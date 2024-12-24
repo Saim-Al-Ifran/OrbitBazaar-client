@@ -1,0 +1,15 @@
+.Dashboard-logout {
+    margin-top: 12rem!important ;
+}
+
+@media screen and (max-width: 768px) {  
+    .Dashboard-logout {
+        margin-top: 5rem !important;
+    }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .Dashboard-logout {
+        margin-top: 5rem !important;
+    }
+}
