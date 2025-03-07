@@ -2,31 +2,3 @@
 @tailwind components;
 @tailwind utilities;
 
-
-* {
-  transition: 0.3s;
-}
-.sidebar {
-  transform: translateX(-100%);
-  transition: transform 0.3s ease;
-}
-.sidebar.active {
-  transform: translateX(0);
-}
-@media (min-width: 768px) {
-  .sidebar {
-    transform: translateX(0);
-  }
-}
-.fixed-header {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 50;
-}
-.fixed-sidebar {
-  position: fixed;
-  top: 64px;
-  height: calc(100% - 64px);
-  z-index: 40;
-}
