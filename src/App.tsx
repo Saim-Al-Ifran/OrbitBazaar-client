@@ -1,13 +1,10 @@
-import Dashboard from "./layouts/Dashboard"
+import AppRouter from "./routes/Routes"
 
-
- 
- 
 function App() {
  
   return (
     <>
-         <Dashboard/>
+         <AppRouter/>
     </>
   )
 }

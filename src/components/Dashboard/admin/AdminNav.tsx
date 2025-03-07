@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 interface AdminNavProps {
   active: string;
@@ -15,8 +16,8 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
   return (
     <nav className="space-y-2">
       {/* Dashboard */}
-      <a
-        href="#"
+      <NavLink
+        to="/dashboard/admin"
         onClick={() => setActive("Dashboard")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
           active === "Dashboard" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
@@ -26,11 +27,11 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
           <i className="fas fa-tachometer-alt"></i>
           <span>Dashboard</span>
         </div>
-      </a>
+      </NavLink>
 
       {/* Users */}
-      <a
-        href="#"
+      <NavLink
+        to="/dashboard/users"
         onClick={() => setActive("Users")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
           active === "Users" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
@@ -40,12 +41,12 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
           <i className="fas fa-users"></i>
           <span>Users</span>
         </div>
-      </a>
+      </NavLink>
  
 
       {/* Sellers */}
-      <a
-        href="#"
+      <NavLink
+        to="/dashboard/sellers"
         onClick={() => setActive("Sellers")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
           active === "Sellers" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
@@ -55,11 +56,11 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
           <i className="fa-solid fa-user-tie"></i>
           <span>Sellers</span>
         </div>
-      </a>
+      </NavLink>
 
       {/* Sellers Request */}
-      <a
-        href="#"
+      <NavLink
+        to="/dashboard/sellers/request"
         onClick={() => setActive("Sellers-request")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
           active === "Sellers-request" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
@@ -69,11 +70,11 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
           <i className="fa-solid fa-users-gear"></i>
           <span>Sellers Request</span>
         </div>
-      </a>
+      </NavLink>
 
       {/* Deactive Sellers */}
-      <a
-        href="#"
+      <NavLink
+        to="/dashboard/sellers/deactive"
         onClick={() => setActive("Deactive-sellers")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
           active === "Deactive-sellers" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
@@ -83,7 +84,7 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
           <i className="fa-solid fa-user-minus"></i>
           <span>Deactive Sellers</span>
         </div>
-      </a>
+      </NavLink>
 
       {/* Categories with Dropdown */}
       <div>
@@ -106,8 +107,8 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
         {/* Dropdown Items */}
         {activeSection === "Categories" && (
           <div className="ml-6 space-y-2">
-            <a
-              href="#"
+            <NavLink
+              to="/dashboard/categories"
               onClick={() => setActive("AllCategories")}
               className={`py-1 px-4 flex items-center gap-3 rounded-md ${
                 active === "AllCategories" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
@@ -115,9 +116,9 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
             >
               <i className="fa-solid fa-list"></i>
               <span>All Categories</span>
-            </a>
-            <a
-              href="#"
+            </NavLink>
+            <NavLink
+              to="/dashboard/category/add"
               onClick={() => setActive("AddCategory")}
               className={`py-1 px-4 flex items-center gap-3 rounded-md ${
                 active === "AddCategory" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
@@ -125,7 +126,7 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
             >
               <i className="fa-solid fa-plus"></i>
               <span>Add Category</span>
-            </a>
+            </NavLink>
           </div>
         )}
       </div>

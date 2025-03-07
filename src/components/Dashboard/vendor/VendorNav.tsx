@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 interface VendorNavProps {
   active: string;
@@ -15,8 +16,8 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
   return (
     <nav className="space-y-2">
       {/* Dashboard */}
-      <a
-        href="#"
+      <NavLink
+        to="/dashboard/vendor"
         onClick={() => setActive("Dashboard")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
           active === "Dashboard" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
@@ -26,7 +27,7 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
           <i className="fas fa-tachometer-alt"></i>
           <span>Dashboard (Vendor)</span>
         </div>
-      </a>
+      </NavLink>
 
       {/* Products with Dropdown */}
       <div>
@@ -52,8 +53,8 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
         {/* Dropdown Items */}
         {activeSection === "Products" && (
           <div className="ml-6 space-y-2">
-            <a
-              href="#"
+            <NavLink
+              to="/dashboard/vendor/products"
               onClick={() => setActive("AllProducts")}
               className={`py-1 px-4 flex items-center gap-3 rounded-md ${
                 active === "AllProducts" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
@@ -61,9 +62,9 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
             >
               <i className="fa-solid fa-list"></i>
               <span>All Products</span>
-            </a>
-            <a
-              href="#"
+            </NavLink>
+            <NavLink
+              to="/dashboard/vendor/products/add"
               onClick={() => setActive("AddProduct")}
               className={`py-1 px-4 flex items-center gap-3 rounded-md ${
                 active === "AddProduct" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
@@ -71,14 +72,14 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
             >
               <i className="fa-solid fa-plus"></i>
               <span>Add Product</span>
-            </a>
+            </NavLink>
           </div>
         )}
       </div>
 
       {/* Reports */}
-      <a
-        href="#"
+      <NavLink
+        to="/dashboard/vendor/reports"
         onClick={() => setActive("Reports")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
           active === "Reports" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
@@ -88,11 +89,11 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
           <i className="fa-solid fa-flag"></i>
           <span>Reports</span>
         </div>
-      </a>
+      </NavLink>
 
       {/* Orders */}
-      <a
-        href="#"
+      <NavLink
+        to="/dashboard/vendor/orders"
         onClick={() => setActive("Orders")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
           active === "Orders" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
@@ -102,7 +103,7 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
           <i className="fa-solid fa-cart-plus"></i>
           <span>Orders</span>
         </div>
-      </a>
+      </NavLink>
     </nav>
   );
 };

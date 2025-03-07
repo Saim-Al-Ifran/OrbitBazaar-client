@@ -8,7 +8,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isActive }) => {
   const [active, setActive] = useState("");
-  const role = "vendor"; // Change this dynamically based on user role
+  const role = "admin"; 
 
   return (
     <aside

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import TopNavbar from '../components/Dashboard/TopNavbar';
 import Sidebar from '../components/Dashboard/Sidebar';
 import '../styles/dashboard.style.css'; 
-
+import { Outlet } from 'react-router-dom';
  
  
 const Dashboard: React.FC = () => {
@@ -21,7 +21,7 @@ const Dashboard: React.FC = () => {
         <div className="flex">
           <Sidebar isActive={isSidebarActive} />
           <main className="ml-64 p-6">
-   
+               <Outlet/>
           </main>
         </div>
       </div>
