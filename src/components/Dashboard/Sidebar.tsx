@@ -4,6 +4,7 @@ import VendorNav from "./vendor/VendorNav";
 
 interface SidebarProps {
   isActive: boolean;
+  
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isActive }) => {
@@ -12,9 +13,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isActive }) => {
 
   return (
     <aside
-      className={`sm:w-64 w-full bg-[#384B70] text-white py-7 px-2 fixed top-16 h-[calc(100%-64px)] transform transition-transform ${
-        isActive ? "translate-x-0" : "-translate-x-full"
-      } md:translate-x-0 flex flex-col`}
+    className={`sm:w-64 w-full bg-[#384B70] text-white py-7 px-2 fixed top-16 h-[calc(100%-64px)] transform transition-transform ${
+      isActive ? "translate-x-0" : "-translate-x-full"
+    } md:translate-x-0 flex flex-col`}
     >
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto space-y-6 custom-scrollbar">

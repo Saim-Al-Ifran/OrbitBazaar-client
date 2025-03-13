@@ -1,32 +1,38 @@
-import React, { useState } from 'react';
-import TopNavbar from '../components/Dashboard/TopNavbar';
-import Sidebar from '../components/Dashboard/Sidebar';
-import '../styles/dashboard.style.css'; 
-import { Outlet } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import Sidebar from "../components/Dashboard/Sidebar";
+import TopNavbar from "../components/Dashboard/TopNavbar";
  
- 
+
 const Dashboard: React.FC = () => {
-    const [isSidebarActive, setSidebarActive] = useState(false);
+  const [sidebarActive, setSidebarActive] = useState(false);
+  const location = useLocation();
   
-    const toggleSidebar = () => {
-      setSidebarActive((prev) => !prev);
-    };
+  useEffect(() => {
+    setSidebarActive(false);
+  }, [location.pathname]); 
+
   
-    return (
-      <>
-       
-   
-        <div className="bg-gray-100">
-          <TopNavbar toggleSidebar={toggleSidebar}/>
-        <div className="flex">
-          <Sidebar isActive={isSidebarActive} />
-          <main className="ml-64 p-6">
-               <Outlet/>
-          </main>
+  return (
+    <div className="flex">
+      {/* Sidebar */}
+      <Sidebar isActive={sidebarActive} />
+
+      <div className="flex-1 min-h-screen bg-gray-100">
+        {/* Top Navbar */}
+        <TopNavbar
+         toggleSidebar={() => setSidebarActive(!sidebarActive)}
+         isSidebarOpen={sidebarActive}
+        />
+
+        {/* Main Content */}
+        <div className="mt-16 ml-0 md:ml-64 p-6">
+          <Outlet />
         </div>
       </div>
-      </>
-    )
-  }
-  
-  export default Dashboard
+    </div>
+  );
+};
+
+export default Dashboard;
+

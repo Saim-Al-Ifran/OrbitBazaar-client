@@ -3,9 +3,12 @@ import React from 'react';
 
 interface NavbarProps {
   toggleSidebar: () => void;
+  isSidebarOpen: boolean;
 }
 
-const TopNavbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
+const TopNavbar: React.FC<NavbarProps> = ({ toggleSidebar, isSidebarOpen }) => {
+
+  
   return (
     <nav className="bg-[#5a75aa] p-4 shadow-md flex justify-between items-center fixed top-0 w-full z-50">
       <div className="text-white text-lg font-bold">Dashboard</div>
@@ -24,11 +27,12 @@ const TopNavbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
           onClick={toggleSidebar}
           className="text-white text-2xl block md:hidden"
         >
-          <i className="fas fa-bars"></i>
+          <i className={`fas ${isSidebarOpen ? "fa-xmark" : "fa-bars"}`}></i>
         </button>
       </div>
     </nav>
   );
 };
+
 
 export default TopNavbar;
