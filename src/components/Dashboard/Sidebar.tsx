@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import AdminNav from "./admin/AdminNav";
-import VendorNav from "./vendor/VendorNav";
+import AdminNav from "../Admin/AdminNav";
+import VendorNav from "../Vendor/VendorNav";
 
 interface SidebarProps {
   isActive: boolean;
@@ -9,11 +9,11 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isActive }) => {
   const [active, setActive] = useState("");
-  const role = "admin"; 
-
+  const [role, setRole] = useState<"admin" | "vendor">("admin");
+  
   return (
     <aside
-    className={`sm:w-64 w-full bg-[#384B70] text-white py-7 px-2 fixed top-16 h-[calc(100%-64px)] transform transition-transform ${
+    className={`sm:w-64 z-10 w-full bg-[#384B70] text-white py-7 px-2 fixed top-16 h-[calc(100%-64px)] transform transition-transform ${
       isActive ? "translate-x-0" : "-translate-x-full"
     } md:translate-x-0 flex flex-col`}
     >
