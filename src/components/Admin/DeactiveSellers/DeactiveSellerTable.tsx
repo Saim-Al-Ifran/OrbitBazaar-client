@@ -58,12 +58,12 @@ const TABLE_ROWS = [
   },
 ];
 
-const UserTable = () => {
+const DeactiveSellerTable = () => {
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [role, setRole] = useState("");
   const [status, setStatus] = useState("");
   console.log(selectedUser);
+
   interface User {
     img: string;
     name: string;
@@ -76,7 +76,6 @@ const UserTable = () => {
 
   const handleOpen = (user: User): void => {
     setSelectedUser(user);
-    setRole(user.role);
     setStatus(user.status);
     setOpen(true);
   };
@@ -200,23 +199,15 @@ const UserTable = () => {
        {open && (
         <div className="modal modal-open">
           <div className="modal-box">
-            <h3 className="font-bold text-lg">Edit User</h3>
-
-            {/* Role Selection */}
-            <div className="mt-4">
-              <label className="block font-medium">User Role</label>
-              <select className="select select-bordered w-full" value={role} onChange={(e) => setRole(e.target.value)}>
-                <option value="admin">Admin</option>
-                <option value="user">User</option>
-              </select>
-            </div>
+            <h3 className="font-bold text-lg">Edit Deactive Sellers</h3>
+ 
 
             {/* Status Selection */}
             <div className="mt-4">
-              <label className="block font-medium">User Status</label>
+              <label className="block font-medium">Seller Status</label>
               <select className="select select-bordered w-full" value={status} onChange={(e) => setStatus(e.target.value)}>
                 <option value="active">Active</option>
-                <option value="block">Blocked</option>
+                <option value="block">Block</option>
               </select>
             </div>
 
@@ -233,4 +224,4 @@ const UserTable = () => {
   );
 };
 
-export default UserTable;
+export default DeactiveSellerTable;

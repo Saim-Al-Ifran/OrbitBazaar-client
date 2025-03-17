@@ -1,6 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from '../layouts/Dashboard';
 import AllUsers from '../pages/Dashboard/Admin/User/AllUsers';
+import AllSellers from '../pages/Dashboard/Admin/Sellers/AllSellers';
+import AllDeactiveSellers from '../pages/Dashboard/Admin/DeactiveSellers/AllDeactiveSellers';
+import AllSellerRequest from '../pages/Dashboard/Admin/SellerRequest/AllSellerRequest';
 
 
 // Main Router Component
@@ -19,9 +22,9 @@ const AppRouter = () => {
             }
           />
           
-          <Route path="sellers" element={<h1>Hello sellers</h1>} />
-          <Route path="sellers/request" element={<h1>Sellers request</h1>} />
-          <Route path="sellers/deactive" element={<h1>Deactive Sellers</h1>} />
+          <Route path="sellers" element={<AllSellers/>} />
+          <Route path="sellers/request" element={<AllSellerRequest/>} />
+          <Route path="sellers/deactive" element={<AllDeactiveSellers/>} />
           <Route path="categories" element={<h1>All Categories</h1>} />
           <Route path="category/add" element={<h1>Add Category</h1>} />
         </Route>
