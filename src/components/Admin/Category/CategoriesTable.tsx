@@ -5,6 +5,7 @@ import {
   IconButton,
   Tooltip,
 } from "@material-tailwind/react";
+import { NavLink } from "react-router-dom";
  
 
 const TABLE_HEAD = ["Category-image", "Category-name", "Actions"];
@@ -92,11 +93,14 @@ const CategoriesTable = () => {
  
                 <td className={classes}>
                     <div className="flex items-center gap-4">
-                      <Tooltip content="Edit User" >  
-                        <IconButton variant="filled"   {...(undefined as any)}>
-                          <PencilIcon className="h-4 w-4" />
-                        </IconButton>
-                      </Tooltip>
+                      <NavLink to="/dashboard/category/edit/1">
+                        <Tooltip content="Edit User" >  
+                          <IconButton variant="filled"   {...(undefined as any)}>
+                            <PencilIcon className="h-4 w-4" />
+                          </IconButton>
+                        </Tooltip>
+                      </NavLink>
+
                       <Tooltip content="Delete User">
                           <IconButton
                             variant="filled"
