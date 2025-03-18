@@ -4,6 +4,8 @@ import AllUsers from '../pages/Dashboard/Admin/User/AllUsers';
 import AllSellers from '../pages/Dashboard/Admin/Sellers/AllSellers';
 import AllDeactiveSellers from '../pages/Dashboard/Admin/DeactiveSellers/AllDeactiveSellers';
 import AllSellerRequest from '../pages/Dashboard/Admin/SellerRequest/AllSellerRequest';
+import AllCategories from '../pages/Dashboard/Admin/Category/AllCategories';
+import AddCategory from '../pages/Dashboard/Admin/Category/AddCategory';
 
 
 // Main Router Component
@@ -25,8 +27,8 @@ const AppRouter = () => {
           <Route path="sellers" element={<AllSellers/>} />
           <Route path="sellers/request" element={<AllSellerRequest/>} />
           <Route path="sellers/deactive" element={<AllDeactiveSellers/>} />
-          <Route path="categories" element={<h1>All Categories</h1>} />
-          <Route path="category/add" element={<h1>Add Category</h1>} />
+          <Route path="categories" element={<AllCategories/>} />
+          <Route path="category/add" element={<AddCategory/>} />
         </Route>
       </Routes>
     </Router>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 interface AdminNavProps {
   active: string;
@@ -8,11 +8,11 @@ interface AdminNavProps {
 
 const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
-
+  const location = useLocation()
   const toggleSection = (section: string) => {
     setActiveSection(prevSection => (prevSection === section ? null : section));
   };
-
+  console.log(location.pathname)
   return (
     <nav className="space-y-2">
       {/* Dashboard */}
@@ -111,7 +111,7 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
               to="/dashboard/categories"
               onClick={() => setActive("AllCategories")}
               className={`py-1 px-4 flex items-center gap-3 rounded-md ${
-                active === "AllCategories" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+                location.pathname === "/dashboard/categories" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
               }`}
             >
               <i className="fa-solid fa-list"></i>
@@ -121,7 +121,7 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
               to="/dashboard/category/add"
               onClick={() => setActive("AddCategory")}
               className={`py-1 px-4 flex items-center gap-3 rounded-md ${
-                active === "AddCategory" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+                location.pathname === "/dashboard/category/add" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
               }`}
             >
               <i className="fa-solid fa-plus"></i>

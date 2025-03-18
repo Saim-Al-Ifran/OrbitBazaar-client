@@ -10,7 +10,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isActive }) => {
   const [active, setActive] = useState("");
   const [role, setRole] = useState<"admin" | "vendor">("admin");
-  
+  console.log(active)
   return (
     <aside
     className={`sm:w-64 z-10 w-full bg-[#384B70] text-white py-7 px-2 fixed top-16 h-[calc(100%-64px)] transform transition-transform ${
