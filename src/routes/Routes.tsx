@@ -7,6 +7,7 @@ import AllSellerRequest from '../pages/Dashboard/Admin/SellerRequest/AllSellerRe
 import AllCategories from '../pages/Dashboard/Admin/Category/AllCategories';
 import AddCategory from '../pages/Dashboard/Admin/Category/AddCategory';
 import EditCategory from '../pages/Dashboard/Admin/Category/EditCategory';
+import AddProduct from '../pages/Dashboard/Vendor/Products/AddProduct';
 
 
 // Main Router Component
@@ -31,6 +32,7 @@ const AppRouter = () => {
           <Route path="categories" element={<AllCategories/>} />
           <Route path="category/add" element={<AddCategory/>} />
           <Route path="category/edit/:id" element={<EditCategory/>} />
+          <Route path="vendor/product/add" element={<AddProduct/>} />
  
         </Route>
       </Routes>

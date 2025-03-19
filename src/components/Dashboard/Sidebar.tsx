@@ -9,7 +9,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isActive }) => {
   const [active, setActive] = useState("");
-  const [role, setRole] = useState<"admin" | "vendor">("admin");
+  const [role, setRole] = useState<"admin" | "vendor">("vendor");
   console.log(active)
   return (
     <aside

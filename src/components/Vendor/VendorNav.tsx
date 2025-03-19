@@ -64,7 +64,7 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
               <span>All Products</span>
             </NavLink>
             <NavLink
-              to="/dashboard/vendor/products/add"
+              to="/dashboard/vendor/product/add"
               onClick={() => setActive("AddProduct")}
               className={`py-1 px-4 flex items-center gap-3 rounded-md ${
                 active === "AddProduct" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
