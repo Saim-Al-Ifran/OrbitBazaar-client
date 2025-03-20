@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 interface VendorNavProps {
   active: string;
@@ -8,7 +8,7 @@ interface VendorNavProps {
 
 const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
-
+  const location = useLocation();
   const toggleSection = (section: string) => {
     setActiveSection(prevSection => (prevSection === section ? null : section));
   };
@@ -57,7 +57,7 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
               to="/dashboard/vendor/products"
               onClick={() => setActive("AllProducts")}
               className={`py-1 px-4 flex items-center gap-3 rounded-md ${
-                active === "AllProducts" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+                location.pathname === "/dashboard/vendor/products" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
               }`}
             >
               <i className="fa-solid fa-list"></i>
@@ -67,7 +67,7 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
               to="/dashboard/vendor/product/add"
               onClick={() => setActive("AddProduct")}
               className={`py-1 px-4 flex items-center gap-3 rounded-md ${
-                active === "AddProduct" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+                location.pathname === "/dashboard/vendor/product/add"  ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
               }`}
             >
               <i className="fa-solid fa-plus"></i>
