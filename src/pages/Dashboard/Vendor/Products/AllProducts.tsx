@@ -135,7 +135,6 @@ const AllProducts = () => {
       </CardHeader>
  
       <CardBody className="overflow-scroll px-0" {...(undefined as any)}>
-        {/* Pass sortOrder to your UserTable if needed */}
          <ProductTable/>
       </CardBody>
 

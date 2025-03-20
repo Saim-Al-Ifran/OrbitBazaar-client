@@ -6,6 +6,7 @@ import {
   Tooltip,
 } from "@material-tailwind/react";
 import { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 const TABLE_HEAD = ["Product", "Category", "Price", "Stock", "Action"];
 
@@ -53,10 +54,9 @@ const TABLE_ROWS = [
 ];
 
 const ProductTable = () => {
-  const [open, setOpen] = useState(false);
+ 
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [price, setPrice] = useState("");
-  const [stock, setStock] = useState("");
+ 
   console.log(selectedProduct);
 
   interface Product {
@@ -70,9 +70,6 @@ const ProductTable = () => {
 
   const handleOpen = (product: Product): void => {
     setSelectedProduct(product);
-    setPrice(product.price);
-    setStock(String(product.stock));
-    setOpen(true);
   };
 
   return (
@@ -160,15 +157,18 @@ const ProductTable = () => {
                 </td>
                 <td className={classes}>
                   <div className="flex items-center gap-4">
-                    <Tooltip content="Edit Product">
-                      <IconButton
-                        variant="filled"
-                        onClick={() => handleOpen(product)}
-                        {...(undefined as any)}
-                      >
-                        <PencilIcon className="h-4 w-4" />
-                      </IconButton>
-                    </Tooltip>
+                    <NavLink to="edit/1">
+                        <Tooltip content="Edit Product">
+                          <IconButton
+                            variant="filled"
+                            onClick={() => handleOpen(product)}
+                            {...(undefined as any)}
+                          >
+                            <PencilIcon className="h-4 w-4" />
+                          </IconButton>
+                        </Tooltip>
+                    </NavLink>
+
                     <Tooltip content="Delete Product">
                       <IconButton
                         variant="filled"
@@ -186,49 +186,7 @@ const ProductTable = () => {
         </tbody>
       </table>
 
-      {/* Modal */}
-      {open && (
-        <div className="modal modal-open">
-          <div className="modal-box">
-            <h3 className="font-bold text-lg">Edit Product</h3>
-
-            {/* Price Input */}
-            <div className="mt-4">
-              <label className="block font-medium">Product Price</label>
-              <input
-                type="text"
-                className="input input-bordered w-full"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-              />
-            </div>
-
-            {/* Stock Input */}
-            <div className="mt-4">
-              <label className="block font-medium">Stock Quantity</label>
-              <input
-                type="number"
-                className="input input-bordered w-full"
-                value={stock}
-                onChange={(e) => setStock(e.target.value)}
-              />
-            </div>
-
-            {/* Buttons */}
-            <div className="modal-action">
-              <button className="btn" onClick={() => setOpen(false)}>
-                Cancel
-              </button>
-              <button
-                className="btn btn-primary"
-                onClick={() => setOpen(false)}
-              >
-                Save Changes
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+ 
     </>
   );
 };
