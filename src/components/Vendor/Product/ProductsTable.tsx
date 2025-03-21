@@ -1,11 +1,10 @@
-import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { PencilIcon, TrashIcon, ArchiveBoxIcon } from "@heroicons/react/24/solid";
 import {
   Typography,
   Avatar,
   IconButton,
   Tooltip,
 } from "@material-tailwind/react";
-import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
 const TABLE_HEAD = ["Product", "Category", "Price", "Stock", "Action"];
@@ -54,24 +53,6 @@ const TABLE_ROWS = [
 ];
 
 const ProductTable = () => {
- 
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
- 
-  console.log(selectedProduct);
-
-  interface Product {
-    img: string;
-    name: string;
-    category: string;
-    price: string;
-    stock: number;
-    status: string;
-  }
-
-  const handleOpen = (product: Product): void => {
-    setSelectedProduct(product);
-  };
-
   return (
     <>
       <table className="mt-4 w-full min-w-max table-auto text-left">
@@ -104,77 +85,57 @@ const ProductTable = () => {
               <tr key={name}>
                 <td className={classes}>
                   <div className="flex items-center gap-3">
-                    <Avatar src={img} alt={name} size="sm" {...(undefined as any)}/>
+                    <Avatar src={img} alt={name} size="sm" {...(undefined as any)} />
                     <div className="flex flex-col">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                        {...(undefined as any)}
-                      >
+                      <Typography variant="small" color="blue-gray" className="font-normal" {...(undefined as any)}>
                         {name}
                       </Typography>
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal opacity-70"
-                        {...(undefined as any)}
-                      >
+                      <Typography variant="small" color="blue-gray" className="font-normal opacity-70" {...(undefined as any)}>
                         {category}
                       </Typography>
                     </div>
                   </div>
                 </td>
                 <td className={classes}>
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                    {...(undefined as any)}
-                  >
+                  <Typography variant="small" color="blue-gray" className="font-normal" {...(undefined as any)}>
                     {category}
                   </Typography>
                 </td>
                 <td className={classes}>
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                    {...(undefined as any)}
-                  >
+                  <Typography variant="small" color="blue-gray" className="font-normal" {...(undefined as any)}>
                     {price}
                   </Typography>
                 </td>
                 <td className={classes}>
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                    {...(undefined as any)}
-                  >
+                  <Typography variant="small" color="blue-gray" className="font-normal" {...(undefined as any)}>
                     {stock}
                   </Typography>
                 </td>
                 <td className={classes}>
                   <div className="flex items-center gap-4">
                     <NavLink to="edit/1">
-                        <Tooltip content="Edit Product">
-                          <IconButton
-                            variant="filled"
-                            onClick={() => handleOpen(product)}
-                            {...(undefined as any)}
-                          >
-                            <PencilIcon className="h-4 w-4" />
-                          </IconButton>
-                        </Tooltip>
+                      <Tooltip content="Edit Product">
+                        <IconButton variant="filled" {...(undefined as any)}>
+                          <PencilIcon className="h-4 w-4" />
+                        </IconButton>
+                      </Tooltip>
                     </NavLink>
+
+                    <Tooltip content="Archive Product">
+                      <IconButton
+                       variant="filled"
+                       className="bg-gray-500 hover:bg-gray-600 text-white p-2 rounded-md"
+                       {...(undefined as any)}
+                       >
+                        <ArchiveBoxIcon className="h-4 w-4" />
+                      </IconButton>
+                    </Tooltip>
 
                     <Tooltip content="Delete Product">
                       <IconButton
-                        variant="filled"
-                        className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-md"
-                        {...(undefined as any)}
-                      >
+                       variant="filled"
+                       className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-md"
+                       {...(undefined as any)}>
                         <TrashIcon className="h-4 w-4" />
                       </IconButton>
                     </Tooltip>
@@ -185,8 +146,6 @@ const ProductTable = () => {
           })}
         </tbody>
       </table>
-
- 
     </>
   );
 };
