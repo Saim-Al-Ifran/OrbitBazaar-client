@@ -11,6 +11,7 @@ import AddProduct from '../pages/Dashboard/Vendor/Products/AddProduct';
 import AllProducts from '../pages/Dashboard/Vendor/Products/AllProducts';
 import EditProduct from '../pages/Dashboard/Vendor/Products/EditProduct';
 import AllReports from '../pages/Dashboard/Vendor/Reports/AllReports';
+import AllOrders from '../pages/Dashboard/Vendor/Orders/AllOrders';
 
 
 // Main Router Component
@@ -42,7 +43,7 @@ const AppRouter = () => {
           <Route path="vendor/products" element={<AllProducts/>} />
           <Route path="vendor/products/edit/:id" element={<EditProduct/>} />
           <Route path="vendor/reports" element={<AllReports/>} />
-          <Route path="vendor/orders" element={<h1>All Orders</h1>} />
+          <Route path="vendor/orders" element={<AllOrders/>} />
 
  
         </Route>
