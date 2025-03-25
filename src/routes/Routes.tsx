@@ -12,12 +12,25 @@ import AllProducts from '../pages/Dashboard/Vendor/Products/AllProducts';
 import EditProduct from '../pages/Dashboard/Vendor/Products/EditProduct';
 import AllReports from '../pages/Dashboard/Vendor/Reports/AllReports';
 import AllOrders from '../pages/Dashboard/Vendor/Orders/AllOrders';
+import Main from '../layouts/Main';
+import Home from '../pages/Home/Home';
+import Shop from '../pages/Shop/Shop';
+import Contact from '../pages/Contact/Contact';
+import AboutUs from '../pages/AboutUs/AboutUs';
 
 
 // Main Router Component
 const AppRouter = () => {
   return (
     <Router>
+      <Routes>
+          <Route path='/' element={<Main/>}>
+                   <Route index element={<Home/>} />
+                   <Route path='/shop' element={<Shop/>} />
+                   <Route path='/contact' element={<Contact/>} />
+                   <Route path='/about' element={<AboutUs/>} />
+          </Route>
+      </Routes>
       <Routes>
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="admin" element={<h1>Hello admin</h1>} />
