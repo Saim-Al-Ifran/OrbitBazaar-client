@@ -1,7 +1,35 @@
 import { NavLink } from "react-router-dom";
 import { ShoppingCartIcon } from "@heroicons/react/24/solid";
+import { useEffect, useState } from "react";
+
+const products = [
+  { id: 1, name: "GIGABYTE X870 EAGLE WIFI7", price: "Up Coming", image: "https://m.media-amazon.com/images/I/616+VhWBhOL._AC_SL1500_.jpg", stock: "Available" },
+  { id: 2, name: "D-Link NFP-0WH11 Single Faceplate", price: "240৳", image: "https://via.placeholder.com/50", stock: "Available" },
+  { id: 3, name: "Deepcool CK-11509 CPU Cooler", price: "290৳", image: "https://via.placeholder.com/50", stock: "Discount" },
+  { id: 4, name: "Deepcool XFan 120 Case Cooling Fan", price: "Out of Stock", image: "https://via.placeholder.com/50", stock: "Out of Stock" },
+  { id: 5, name: "D-Link NCB-C6UGRYR1-3", price: "490৳", image: "https://via.placeholder.com/50", stock: "Available" },
+];
 
 const Navbar = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<{ id: number; name: string; price: string; image: string; stock: string; }[]>([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      setShowDropdown(false);
+      return;
+    }
+
+    // Simulate API filtering
+    const filteredResults = products.filter(product =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    setSearchResults(filteredResults);
+    setShowDropdown(filteredResults.length > 0);
+  }, [searchQuery]);
+
   return (
     <nav className="bg-white shadow-md">
       <div className="container mx-auto px-6 py-4 flex items-center justify-between">
@@ -13,6 +41,8 @@ const Navbar = () => {
           <div className="relative w-full max-w-lg">
             <input
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search for products..."
               className="w-full px-4 py-2 rounded-full border border-black focus:ring-2 focus:ring-black focus:outline-none shadow-md transition-all duration-300"
             />
@@ -21,6 +51,39 @@ const Navbar = () => {
             </button>
           </div>
         </div>
+
+           {/* Search Results Dropdown */}
+           {showDropdown && (
+            <div className="absolute top-[7rem] lg:top-[4rem] lg:w-[32rem] lg:left-[12rem]  bg-white shadow-lg border border-gray-200 rounded-lg mt-2 z-50">
+              {searchResults.map((product) => (
+                <NavLink
+                  key={product.id}
+                  to={`/product/${product.id}`}
+                  className="flex items-center gap-3 p-2 hover:bg-gray-100 transition-all duration-300"
+                  onClick={() => setShowDropdown(false)}
+                >
+                  <img src={product.image} alt={product.name} className="w-10 h-10 object-cover" />
+                  <div>
+                    <p className="text-sm font-semibold text-gray-800">{product.name}</p>
+                    <p className={`text-xs ${product.stock === "Out of Stock" ? "text-red-500" : "text-green-600"}`}>
+                      {product.price}
+                    </p>
+                  </div>
+                </NavLink>
+              ))}
+                  {/* See All Results Button */}
+                <div className="border-t border-gray-200">
+                  <NavLink
+                    to="/search-results"
+                    className="block text-center py-2 text-white bg-gray-800 rounded-b-lg hover:bg-gray-700 transition-all duration-300 font-semibold"
+                    onClick={() => setShowDropdown(false)}
+                  >
+                    See All Results
+                  </NavLink>
+                </div>
+            </div>
+            
+          )}
 
         {/* Navigation Links */}
         <div className="flex items-center gap-x-6 lg:gap-x-10">
@@ -167,6 +230,8 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search for products..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full px-4 py-2 rounded-full border border-black focus:ring-2 focus:ring-black focus:outline-none shadow-md transition-all duration-300"
           />
           <button className="absolute right-3 top-2 text-black hover:text-gray-700 transition-all duration-300">
