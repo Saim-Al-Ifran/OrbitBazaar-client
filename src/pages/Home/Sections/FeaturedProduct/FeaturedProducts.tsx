@@ -1,19 +1,7 @@
 
 import React, { useState  } from "react";
   const dummyProducts = [
-    {
-      _id: "1",
-      name: "Wireless Bluetooth Headphones",
-      description: "High-quality noise-canceling headphones with deep bass.",
-      category: "Electronics",
-      vendorEmail: "vendor1@example.com",
-      price: 99.99,
-      stock: 12,
-      image: "https://i5.walmartimages.com/seo/VILINICE-Noise-Cancelling-Headphones-Wireless-Bluetooth-Over-Ear-Headphones-with-Microphone-Black-Q8_b994b99c-835f-42fc-8094-9f6be0f9273b.be59955399cdbd1c25011d4a4251ba9b.jpeg",
-      ratings: { average: 4.5, count: 120 },
-      salesCount: 240,
-      isFeatured: true,
-    },
+ 
     {
       _id: "2",
       name: "Smart Watch Series 7",
