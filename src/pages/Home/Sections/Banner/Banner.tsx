@@ -36,7 +36,7 @@ const BannerCarousel: React.FC = () => {
   const prevSlide = () => setCurrentIndex((prevIndex) => (prevIndex - 1 + banners.length) % banners.length);
 
   return (
-    <div className="relative w-full h-screen">
+    <div className="relative w-full lg:h-screen">
       {/* Banner Images */}
       <div className="relative w-full h-[250px] lg:h-full overflow-hidden">
         {banners.map((banner, index) => (
