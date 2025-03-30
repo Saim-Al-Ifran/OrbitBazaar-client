@@ -4,6 +4,8 @@ const Shop = () => {
   const [products, setProducts] = useState<{ id: number; name: string; category: string; price: number; image: string; description: string; }[]>([]);
   const [view, setView] = useState("grid");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 3;
 
   useEffect(() => {
     setProducts([
@@ -24,9 +26,13 @@ const Shop = () => {
 
   const handleCategoryChange: CategoryChangeHandler = (category) => {
     setSelectedCategory(category);
+    setCurrentPage(1);
   };
 
   const filteredProducts = selectedCategory === "All" ? products : products.filter(product => product.category === selectedCategory);
+
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+ 
 
   return (
     <div className="max-w-7xl mx-auto p-4 flex flex-col md:flex-row gap-6">
@@ -112,8 +118,41 @@ const Shop = () => {
             </div>
           ))}
         </div>
+        {/* Pagination */}
+        <div className="flex justify-between items-center mt-6 border-t pt-4">
+          <div className="flex items-center gap-2">
+            <button
+              className="btn btn-sm btn-outline"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((prev) => prev - 1)}
+            >
+              Prev
+            </button>
+            {[...Array(totalPages)].map((_, index) => (
+              <button
+                key={index}
+                className={`btn btn-sm ${currentPage === index + 1 ? "btn-neutral" : "btn-outline"}`}
+                onClick={() => setCurrentPage(index + 1)}
+              >
+                {index + 1}
+              </button>
+            ))}
+            <button
+              className="btn btn-sm btn-outline"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage((prev) => prev + 1)}
+            >
+              Next
+            </button>
+          </div>
+          <p className="text-sm text-gray-500 hidden md:block">
+            Page {currentPage} of {totalPages} ({filteredProducts.length} products)
+          </p>
+        </div>
       </div>
     </div>
+
+    
   );
 };
 
