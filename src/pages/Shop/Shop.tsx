@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const Shop = () => {
   const [products, setProducts] = useState<{ id: number; name: string; category: string; price: number; image: string; description: string; }[]>([]);
@@ -32,10 +33,26 @@ const Shop = () => {
   const filteredProducts = selectedCategory === "All" ? products : products.filter(product => product.category === selectedCategory);
 
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
- 
+   return (
+    <>
+    {/* Breadcrumbs */}
+      <div className="container pl-[20px] overflow-x-hidden lg:pl-[60px] mt-4 mb-4">
+      <div className="flex items-center space-x-2 text-sm text-gray-600 m-auto">
+        <Link to="/" className="flex items-center gap-1 text-[16px] hover:text-blue-600 transition-colors ">
+          <i className="fas fa-home"></i>
+          <span>Home</span>
+        </Link>
+    
+        <span className="text-gray-400">›</span>
+        <span className="flex items-center gap-1 text-[#47698F] font-medium text-[16px]">
+         <i className="fa-solid fa-bag-shopping"></i>
+          <span>Shop</span>
+        </span>
+      </div>
+      </div>
 
-  return (
-    <div className="max-w-7xl mx-auto p-4 flex flex-col md:flex-row gap-6">
+
+      <div className="max-w-7xl mx-auto p-4 flex flex-col md:flex-row gap-6">
       {/* Sidebar Filters */}
       <div className="w-full md:w-1/4 bg-base-100 p-4 shadow-lg rounded-lg">
         <div className="mb-4">
@@ -151,6 +168,8 @@ const Shop = () => {
         </div>
       </div>
     </div>
+    </>
+
 
     
   );
