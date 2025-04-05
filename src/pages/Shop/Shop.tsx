@@ -43,7 +43,7 @@ const Shop = () => {
           <span>Home</span>
         </Link>
     
-        <span className="text-gray-400">›</span>
+        <span className="text-gray-400 ">/</span>
         <span className="flex items-center gap-1 text-[#47698F] font-medium text-[16px]">
          <i className="fa-solid fa-bag-shopping"></i>
           <span>Shop</span>
@@ -124,9 +124,12 @@ const Shop = () => {
                   </button>
                   </div>
                   <div className="w-20">
+                  <Link to={`/shop/${product.id}`}>
                   <button className="btn bg-[#47698F] text-white border-[#35567b] flex-1">
                     <i className="fas fa-eye mr-1"></i> View Product
                   </button>
+                  </Link>
+
                   </div>
 
 
