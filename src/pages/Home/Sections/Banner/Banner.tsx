@@ -1,21 +1,23 @@
 import { useState, useEffect } from "react";
-
+import img1 from  "../../../../assets/Banner_image/banner1.avif";
+import img2 from  "../../../../assets/Banner_image/banner2.avif";
+import img3 from  "../../../../assets/Banner_image/banner3.avif";
 const banners = [
   {
     id: 1,
-    image: "https://img.freepik.com/free-photo/amazed-young-woman-shopaholic-holding-colorful-shopping-bags-look-amused-shop-buying-thi_1258-125439.jpg?t=st=1742970165~exp=1742973765~hmac=ccb781f983cb43ba4f2478a2e3dc4ab3e0069e669184e9084c76a04063e90819&w=1380",
+    image: img1 ,
     title: "Big Summer Sale",
     description: "Get up to 50% off on all products!",
   },
   {
     id: 2,
-    image: "https://img.freepik.com/free-photo/excited-girl-scream-joy-making-fist-pump-holding-shopping-bag-rejoicing-standing-dress-ove_1258-121722.jpg?t=st=1742968756~exp=1742972356~hmac=669574781befcc92c1c958a1de53c7203c31679b9f9d77a4cdaedf2aafa7512d&w=1380",
+    image: img2,
     title: "New Arrivals!",
     description: "Discover the latest trends in fashion.",
   },
   {
     id: 3,
-    image: "https://img.freepik.com/free-photo/concept-shopping-holidays-lifestyle-happy-bearded-guy-holding-paper-bag-from-store-showin_1258-155091.jpg?t=st=1742970208~exp=1742973808~hmac=fbd11474eaf50d1293a3e1a6c11c7c1d32ed523f81803a0d3c6d5c9f50eb8ebe&w=1380",
+    image: img3,
     title: "Limited Time Offer",
     description: "Hurry up! Limited stocks available.",
   },
