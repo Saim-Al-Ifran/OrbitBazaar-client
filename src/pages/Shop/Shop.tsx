@@ -36,7 +36,7 @@ const Shop = () => {
    return (
     <>
     {/* Breadcrumbs */}
-      <div className="container pl-[20px] overflow-x-hidden lg:pl-[60px] mt-4 mb-4">
+      <div className="bg-gray-100 py-3 rounded-md pl-[20px] overflow-x-hidden lg:pl-[60px] mt-4 mb-4">
       <div className="flex items-center space-x-2 text-sm text-gray-600 m-auto">
         <Link to="/" className="flex items-center gap-1 text-[16px] hover:text-blue-600 transition-colors ">
           <i className="fas fa-home"></i>

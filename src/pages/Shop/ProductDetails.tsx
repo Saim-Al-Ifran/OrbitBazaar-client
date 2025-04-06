@@ -77,22 +77,23 @@ const ProductDetails = () => {
 
   return (
     <>
-      {/* Breadcrumbs */}
-      <div className="container pl-5 lg:pl-16 mt-4 mb-4">
-        <div className="flex items-center space-x-2 text-sm text-gray-600">
-          <Link to="/" className="flex items-center gap-1 text-[16px] hover:text-blue-600">
-            <i className="fas fa-home"></i>
-            <span>Home</span>
-          </Link>
-          <span className="text-gray-400">/</span>
-          <Link to="/shop" className="flex items-center gap-1 hover:text-blue-600 font-medium text-[16px]">
-            <i className="fa-solid fa-bag-shopping"></i>
-            <span>Shop</span>
-          </Link>
-          <span className="text-gray-400">/</span>
-          <span className="text-[#47698F] font-medium text-[16px]">{productData.name}</span>
-        </div>
-      </div>
+{/* Breadcrumbs */}
+<div className="pl-5 lg:pl-16 mt-4 mb-4 bg-gray-100 py-3 rounded-md">
+  <div className="flex items-center space-x-2 text-sm text-gray-600">
+    <Link to="/" className="flex items-center gap-1 text-[16px] hover:text-blue-600">
+      <i className="fas fa-home"></i>
+      <span>Home</span>
+    </Link>
+    <span className="text-gray-400">/</span>
+    <Link to="/shop" className="flex items-center gap-1 hover:text-blue-600 font-medium text-[16px]">
+      <i className="fa-solid fa-bag-shopping"></i>
+      <span>Shop</span>
+    </Link>
+    <span className="text-gray-400">/</span>
+    <span className="text-[#47698F] font-medium text-[16px]">{productData.name}</span>
+  </div>
+</div>
+
 
       {/* Product Info */}
       <div className="max-w-7xl mx-auto px-4 py-6">
