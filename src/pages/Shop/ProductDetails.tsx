@@ -144,7 +144,7 @@ const ProductDetails = () => {
             </div>
 
             <div className="flex gap-4 mt-6">
-              <button className="bg-white hover:bg-[#E2E2E2] border border-black text-black font-medium px-6 py-2 rounded-md transition">
+              <button className="bg-white hover:bg-[#E2E2E2] hover:border-[#E2E2E2] border border-black text-black font-medium px-6 py-2 rounded-md transition">
                 <i className="fa-solid fa-shield-heart mr-2"></i>
                 Add to Wishlist
               </button>
@@ -164,7 +164,7 @@ const ProductDetails = () => {
           {currentReviews.map((review) => (
             <div key={review.id} className="border rounded-lg p-4 shadow-sm">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-yellow-500 text-sm">
+                <div className="flex items-center gap-2 text-[#FF943D] text-sm">
                   {[...Array(5)].map((_, i) => (
                     <i
                       key={i}

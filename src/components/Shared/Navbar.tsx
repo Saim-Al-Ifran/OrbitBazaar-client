@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { ShoppingCartIcon } from "@heroicons/react/24/solid";
+import { HeartIcon, ShoppingCartIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 
 const products = [
@@ -54,7 +54,7 @@ const Navbar = () => {
 
            {/* Search Results Dropdown */}
            {showDropdown && (
-            <div className="absolute top-[7rem] lg:top-[4rem] lg:w-[32rem] lg:left-[12rem]  bg-white shadow-lg border border-gray-200 rounded-lg mt-2 z-50">
+            <div className="absolute top-[7rem] lg:top-[4rem] lg:w-[32rem] lg:left-[10rem]  bg-white shadow-lg border border-gray-200 rounded-lg mt-2 z-50">
               {searchResults.map((product) => (
                 <NavLink
                   key={product.id}
@@ -134,11 +134,19 @@ const Navbar = () => {
           </div>
 
           {/* Cart Icon */}
-          <NavLink to="/cart" className="relative">
+          <NavLink to="/cart" className="relative ml-2 md:ml-0">
             <ShoppingCartIcon className="h-6 w-6 text-black hover:text-gray-700 transition-all duration-300" />
             <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full px-2">
               3
             </span>
+          </NavLink>
+          {/* Wishlist Icon */}
+          <NavLink to="/wishlist" className="relative  ">
+            <HeartIcon className="h-6 w-6 text-black hover:text-gray-700 transition-all duration-300" />
+            <span className="absolute -top-1 -right-2 bg-pink-500 text-white text-xs font-bold rounded-full px-2">
+              5
+            </span>
+
           </NavLink>
 
           {/* Login Button */}
