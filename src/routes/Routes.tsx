@@ -17,7 +17,7 @@ import Home from '../pages/Home/Home';
 import Shop from '../pages/Shop/Shop';
 import Contact from '../pages/Contact/Contact';
 import AboutUs from '../pages/AboutUs/AboutUs';
-import ProductDetails from '../pages/Shop/ProductDetails';
+import ProductDetails from '../pages/ProductDetails/ProductDetails';
 
 
 // Main Router Component
