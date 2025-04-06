@@ -18,6 +18,7 @@ import Shop from '../pages/Shop/Shop';
 import Contact from '../pages/Contact/Contact';
 import AboutUs from '../pages/AboutUs/AboutUs';
 import ProductDetails from '../pages/ProductDetails/ProductDetails';
+import Checkout from '../pages/CheckOut/CheckOut';
 
 
 // Main Router Component
@@ -31,6 +32,7 @@ const AppRouter = () => {
                    <Route path='/shop/:id' element={<ProductDetails/>} />
                    <Route path='/contact' element={<Contact/>} />
                    <Route path='/about' element={<AboutUs/>} />
+                   <Route path='/checkout' element={<Checkout/>} />
           </Route>
       </Routes>
       <Routes>

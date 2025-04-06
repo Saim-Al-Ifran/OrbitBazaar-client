@@ -103,7 +103,7 @@ const ProductDetails = () => {
               </button>
               <button className="bg-black hover:bg-gray-800 text-white font-medium px-6 py-2 rounded-md transition">
                 <i className="fa-solid fa-cart-shopping mr-2"></i>
-                Buy Now
+                Add to Cart
               </button>
             </div>
           </div>
