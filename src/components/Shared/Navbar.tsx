@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { HeartIcon, ShoppingCartIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 
@@ -14,7 +14,7 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<{ id: number; name: string; price: string; image: string; stock: string; }[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
-  
+  const location = useLocation();
   useEffect(() => {
     if (searchQuery.trim() === "") {
       setShowDropdown(false);
@@ -29,7 +29,9 @@ const Navbar = () => {
     setSearchResults(filteredResults);
     setShowDropdown(filteredResults.length > 0);
   }, [searchQuery]);
-
+  const isActive = (path: string) => {
+    return location.pathname === path ? "after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[1px] after:bg-black after:rounded-full" : "";
+  };
   return (
     <nav className="bg-white shadow-md">
       <div className="container mx-auto px-6 py-4 flex items-center justify-between">
@@ -90,10 +92,8 @@ const Navbar = () => {
           <div className="hidden md:flex gap-x-6 lg:gap-x-8">
             <NavLink
               to="/"
-              className={({ isActive }) =>
-                `relative font-semibold text-black hover:text-gray-700 transition-all duration-300 ${
-                  isActive ? "after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[1px] after:bg-black after:rounded-full" : ""
-                }`
+              className={`relative font-semibold text-black hover:text-gray-700 transition-all duration-300
+                 ${ isActive("/")}`
               }
             >
               <i className="fa-solid fa-house mr-1"></i> Home
@@ -101,10 +101,8 @@ const Navbar = () => {
 
             <NavLink
               to="/shop"
-              className={({ isActive }) =>
-                `relative font-semibold text-black hover:text-gray-700 transition-all duration-300 ${
-                  isActive ? "after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[1px] after:bg-black after:rounded-full" : ""
-                }`
+              className={`relative font-semibold text-black hover:text-gray-700 transition-all duration-300
+                 ${ isActive("/shop")}`
               }
             >
               <i className="fa-solid fa-bag-shopping mr-1"></i> Shop
@@ -112,10 +110,8 @@ const Navbar = () => {
 
             <NavLink
               to="/contact"
-              className={({ isActive }) =>
-                `relative font-semibold text-black hover:text-gray-700 transition-all duration-300 ${
-                  isActive ? "after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[1px] after:bg-black after:rounded-full" : ""
-                }`
+              className={`relative font-semibold text-black hover:text-gray-700 transition-all duration-300
+                ${ isActive("/contact")}`
               }
             >
               <i className="fa-solid fa-phone mr-1"></i> Contact
@@ -123,10 +119,8 @@ const Navbar = () => {
 
             <NavLink
               to="/about"
-              className={({ isActive }) =>
-                `relative font-semibold text-black hover:text-gray-700 transition-all duration-300 ${
-                  isActive ? "after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[1px] after:bg-black after:rounded-full" : ""
-                }`
+              className={`relative font-semibold text-black hover:text-gray-700 transition-all duration-300
+                ${ isActive("/about")}`
               }
             >
               <i className="fa-solid fa-circle-info mr-1"></i> About us
