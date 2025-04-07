@@ -28,7 +28,11 @@ const cartItems = [
   
     return (
       <>
-        <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="px-6 mt-[3rem]">
+            <h2 className="text-2xl font-bold mb-4 text-center">Shopping Cart</h2>
+            <div className="divider"></div>
+        </div>
+        <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 mb-[5rem]">
           <div className="md:col-span-2 space-y-4">
             {cartItems.map((item) => (
               <div key={item.id} className="flex gap-4 p-4 items-center border rounded-xl shadow">

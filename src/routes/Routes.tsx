@@ -20,6 +20,7 @@ import AboutUs from '../pages/AboutUs/AboutUs';
 import ProductDetails from '../pages/ProductDetails/ProductDetails';
 import Checkout from '../pages/CheckOut/CheckOut';
 import CartDetails from '../pages/Cart/CartDetails';
+import Wishlist from '../pages/WishList/WishList';
  
 
 
@@ -36,6 +37,7 @@ const AppRouter = () => {
                    <Route path='/about' element={<AboutUs/>} />
                    <Route path='/checkout' element={<Checkout/>} />
                    <Route path='/cart' element={<CartDetails/>} />
+                   <Route path='/wishlist' element={<Wishlist/>} />
           </Route>
       </Routes>
       <Routes>
