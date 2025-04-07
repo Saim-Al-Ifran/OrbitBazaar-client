@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const cartItems = [
     {
       id: 1,
@@ -81,7 +83,10 @@ const cartItems = [
               <span>Payable Total</span>
               <span>{total} TK.</span>
             </div>
-            <button className="btn btn-neutral w-full">Proceed to Checkout</button>
+            <Link to="/checkout">
+               <button className="btn btn-neutral w-full">Proceed to Checkout</button>
+            </Link>
+            
           </div>
         </div>
       </>
