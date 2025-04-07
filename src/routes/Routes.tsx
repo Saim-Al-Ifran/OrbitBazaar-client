@@ -19,6 +19,8 @@ import Contact from '../pages/Contact/Contact';
 import AboutUs from '../pages/AboutUs/AboutUs';
 import ProductDetails from '../pages/ProductDetails/ProductDetails';
 import Checkout from '../pages/CheckOut/CheckOut';
+import CartDetails from '../pages/Cart/CartDetails';
+ 
 
 
 // Main Router Component
@@ -33,6 +35,7 @@ const AppRouter = () => {
                    <Route path='/contact' element={<Contact/>} />
                    <Route path='/about' element={<AboutUs/>} />
                    <Route path='/checkout' element={<Checkout/>} />
+                   <Route path='/cart' element={<CartDetails/>} />
           </Route>
       </Routes>
       <Routes>
