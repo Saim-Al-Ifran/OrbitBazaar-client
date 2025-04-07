@@ -1,8 +1,24 @@
-
-
-
+import React, { useState } from "react";
 
 const ContactUs = () => {
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    message: "",
+  });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Form submitted:", formData);
+  };
+
   return (
     <div className="min-h-screen bg-base-200 py-10 px-4 md:px-20">
       <div className="text-center mb-10">
@@ -44,32 +60,47 @@ const ContactUs = () => {
         </div>
 
         {/* Contact Form */}
-        <form className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="form-control">
-          <label className="block text-sm font-semibold mb-1">Full Name</label>
-              <input
-                type="text"
-                placeholder="John Doe"
-                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-              />
+            <label className="block text-sm font-semibold mb-1">Full Name</label>
+            <input
+              type="text"
+              name="fullName"
+              placeholder="John Doe"
+              value={formData.fullName}
+              onChange={handleChange}
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+              required
+            />
           </div>
           <div className="form-control">
-          <label className="block text-sm font-semibold mb-1">Email</label>
-              <input
-                type="email"
-                placeholder="you@example.com"
-                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-              />
+            <label className="block text-sm font-semibold mb-1">Email</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="you@example.com"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+              required
+            />
           </div>
           <div className="form-control">
-          <label className="block text-sm font-semibold mb-1">Message</label>
-              <textarea
-                rows={4}
-                placeholder="Your message here..."
-                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-              ></textarea>
+            <label className="block text-sm font-semibold mb-1">Message</label>
+            <textarea
+              name="message"
+              rows={4}
+              placeholder="Your message here..."
+              value={formData.message}
+              onChange={handleChange}
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+              required
+            ></textarea>
           </div>
-          <button type="submit" className="btn bg-black text-white hover:bg-gray-800 w-full">
+          <button
+            type="submit"
+            className="btn bg-black text-white hover:bg-gray-800 w-full"
+          >
             <i className="fas fa-paper-plane mr-2 text-white"></i>
             Send Message
           </button>
