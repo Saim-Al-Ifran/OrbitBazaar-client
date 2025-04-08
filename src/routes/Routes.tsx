@@ -23,6 +23,7 @@ import CartDetails from '../pages/Cart/CartDetails';
 import Wishlist from '../pages/WishList/WishList';
 import UserLogin from '../pages/Auth/UserLogin';
 import UserRegister from '../pages/Auth/UserRegister';
+import AdminLogin from '../pages/Auth/AdminLogin';
  
 
 
@@ -41,6 +42,7 @@ const AppRouter = () => {
                    <Route path='/cart' element={<CartDetails/>} />
                    <Route path='/wishlist' element={<Wishlist/>} />
           </Route>
+          <Route path='/admin/login' element={<AdminLogin/>}/>
           <Route path='/login' element={<UserLogin/>}/>
           <Route path='/register' element={<UserRegister/>}/>
       </Routes>
