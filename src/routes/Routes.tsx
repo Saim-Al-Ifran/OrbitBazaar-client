@@ -21,6 +21,7 @@ import ProductDetails from '../pages/ProductDetails/ProductDetails';
 import Checkout from '../pages/CheckOut/CheckOut';
 import CartDetails from '../pages/Cart/CartDetails';
 import Wishlist from '../pages/WishList/WishList';
+import UserLogin from '../pages/Auth/UserLogin';
  
 
 
@@ -39,6 +40,7 @@ const AppRouter = () => {
                    <Route path='/cart' element={<CartDetails/>} />
                    <Route path='/wishlist' element={<Wishlist/>} />
           </Route>
+          <Route path='/login' element={<UserLogin/>}/>
       </Routes>
       <Routes>
         <Route path="/dashboard" element={<Dashboard />}>
@@ -70,6 +72,7 @@ const AppRouter = () => {
  
         </Route>
       </Routes>
+   
     </Router>
   );
 };
