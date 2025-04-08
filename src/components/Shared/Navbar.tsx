@@ -76,7 +76,7 @@ const Navbar = () => {
                   {/* See All Results Button */}
                 <div className="border-t border-gray-200">
                   <NavLink
-                    to="/search-results"
+                    to="/search"
                     className="block text-center py-2 text-white bg-gray-800 rounded-b-lg hover:bg-gray-700 transition-all duration-300 font-semibold"
                     onClick={() => setShowDropdown(false)}
                   >

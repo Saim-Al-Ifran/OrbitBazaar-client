@@ -24,6 +24,7 @@ import Wishlist from '../pages/WishList/WishList';
 import UserLogin from '../pages/Auth/UserLogin';
 import UserRegister from '../pages/Auth/UserRegister';
 import AdminLogin from '../pages/Auth/AdminLogin';
+import SearchPage from '../pages/Search/SearchPage';
  
 
 
@@ -41,6 +42,7 @@ const AppRouter = () => {
                    <Route path='/checkout' element={<Checkout/>} />
                    <Route path='/cart' element={<CartDetails/>} />
                    <Route path='/wishlist' element={<Wishlist/>} />
+                   <Route path='/search' element={<SearchPage/>} />
           </Route>
           <Route path='/admin/login' element={<AdminLogin/>}/>
           <Route path='/login' element={<UserLogin/>}/>
