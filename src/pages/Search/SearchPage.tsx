@@ -54,23 +54,32 @@ const products = [
     price: 429.99,
     image: "https://techcrunch.com/wp-content/uploads/2024/11/CMC_8144.jpg?w=1024",
     description: "Premium laptop with high performance.",
-  },
-  {
-    id: 6,
-    name: "MacBook Pro",
-    category: "Laptop",
-    price: 429.99,
-    image: "https://techcrunch.com/wp-content/uploads/2024/11/CMC_8144.jpg?w=1024",
-    description: "Premium laptop with high performance.",
+    ratings: { average: 4.5, count: 40 },
   },
 ];
 
 const SearchPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortOption, setSortOption] = useState("");
   const itemsPerPage = 6;
 
-  const totalPages = Math.ceil(products.length / itemsPerPage);
-  const currentItems = products.slice(
+  const sortedProducts = [...products].sort((a, b) => {
+    switch (sortOption) {
+      case "low-to-high":
+        return a.price - b.price;
+      case "high-to-low":
+        return b.price - a.price;
+      case "rating-high-to-low":
+        return (b.ratings?.average || 0) - (a.ratings?.average || 0);
+      case "rating-low-to-high":
+        return (a.ratings?.average || 0) - (b.ratings?.average || 0);
+      default:
+        return 0;
+    }
+  });
+
+  const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
+  const currentItems = sortedProducts.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -79,61 +88,87 @@ const SearchPage = () => {
     <>
       <div className="bg-gray-100 py-3 rounded-md pl-[20px] overflow-x-hidden lg:pl-[60px] mt-4 mb-4">
         <div className="flex items-center space-x-2 text-sm text-gray-600 m-auto">
-            <Link to="/" className="flex items-center gap-1 text-[16px] hover:text-blue-600 transition-colors ">
+          <Link
+            to="/"
+            className="flex items-center gap-1 text-[16px] hover:text-blue-600 transition-colors "
+          >
             <i className="fas fa-home"></i>
             <span>Home</span>
-            </Link>
-        
-            <span className="text-gray-400 ">/</span>
-            <span className="flex items-center gap-1   font-medium text-[16px]">
+          </Link>
+          <span className="text-gray-400">/</span>
+          <span className="flex items-center gap-1 font-medium text-[16px]">
             <i className="fa-solid fa-magnifying-glass"></i>
             <span>Search</span>
-            </span>
-            <span className="text-gray-400 ">/</span>
-            <span className="flex items-center gap-1 text-[#47698F] font-medium text-[16px]">
- 
-                <span>Mobiles</span>
-           </span>
+          </span>
+          <span className="text-gray-400">/</span>
+          <span className="flex items-center gap-1 text-[#47698F] font-medium text-[16px]">
+            <span>Mobiles</span>
+          </span>
         </div>
       </div>
-        <div className="max-w-7xl mx-auto px-4 py-8">
-    
-        {/* Title */}
-        <h1 className="text-2xl font-bold mb-4">Search Results "Mobiles"</h1>
+
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+          <h1 className="text-2xl font-bold">Search Results "Mobiles"</h1>
+
+           {/* Sorting Dropdown */}
+          <div className="flex items-center gap-2">
+            <label htmlFor="sort" className="text-sm font-medium text-gray-700 flex items-center gap-1">
+              <i className="fa-solid fa-arrow-down-wide-short text-gray-600" />
+              Sort by:
+            </label>
+            <select
+              id="sort"
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value)}
+              className="select select-bordered"
+            >
+              <option value="">Default</option>
+              <option value="low-to-high">Price: Low to High</option>
+              <option value="high-to-low">Price: High to Low</option>
+              <option value="rating-high-to-low">Rating: High to Low</option>
+              <option value="rating-low-to-high">Rating: Low to High</option>
+            </select>
+        </div>
+
+        </div>
 
         {/* Results */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
-            {currentItems.map((item) => (
+          {currentItems.map((item) => (
             <div
-                key={item.id}
-                className="border rounded-lg p-4 hover:shadow transition"
+              key={item.id}
+              className="border rounded-lg p-4 hover:shadow transition"
             >
-                <img
+              <img
                 src={item.image}
                 alt={item.name}
                 className="w-full h-40 object-cover mb-3 rounded"
-                />
-                <h3 className="text-lg font-semibold">{item.name}</h3>
-                <p className="text-sm text-gray-500 mb-1">{item.category}</p>
-                <p className="text-gray-700 mb-2">{item.description}</p>
-                <div className="flex  items-center mb-2">
-                      <span className="text-[#FE9428] text-lg">
-                      <i className="fa-solid fa-star"></i> {item.ratings?.average ?? "N/A"}
-                      </span>
-                      <span className="text-gray-500 text-sm ml-2">({item.ratings?.count} reviews)</span>
-                </div>
-                <p className="text-black font-bold text-lg mb-3">₹{item.price}</p>
-                
-                <Link to={`/shop/${item.id}`}>
-                    <button className="w-full bg-black text-white py-2 rounded hover:bg-gray-900 transition">
-                    View Product
-                    </button>
-                </Link>
+              />
+              <h3 className="text-lg font-semibold">{item.name}</h3>
+              <p className="text-sm text-gray-500 mb-1">{item.category}</p>
+              <p className="text-gray-700 mb-2">{item.description}</p>
+              <div className="flex items-center mb-2">
+                <span className="text-[#FE9428] text-lg">
+                  <i className="fa-solid fa-star"></i> {item.ratings?.average ?? "N/A"}
+                </span>
+                <span className="text-gray-500 text-sm ml-2">
+                  ({item.ratings?.count ?? 0} reviews)
+                </span>
+              </div>
+              <p className="text-black font-bold text-lg mb-3">₹{item.price}</p>
 
+              <Link to={`/shop/${item.id}`}>
+                <button className="w-full bg-black text-white py-2 rounded hover:bg-gray-900 transition">
+                  View Product
+                </button>
+              </Link>
             </div>
-            ))}
+          ))}
         </div>
 
+        {/* Pagination */}
         <div className="flex justify-between items-center mt-6 border-t pt-4">
           <div className="flex items-center gap-2">
             <button
@@ -164,10 +199,10 @@ const SearchPage = () => {
             Page {currentPage} of {totalPages} ({products.length} products)
           </p>
         </div>
-        </div>
+      </div>
     </>
-
   );
 };
 
 export default SearchPage;
+

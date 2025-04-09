@@ -10,12 +10,63 @@ const Shop = () => {
 
   useEffect(() => {
     setProducts([
-      { id: 1, name: "iPhone X", category: "Mobile", price: 60000, image: "https://i5.walmartimages.com/seo/Pre-Owned-Apple-iPhone-X-64GB-Factory-Unlocked-Smartphone-Refurbished-Good_9b5ec8b2-9665-463b-adc5-64829ba72da6.1b496e5a8fcee76fdad69bae12b54745.jpeg", description: "A high-end mobile phone with excellent performance." },
-      { id: 2, name: "Samsung S20", category: "Mobile", price: 50000, image: "https://via.placeholder.com/150", description: "Powerful smartphone with a stunning display." },
-      { id: 3, name: "Dell Series", category: "Laptop", price: 6000, image: "https://via.placeholder.com/150", description: "Reliable laptop for work and entertainment." },
-      { id: 4, name: "Nokia 420", category: "Mobile", price: 125.99, image: "https://via.placeholder.com/150", description: "Classic Nokia phone with long battery life." },
-      { id: 5, name: "Mac PC", category: "Computer", price: 40000, image: "https://via.placeholder.com/150", description: "A powerful desktop for professionals." },
-      { id: 6, name: "MacBook Pro", category: "Laptop", price: 429.99, image: "https://via.placeholder.com/150", description: "Premium laptop with high performance." },
+      {
+        id: 1,
+        name: "iPhone X",
+        category: "Mobile",
+        price: 60000,
+        image:
+          "https://i5.walmartimages.com/seo/Pre-Owned-Apple-iPhone-X-64GB-Factory-Unlocked-Smartphone-Refurbished-Good_9b5ec8b2-9665-463b-adc5-64829ba72da6.1b496e5a8fcee76fdad69bae12b54745.jpeg",
+        description: "A high-end mobile phone with excellent performance.",
+      },
+      {
+        id: 2,
+        name: "Samsung S20",
+        category: "Mobile",
+        price: 50000,
+        image: "https://mobilebuzzbd.com/wp-content/uploads/2023/07/Galaxy-S20-FE.jpg",
+        description: "Powerful smartphone with a stunning display.",
+      },
+      {
+        id: 3,
+        name: "Dell Series",
+        category: "Laptop",
+        price: 6000,
+        image: "https://mcsolution.com.bd/wp-content/uploads/2021/10/dell-inspiron-15-3000-price-in-bangladesh-1200x900.webp",
+        description: "Reliable laptop for work and entertainment.",
+      },
+      {
+        id: 4,
+        name: "Nokia 420",
+        category: "Mobile",
+        price: 125.99,
+        image: "https://i.gadgets360cdn.com/products/large/1551025118_635_Nokia_4.2_db.jpg",
+        description: "Classic Nokia phone with long battery life.",
+      },
+      {
+        id: 5,
+        name: "Mac PC",
+        category: "Computer",
+        price: 40000,
+        image: "https://i.blogs.es/022fbb/new_2017_imac_two_side/1366_2000.jpg",
+        description: "A powerful desktop for professionals.",
+      },
+      {
+        id: 6,
+        name: "MacBook Pro",
+        category: "Laptop",
+        price: 429.99,
+        image: "https://techcrunch.com/wp-content/uploads/2024/11/CMC_8144.jpg?w=1024",
+        description: "Premium laptop with high performance.",
+      },
+      {
+        id: 6,
+        name: "MacBook Pro",
+        category: "Laptop",
+        price: 429.99,
+        image: "https://techcrunch.com/wp-content/uploads/2024/11/CMC_8144.jpg?w=1024",
+        description: "Premium laptop with high performance.",
+      },
     ]);
   }, []);
 
