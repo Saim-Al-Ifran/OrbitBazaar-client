@@ -81,6 +81,18 @@ const LoginForm = () => {
             <FcGoogle className="text-lg" />
             <span className="font-medium">Continue with Google</span>
           </button>
+          <Link to="/seller_login">
+            <button
+                type="button"
+                className="w-full mt-3 bg-white border border-black text-black font-medium py-3 px-4 rounded-lg hover:bg-gray-100 hover:border-[#F1EFEC] transition duration-300"
+            >
+
+                <i className="fa-solid fa-user-tie mr-4"></i>
+                Become a Seller
+            </button>
+          </Link>
+
+
         </div>
 
         <p className="mt-4 text-center text-sm">
