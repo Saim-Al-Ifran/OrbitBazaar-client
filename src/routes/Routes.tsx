@@ -25,6 +25,7 @@ import UserLogin from '../pages/Auth/UserLogin';
 import UserRegister from '../pages/Auth/UserRegister';
 import AdminLogin from '../pages/Auth/AdminLogin';
 import SearchPage from '../pages/Search/SearchPage';
+import SellerRegister from '../pages/Auth/SellerRegister';
  
 
 
@@ -43,10 +44,12 @@ const AppRouter = () => {
                    <Route path='/cart' element={<CartDetails/>} />
                    <Route path='/wishlist' element={<Wishlist/>} />
                    <Route path='/search' element={<SearchPage/>} />
+               
           </Route>
           <Route path='/admin/login' element={<AdminLogin/>}/>
           <Route path='/login' element={<UserLogin/>}/>
           <Route path='/register' element={<UserRegister/>}/>
+          <Route path='/seller_login' element={<SellerRegister/>} />
       </Routes>
       <Routes>
         <Route path="/dashboard" element={<Dashboard />}>
