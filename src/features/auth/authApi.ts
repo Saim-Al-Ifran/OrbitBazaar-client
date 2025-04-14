@@ -4,6 +4,8 @@ import { apiSlice } from "../api/apiSlice";
 import {
   LoginInput,
   LoginResponse,
+  RefreshTokenInput,
+  RefreshTokenResponse,
   UserRegisterInput,
   UserRegisterResponse,
   VendorRegisterInput,
@@ -56,7 +58,7 @@ const authApi = apiSlice.injectEndpoints({
       async onQueryStarted(_arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
-          handleLoginSuccess(result.data, dispatch);
+          handleLoginSuccess(result?.data, dispatch);
         } catch (err) {
           console.error('Login failed:', err);
         }
@@ -71,11 +73,26 @@ const authApi = apiSlice.injectEndpoints({
       async onQueryStarted(_arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
-          handleLoginSuccess(result.data, dispatch);
+          handleLoginSuccess(result?.data, dispatch);
         } catch (err) {
           console.error('Login failed:', err);
         }
       },
+    }),
+    refreshToken: builder.mutation<RefreshTokenResponse , RefreshTokenInput>({
+      query: (credentials) => ({
+        url: "/auth/refresh-token",
+        method: "POST",
+        body: credentials,
+      }),
+      async onQueryStarted(_arg, { queryFulfilled, dispatch }) {
+        try {
+          const result = await queryFulfilled;
+           handleLoginSuccess(result?.data, dispatch);
+        } catch (err) {
+          console.error('Refresh token failed:', err);
+        }
+      }
     }),
     userRegister: builder.mutation<UserRegisterResponse, UserRegisterInput>({
       query: (credentials) => ({
@@ -99,4 +116,5 @@ export const {
   useUserRegisterMutation,
   useUserLoginMutation,
   useVendorRegisterMutation,
+  useRefreshTokenMutation
 } = authApi;

@@ -29,3 +29,7 @@ export interface  LoginResponse {
 export interface UserRegisterResponse extends LoginResponse{}; 
 export interface VendorRegisterResponse extends LoginResponse{};
 export interface VendorRegisterInput extends UserRegisterInput {};
+export interface RefreshTokenInput {
+   refreshToken: string;
+}
+export interface RefreshTokenResponse extends LoginResponse{};
