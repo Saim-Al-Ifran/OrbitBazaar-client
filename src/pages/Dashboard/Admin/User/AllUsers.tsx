@@ -10,11 +10,19 @@ import {
   CardFooter,
 } from "@material-tailwind/react";
 import UserTable from "../../../../components/Admin/User/UserTable";
-import { useState } from "react";
+import {   useEffect, useState } from "react";
+import { useGetUserQuery } from "../../../../features/auth/authApi";
 
 const AllUsers = () => {
   const [sortOrder, setSortOrder] = useState("asc");
-
+  const {data:users,refetch} = useGetUserQuery(
+    {},
+  );
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+  console.log(users);
+ 
   return (
     <Card className="h-full w-full" {...(undefined as any)}>
       <CardHeader floated={false} shadow={false} className="rounded-none" {...(undefined as any)}>

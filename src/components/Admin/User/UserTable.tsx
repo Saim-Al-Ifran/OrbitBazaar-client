@@ -63,7 +63,7 @@ const UserTable = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [role, setRole] = useState("");
   const [status, setStatus] = useState("");
-  console.log(selectedUser);
+ 
   interface User {
     img: string;
     name: string;

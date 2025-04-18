@@ -29,7 +29,7 @@ const AdminLogin = () => {
     if (isSuccess) {
       toast.success("Login success");
       reset(); 
-      navigate("/dashboard");
+      navigate("/dashboard/admin");
     }
     console.log(isError);
     
