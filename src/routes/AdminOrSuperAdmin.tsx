@@ -7,10 +7,11 @@ interface AdminOrSuperAdminProps {
 }
 
 const AdminOrSuperAdmin: React.FC<AdminOrSuperAdminProps> = ({ children }) => {
-  const { isSuperAdmin, isAdmin, isUser, isLoading, isError } = useUserRoles();
+  const { isSuperAdmin, isAdmin, isUser, isVendor, isLoading, isError } = useUserRoles();
   const location = useLocation();
 
-  if (isLoading) {
+  // Show loading spinner
+  if (isLoading || (!isUser && !isAdmin && !isSuperAdmin && !isVendor && !isError)) {
     return (
       <div className="flex justify-center items-center h-screen">
         <span className="loading loading-dots loading-lg"></span>
@@ -18,15 +19,23 @@ const AdminOrSuperAdmin: React.FC<AdminOrSuperAdminProps> = ({ children }) => {
     );
   }
 
-  if (isError || isUser) {
-    return <Navigate to="/" replace />;
+  // Error or unknown role
+  if (isError) {
+    return <Navigate to="/admin/login" state={{ from: location }} replace />;
   }
 
+  // Redirect users and vendors to their dashboards
+  if (isUser) return <Navigate to="/" replace />;
+  if (isVendor) return <Navigate to="/dashboard/vendor" replace />;
+
+  // Allow admins and super admins to access protected content
   if (isAdmin || isSuperAdmin) {
     return <>{children}</>;
   }
 
+  // Fallback: redirect to admin login
   return <Navigate to="/admin/login" state={{ from: location }} replace />;
 };
 
 export default AdminOrSuperAdmin;
+

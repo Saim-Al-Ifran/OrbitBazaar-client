@@ -10,6 +10,7 @@ const VendorRoute: React.FC<VendorPrivateRouteProps> = ({ children }) => {
   const { isVendor, isAdmin, isSuperAdmin, isUser, isLoading, isError } = useUserRoles();
   const location = useLocation();
 
+  // ⏳ Loading state
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -18,14 +19,14 @@ const VendorRoute: React.FC<VendorPrivateRouteProps> = ({ children }) => {
     );
   }
 
-  // ❌ Block all other roles and if token is invalid
-  if (isError || isUser || isAdmin || isSuperAdmin) {
-    return <Navigate to="/" replace />;
-  }
-
   // ✅ Vendor is allowed
   if (isVendor) {
     return <>{children}</>;
+  }
+
+  // ❌ Block other roles or error
+  if (isUser || isAdmin || isSuperAdmin || isError) {
+    return <Navigate to="/" replace />;
   }
 
   // 🔒 Not authenticated or unknown case
