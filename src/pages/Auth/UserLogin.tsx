@@ -1,24 +1,46 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { ILoginFormInput } from "../../types/types";
+import { useUserLoginMutation } from "../../features/auth/authApi";
+import { useGetUserProfileQuery } from "../../features/user/userApi";
+import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 const LoginForm = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<ILoginFormInput>();
 
-  // Handle input change
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  const [login, { isLoading, isSuccess }] = useUserLoginMutation();
+  const navigate = useNavigate();
+  const { data: userData, refetch: refetchUser } = useGetUserProfileQuery({});
+  const role = userData?.data?.role;
+  // Redirect based on user role
+  useEffect(() => {
+ 
+    if (isSuccess && role) {
+      if (role === "user") navigate("/");
+      else if (role === "vendor") navigate("/dashboard/vendor");
+    }
+  }, [role, navigate, isSuccess]);
 
-  // Handle form submit
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Login submitted", formData);
-    // TODO: send formData to your backend or handle login logic
+  const onSubmit = async (data: ILoginFormInput) => {
+    try {
+      await login({
+        email: data.email,
+        password: data.password,
+      }).unwrap();
+
+      await refetchUser();
+      toast.success("Login success");
+      reset();
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Login failed");
+    }
   };
 
   return (
@@ -26,38 +48,57 @@ const LoginForm = () => {
       <div className="w-full max-w-md bg-white border border-gray-200 shadow-md rounded-xl p-8">
         <h2 className="text-2xl font-bold text-center mb-6">Login to Your Account</h2>
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
           <div>
-            <label className="block text-sm font-medium mb-1">Email Address</label>
+            <label htmlFor="email" className="block text-sm font-medium mb-1">
+              Email Address
+            </label>
             <input
+              id="email"
               type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
+              autoComplete="email"
               placeholder="you@example.com"
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-              required
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                errors.email
+                  ? "border-red-500 focus:ring-red-500 placeholder-red-400"
+                  : "border-gray-300 focus:ring-black bg-gray-100 text-gray-800"
+              }`}
+              {...register("email", { required: "Email is required" })}
             />
+            {errors.email && (
+              <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
+            )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Password</label>
+            <label htmlFor="password" className="block text-sm font-medium mb-1">
+              Password
+            </label>
             <input
+              id="password"
               type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
+              autoComplete="current-password"
               placeholder="••••••••"
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-              required
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                errors.password
+                  ? "border-red-500 focus:ring-red-500 placeholder-red-400"
+                  : "border-gray-300 focus:ring-black bg-gray-100 text-gray-800"
+              }`}
+              {...register("password", { required: "Password is required" })}
             />
+            {errors.password && (
+              <p className="text-sm text-red-500 mt-1">{errors.password.message}</p>
+            )}
           </div>
 
           <button
             type="submit"
-            className="w-full bg-black hover:bg-gray-900 text-white font-semibold py-3 px-4 rounded-lg transition duration-300"
+            disabled={isLoading}
+            className={`w-full bg-black text-white font-semibold py-3 px-4 rounded-lg transition duration-300 ${
+              isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-900"
+            }`}
           >
-            Login
+            {isLoading ? "Logging in..." : "Login"}
           </button>
         </form>
 
@@ -66,9 +107,7 @@ const LoginForm = () => {
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300"></div>
             </div>
-            <div className="relative bg-white px-2 text-sm text-gray-500">
-              OR
-            </div>
+            <div className="relative bg-white px-2 text-sm text-gray-500">OR</div>
           </div>
 
           <button
@@ -81,18 +120,16 @@ const LoginForm = () => {
             <FcGoogle className="text-lg" />
             <span className="font-medium">Continue with Google</span>
           </button>
+
           <Link to="/seller_login">
             <button
-                type="button"
-                className="w-full mt-3 bg-white border border-black text-black font-medium py-3 px-4 rounded-lg hover:bg-gray-100 hover:border-[#F1EFEC] transition duration-300"
+              type="button"
+              className="w-full mt-3 bg-white border border-black text-black font-medium py-3 px-4 rounded-lg hover:bg-gray-100 hover:border-[#F1EFEC] transition duration-300"
             >
-
-                <i className="fa-solid fa-user-tie mr-4"></i>
-                Become a Seller
+              <i className="fa-solid fa-user-tie mr-4"></i>
+              Become a Seller
             </button>
           </Link>
-
-
         </div>
 
         <p className="mt-4 text-center text-sm">

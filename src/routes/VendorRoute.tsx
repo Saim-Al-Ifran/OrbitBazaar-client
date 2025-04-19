@@ -29,7 +29,7 @@ const VendorRoute: React.FC<VendorPrivateRouteProps> = ({ children }) => {
   }
 
   // 🔒 Not authenticated or unknown case
-  return <Navigate to="/vendor/login" state={{ from: location }} replace />;
+  return <Navigate to="/login" state={{ from: location }} replace />;
 };
 
 export default VendorRoute;

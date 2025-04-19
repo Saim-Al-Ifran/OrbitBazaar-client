@@ -21,7 +21,7 @@ const TopNavbar: React.FC<NavbarProps> = ({ toggleSidebar, isSidebarOpen }) => {
           <div className="flex items-center gap-2 text-white">
             <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-white">
               <img
-                src={avatar}
+                src={user?.image ||avatar}
                 alt="User Avatar"
                 className="w-full h-full object-cover"
               />
