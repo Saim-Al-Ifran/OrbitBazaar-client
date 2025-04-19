@@ -9,8 +9,7 @@ interface AdminOrSuperAdminProps {
 const AdminOrSuperAdmin: React.FC<AdminOrSuperAdminProps> = ({ children }) => {
   const { isSuperAdmin, isAdmin, isUser, isLoading, isError } = useUserRoles();
   const location = useLocation();
-
-  if (isLoading) {
+  if (isLoading || (!isUser && !isAdmin && !isSuperAdmin && !isError)) {
     return (
       <div className="flex justify-center items-center h-screen">
         <span className="loading loading-dots loading-lg"></span>

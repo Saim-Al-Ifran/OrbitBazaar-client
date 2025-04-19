@@ -6,7 +6,7 @@ interface VendorPrivateRouteProps {
   children: ReactNode;
 }
 
-const VendorPrivateRoute: React.FC<VendorPrivateRouteProps> = ({ children }) => {
+const VendorRoute: React.FC<VendorPrivateRouteProps> = ({ children }) => {
   const { isVendor, isAdmin, isSuperAdmin, isUser, isLoading, isError } = useUserRoles();
   const location = useLocation();
 
@@ -32,4 +32,4 @@ const VendorPrivateRoute: React.FC<VendorPrivateRouteProps> = ({ children }) => 
   return <Navigate to="/vendor/login" state={{ from: location }} replace />;
 };
 
-export default VendorPrivateRoute;
+export default VendorRoute;

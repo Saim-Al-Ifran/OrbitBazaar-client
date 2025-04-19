@@ -26,7 +26,8 @@ import UserRegister from '../pages/Auth/UserRegister';
 import AdminLogin from '../pages/Auth/AdminLogin';
 import SearchPage from '../pages/Search/SearchPage';
 import SellerRegister from '../pages/Auth/SellerRegister';
- 
+import AdminOrSuperAdmin from './AdminOrSuperAdmin';
+import VendorRoute from './VendorRoute';
 
 
 // Main Router Component
@@ -46,40 +47,135 @@ const AppRouter = () => {
                    <Route path='/search' element={<SearchPage/>} />
                
           </Route>
+          {/* Auth Routes */}
           <Route path='/admin/login' element={<AdminLogin/>}/>
           <Route path='/login' element={<UserLogin/>}/>
           <Route path='/register' element={<UserRegister/>}/>
           <Route path='/seller_login' element={<SellerRegister/>} />
       </Routes>
       <Routes>
+
+         {/* Dashboard Routes */}
         <Route path="/dashboard" element={<Dashboard />}>
-          <Route path="admin" element={<h1>Hello admin</h1>} />
-          
-          {/* Users route with a simple button */}
-          <Route 
-            path="users" 
+          {/* Admin & Super Admin Protected Routes */}
+          <Route
+            index
             element={
-               <AllUsers/>
+              <AdminOrSuperAdmin>
+                <h1>Hello Admin</h1>
+              </AdminOrSuperAdmin>
             }
           />
-          
-          <Route path="sellers" element={<AllSellers/>} />
-          <Route path="sellers/request" element={<AllSellerRequest/>} />
-          <Route path="sellers/deactive" element={<AllDeactiveSellers/>} />
-          <Route path="categories" element={<AllCategories/>} />
-          <Route path="category/add" element={<AddCategory/>} />
-          <Route path="category/edit/:id" element={<EditCategory/>} />
+          <Route
+            path="users"
+            element={
+              <AdminOrSuperAdmin>
+                <AllUsers />
+              </AdminOrSuperAdmin>
+            }
+          />
+          <Route
+            path="sellers"
+            element={
+              <AdminOrSuperAdmin>
+                <AllSellers />
+              </AdminOrSuperAdmin>
+            }
+          />
+          <Route
+            path="sellers/request"
+            element={
+              <AdminOrSuperAdmin>
+                <AllSellerRequest />
+              </AdminOrSuperAdmin>
+            }
+          />
+          <Route
+            path="sellers/deactive"
+            element={
+              <AdminOrSuperAdmin>
+                <AllDeactiveSellers />
+              </AdminOrSuperAdmin>
+            }
+          />
+          <Route
+            path="categories"
+            element={
+              <AdminOrSuperAdmin>
+                <AllCategories />
+              </AdminOrSuperAdmin>
+            }
+          />
+          <Route
+            path="category/add"
+            element={
+              <AdminOrSuperAdmin>
+                <AddCategory />
+              </AdminOrSuperAdmin>
+            }
+          />
+          <Route
+            path="category/edit/:id"
+            element={
+              <AdminOrSuperAdmin>
+                <EditCategory />
+              </AdminOrSuperAdmin>
+            }
+          />
 
-          {/* vendor routes */}
-          <Route path="vendor/product/add" element={<AddProduct/>} />
-          <Route path="vendor" element={<h1>Welcome to dashboard</h1>} />
-          <Route path="vendor/products" element={<AllProducts/>} />
-          <Route path="vendor/products/edit/:id" element={<EditProduct/>} />
-          <Route path="vendor/reports" element={<AllReports/>} />
-          <Route path="vendor/orders" element={<AllOrders/>} />
+          {/* Vendor Protected Routes */}
+          <Route
+            path="vendor"
+            element={
+              <VendorRoute>
+                <h1>Welcome Vendor</h1>
+              </VendorRoute>
+            }
+          />
+          <Route
+            path="vendor/product/add"
+            element={
+              <VendorRoute>
+                <AddProduct />
+              </VendorRoute>
+            }
+          />
+          <Route
+            path="vendor/products"
+            element={
+              <VendorRoute>
+                <AllProducts />
+              </VendorRoute>
+            }
+          />
+          <Route
+            path="vendor/products/edit/:id"
+            element={
+              <VendorRoute>
+                <EditProduct />
+              </VendorRoute>
+            }
+          />
+          <Route
+            path="vendor/reports"
+            element={
+              <VendorRoute>
+                <AllReports />
+              </VendorRoute>
+            }
+          />
+          <Route
+            path="vendor/orders"
+            element={
+              <VendorRoute>
+                <AllOrders />
+              </VendorRoute>
+            }
+          />
+        </Route>
 
  
-        </Route>
+      
       </Routes>
    
     </Router>

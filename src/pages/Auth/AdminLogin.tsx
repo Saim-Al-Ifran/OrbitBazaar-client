@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { ILoginFormInput } from "../../types/types";
 import { useAdminLoginMutation } from "../../features/auth/authApi";
+import { useGetUserProfileQuery } from "../../features/user/userApi";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -15,28 +16,38 @@ const AdminLogin = () => {
     reset,
   } = useForm<ILoginFormInput>();
 
-  const [adminLogin, { isError, error, isSuccess, isLoading }] = useAdminLoginMutation<any>();
+  const [adminLogin, { isLoading }] = useAdminLoginMutation();
+  const {
+    data: userData,
+    refetch: refetchUser, // 👈 refetch function
+  } = useGetUserProfileQuery({});
 
-  const onSubmit = (data: ILoginFormInput) => {
-    adminLogin({
-      email: data.email,
-      password: data.password,
-    });
- 
-  };
-
+  //Redirect based on user role
   useEffect(() => {
-    if (isSuccess) {
+    const role = userData?.data?.role;
+    if (role === "user") {
+      navigate("/");
+    }
+    if (role === "admin" || role === "super-admin") {
+      navigate("/dashboard");
+    }
+  }, [userData, navigate]);
+
+  const onSubmit = async (data: ILoginFormInput) => {
+    try {
+      await adminLogin({
+        email: data.email,
+        password: data.password,
+      }).unwrap();
+
+      await refetchUser(); 
       toast.success("Login success");
-      reset(); 
-      navigate("/dashboard/admin");
+      reset();
+      navigate("/dashboard");
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Login failed");
     }
-    console.log(isError);
-    
-    if (isError) {
-      toast.error(error?.data?.message); 
-    }
-  }, [isSuccess, isError, error, navigate, reset]);
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-white">
@@ -55,6 +66,7 @@ const AdminLogin = () => {
               } text-gray-800 rounded-lg focus:outline-none focus:ring-2 ${
                 errors.email ? "focus:ring-red-500" : "focus:ring-black"
               }`}
+              disabled={isLoading}
               {...register("email", {
                 required: "Email is required",
                 pattern: {
@@ -79,6 +91,7 @@ const AdminLogin = () => {
               } text-gray-800 rounded-lg focus:outline-none focus:ring-2 ${
                 errors.password ? "focus:ring-red-500" : "focus:ring-black"
               }`}
+              disabled={isLoading}
               {...register("password", {
                 required: "Password is required",
                 minLength: {

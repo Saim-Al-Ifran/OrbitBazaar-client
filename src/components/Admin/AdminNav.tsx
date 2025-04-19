@@ -12,12 +12,11 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
   const toggleSection = (section: string) => {
     setActiveSection(prevSection => (prevSection === section ? null : section));
   };
-  console.log(location.pathname)
   return (
     <nav className="space-y-2">
       {/* Dashboard */}
       <NavLink
-        to="/dashboard/admin"
+        to="/dashboard"
         onClick={() => setActive("Dashboard")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
           active === "Dashboard" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
