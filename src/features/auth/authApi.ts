@@ -92,6 +92,21 @@ const authApi = apiSlice.injectEndpoints({
         body: credentials,
       }),
     }),
+    logout: builder.mutation({
+      query: () => ({
+        url: "/auth/logout",
+        method: "POST",
+      }),
+      async onQueryStarted(_arg, { queryFulfilled, dispatch }) {
+        try {
+          await queryFulfilled;
+          localStorage.removeItem("user");
+          dispatch(userLoggedIn({ user: null }));
+        } catch (err) {
+          console.error('Logout failed:', err);
+        }
+      }
+    })
   }),
  
     
@@ -103,5 +118,6 @@ export const {
   useUserLoginMutation,
   useVendorRegisterMutation,
   useRefreshTokenMutation,
+  useLogoutMutation,
   useGetUserQuery
 } = authApi;
