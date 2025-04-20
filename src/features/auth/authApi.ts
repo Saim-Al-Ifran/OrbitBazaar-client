@@ -87,7 +87,7 @@ const authApi = apiSlice.injectEndpoints({
     }),
     vendorRegister: builder.mutation<VendorRegisterResponse, VendorRegisterInput>({
       query: (credentials) => ({
-        url: "/vendors/register",
+        url: "/auth/vendors/register",
         method: "POST",
         body: credentials,
       }),

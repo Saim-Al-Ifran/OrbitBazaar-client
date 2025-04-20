@@ -46,7 +46,7 @@ const UserRegister = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-white">
-      <div className="w-full max-w-md bg-white border border-gray-300 shadow-lg rounded-xl p-8">
+      <div className="w-full max-w-lg bg-white border border-gray-200 shadow-md rounded-xl p-8">
         <h2 className="text-2xl font-bold text-center mb-6">Create an Account</h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
