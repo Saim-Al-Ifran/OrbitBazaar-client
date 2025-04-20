@@ -2,6 +2,13 @@ export interface ILoginFormInput {
   email: string;
   password: string;
 }
+export interface IRegistrationFormInput {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  phoneNumber: string;
+}
 
 export interface User {
     id: string;

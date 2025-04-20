@@ -5,7 +5,7 @@ export interface  LoginInput {
   }
 
 export interface UserRegisterInput {
-    username: string;
+    name: string;
     email: string;
     password: string;
     phoneNumber: string;

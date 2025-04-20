@@ -1,25 +1,47 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { IRegistrationFormInput } from "../../types/types";
+import { useRegisterUserMutation } from "../../features/auth/authApi";
+import toast from "react-hot-toast";
+import { useGetUserProfileQuery } from "../../features/user/userApi";
+import { useEffect } from "react";
+ 
+ 
 
 const UserRegister = () => {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<IRegistrationFormInput>();
+  
+  const [registerUser, {isLoading, isSuccess }] = useRegisterUserMutation();
+  const { data: userData, refetch: refetchUser } = useGetUserProfileQuery({});
+  const role = userData?.data?.role;
+  const navigate = useNavigate();
+  // Redirect based on user role
+  useEffect(() => {
+      if (isSuccess && role) {
+        if (role === "user") navigate("/");
+      }
+  }, [role, navigate, isSuccess]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    // Optional: Add form validation here
-    console.log("User Registered:", formData);
-
-    // TODO: Send data to backend or Firebase/Auth logic
+  //handle form submission
+  const onSubmit = async(data: IRegistrationFormInput) => {
+    try {
+    await  registerUser({
+        name: data.username,
+        email: data.email,
+        password: data.password,
+        phoneNumber: data.phoneNumber, 
+      }).unwrap();
+      await refetchUser();
+      toast.success("Registration successful!");
+    }
+    catch (err: any) {
+      toast.error(err?.data?.message || "Login failed");
+    }
   };
 
   return (
@@ -27,64 +49,120 @@ const UserRegister = () => {
       <div className="w-full max-w-md bg-white border border-gray-300 shadow-lg rounded-xl p-8">
         <h2 className="text-2xl font-bold text-center mb-6">Create an Account</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* Full Name */}
           <div>
             <label className="block text-sm font-medium mb-1">Full Name</label>
             <input
               type="text"
-              name="fullName"
               placeholder="John Doe"
-              value={formData.fullName}
-              onChange={handleChange}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-              required
+              {...register("username", { required: "Full Name is required" })}
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                errors.username
+                  ? "border-red-500 focus:ring-red-500 placeholder-red-400"
+                  : "border-gray-300 focus:ring-black bg-gray-100 text-gray-800"
+              }`}
             />
+            {errors.username&& (
+              <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>
+            )}
+          </div>
+          {/* Phone number */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Phone Number</label>
+            <input
+              type="text"
+              placeholder="+1234567890"
+              {...register("phoneNumber", { required: "Full Name is required" })}
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                errors.phoneNumber
+                  ? "border-red-500 focus:ring-red-500 placeholder-red-400"
+                  : "border-gray-300 focus:ring-black bg-gray-100 text-gray-800"
+              }`}
+            />
+            {errors.phoneNumber&& (
+              <p className="text-red-500 text-sm mt-1">{errors.phoneNumber.message}</p>
+            )}
           </div>
 
+          {/* Email */}
           <div>
             <label className="block text-sm font-medium mb-1">Email Address</label>
             <input
               type="email"
-              name="email"
               placeholder="you@example.com"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-              required
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^\S+@\S+\.\S+$/,
+                  message: "Enter a valid email address",
+                },
+              })}
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                errors.email
+                  ? "border-red-500 focus:ring-red-500 placeholder-red-400"
+                  : "border-gray-300 focus:ring-black bg-gray-100 text-gray-800"
+              }`}
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+            )}
           </div>
 
+          {/* Password */}
           <div>
             <label className="block text-sm font-medium mb-1">Password</label>
             <input
               type="password"
-              name="password"
               placeholder="••••••••"
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-              required
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
+              })}
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                errors.password
+                  ? "border-red-500 focus:ring-red-500 placeholder-red-400"
+                  : "border-gray-300 focus:ring-black bg-gray-100 text-gray-800"
+              }`}
             />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+            )}
           </div>
 
+          {/* Confirm Password */}
           <div>
             <label className="block text-sm font-medium mb-1">Confirm Password</label>
             <input
               type="password"
-              name="confirmPassword"
               placeholder="••••••••"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-              required
+              {...register("confirmPassword", {
+                required: "Please confirm your password",
+                validate: (value) =>
+                  value === watch("password") || "Passwords do not match",
+              })}
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+                errors.confirmPassword
+                  ? "border-red-500 focus:ring-red-500 placeholder-red-400"
+                  : "border-gray-300 focus:ring-black bg-gray-100 text-gray-800"
+              }`}
             />
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>
+            )}
           </div>
 
           <button
             type="submit"
-            className="w-full bg-black hover:bg-gray-900 text-white font-semibold py-3 px-4 rounded-lg transition duration-300"
+            disabled={isLoading}
+            className={`w-full bg-black text-white font-semibold py-3 px-4 rounded-lg transition duration-300 ${
+              isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-900"
+            }`}
           >
-            Register
+            {isLoading ? "Registering..." : "Register"}
           </button>
         </form>
 
