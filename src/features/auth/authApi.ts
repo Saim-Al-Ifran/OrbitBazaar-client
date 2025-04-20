@@ -57,6 +57,21 @@ const authApi = apiSlice.injectEndpoints({
         }
       },
     }),
+    firebaseUserLogin: builder.mutation<LoginResponse, LoginInput>({
+      query: (credentials) => ({
+        url: "/auth/firebase_login",
+        method: "POST",
+        body: credentials,
+      }),
+      async onQueryStarted(_arg, { queryFulfilled, dispatch }) {
+        try {
+          const result = await queryFulfilled;
+          handleLoginSuccess(result?.data, dispatch);
+        } catch (err) {
+          console.error('Login failed:', err);
+        }
+      }
+    }),
     refreshToken: builder.mutation<RefreshTokenResponse , RefreshTokenInput>({
       query: (credentials) => ({
         url: "/auth/refresh-token",
