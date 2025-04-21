@@ -33,3 +33,6 @@ export interface RefreshTokenInput {
    refreshToken: string;
 }
 export interface RefreshTokenResponse extends LoginResponse{};
+export interface FirebaseLoginInput{
+    idToken: string;
+};

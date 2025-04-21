@@ -2,6 +2,7 @@
 import { BaseQueryFn, EndpointBuilder } from "@reduxjs/toolkit/query";
 import { apiSlice } from "../api/apiSlice";
 import {
+  FirebaseLoginInput,
   LoginInput,
   LoginResponse,
   RefreshTokenInput,
@@ -19,6 +20,8 @@ import { userLoggedIn} from './authSlice';
  
 const handleLoginSuccess = (result: LoginResponse, dispatch: Dispatch) => {
   const { user } = result?.data;
+  console.log("Login result:", result);
+  
   if (user) {
     localStorage.setItem("user", JSON.stringify(user));
      dispatch(userLoggedIn({ user }));
@@ -57,7 +60,7 @@ const authApi = apiSlice.injectEndpoints({
         }
       },
     }),
-    firebaseUserLogin: builder.mutation<LoginResponse, LoginInput>({
+    firebaseUserLogin: builder.mutation<LoginResponse, FirebaseLoginInput>({
       query: (credentials) => ({
         url: "/auth/firebase_login",
         method: "POST",
@@ -134,5 +137,6 @@ export const {
   useRefreshTokenMutation,
   useLogoutMutation,
   useGetUserQuery,
-  useRegisterUserMutation
+  useRegisterUserMutation,
+  useFirebaseUserLoginMutation,
 } = authApi;
