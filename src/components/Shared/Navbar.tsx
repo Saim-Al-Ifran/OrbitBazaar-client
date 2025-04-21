@@ -1,6 +1,8 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { HeartIcon, ShoppingCartIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
+import { useGetUserProfileQuery } from "../../features/user/userApi";
+import UserProfile from "../Profile/UserProfile";
 
 const products = [
   { id: 1, name: "GIGABYTE X870 EAGLE WIFI7", price: "Up Coming", image: "https://m.media-amazon.com/images/I/616+VhWBhOL._AC_SL1500_.jpg", stock: "Available" },
@@ -15,6 +17,9 @@ const Navbar = () => {
   const [searchResults, setSearchResults] = useState<{ id: number; name: string; price: string; image: string; stock: string; }[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const location = useLocation();
+  const {data,isLoading} = useGetUserProfileQuery({}); // Fetch user profile data
+  console.log(data);  
+  
   useEffect(() => {
     if (searchQuery.trim() === "") {
       setShowDropdown(false);
@@ -142,14 +147,20 @@ const Navbar = () => {
             </span>
 
           </NavLink>
-
+           {/* User Profile Icon */}
+            {isLoading ? (
+              <div className="animate-pulse bg-gray-300 rounded-full h-8 w-8"></div>
+            ) : data ? (
+              <UserProfile />
+            ) : (
+              <NavLink
+                to="/login"
+                className="btn btn-primary btn-sm bg-black border-black text-white hover:bg-gray-800"
+              >Login</NavLink>
+            )}
+            
           {/* Login Button */}
-          <NavLink
-            to="/login"
-            className="btn btn-primary btn-sm bg-black border-black text-white hover:bg-gray-800"
-          >
-            Login
-          </NavLink>
+
 
           {/* Mobile Menu */}
           <div className="md:hidden dropdown dropdown-end">
