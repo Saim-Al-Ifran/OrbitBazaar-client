@@ -5,20 +5,24 @@ import useUserRoles from "../../hooks/auth/useCheckRoles";
 import { useLogoutMutation } from "../../features/auth/authApi";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-
+import { apiSlice } from '../../features/api/apiSlice';
+import { useDispatch } from 'react-redux';
+import UserNav from "../User/UserNav";
 interface SidebarProps {
   isActive: boolean;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isActive }) => {
   const [active, setActive] = useState("");
-  const { isAdmin, isVendor, isLoading } = useUserRoles();
+  const dispatch = useDispatch();
+  const { isAdmin, isVendor,isUser, isLoading } = useUserRoles();
   const [logout, { isLoading: logoutLoading, isSuccess: logoutSuccess }] = useLogoutMutation();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-      await logout({});
+      await logout({}).unwrap();
+      dispatch(apiSlice.util.resetApiState());
     } catch (error) {
       console.error("Logout failed:", error);
     }
@@ -52,6 +56,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isActive }) => {
           <>
             {isAdmin && <AdminNav active={active} setActive={setActive} />}
             {isVendor && <VendorNav active={active} setActive={setActive} />}
+            {isUser && <UserNav active={active} setActive={setActive} />}
           </>
         )}
       </div>

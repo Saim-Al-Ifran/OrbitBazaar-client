@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
-interface VendorNavProps {
+interface UserNavProps  {
   active: string;
   setActive: (section: string) => void;
 }
 
-const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
+const UserNav: React.FC<UserNavProps> = ({ active, setActive }) => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const location = useLocation();
   const toggleSection = (section: string) => {
@@ -17,7 +17,7 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
     <nav className="space-y-2">
       {/* Dashboard */}
       <NavLink
-        to="/dashboard/vendor"
+        to="/dashboard/user/home"
         onClick={() => setActive("Dashboard")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
           active === "Dashboard" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
@@ -25,7 +25,7 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
       >
         <div className="flex items-center gap-3">
           <i className="fas fa-tachometer-alt"></i>
-          <span>Vendor Dashboard</span>
+          <span>User Dashboard</span>
         </div>
       </NavLink>
 
@@ -34,47 +34,22 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
         <a
           href="#"
           onClick={() => {
-            setActive("Products");
-            toggleSection("Products");
+            setActive("Profile");
+            toggleSection("Profile");
           }}
           className={`py-2 px-4 flex items-center justify-between rounded-md ${
-            active === "Products" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+            active === "Profile" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
           }`}
         >
           <div className="flex items-center gap-3">
             <i className="fa-solid fa-bag-shopping"></i>
-            <span>Products</span>
+            <span>Profile</span>
           </div>
-          <i className={`fa-solid fa-chevron-down transition-transform duration-300 ${
-            activeSection === "Products" ? "rotate-180" : ""
-          }`}></i>
+ 
         </a>
 
         {/* Dropdown Items */}
-        {activeSection === "Products" && (
-          <div className="ml-6 space-y-2">
-            <NavLink
-              to="/dashboard/vendor/products"
-              onClick={() => setActive("AllProducts")}
-              className={`py-1 px-4 flex items-center gap-3 rounded-md ${
-                location.pathname === "/dashboard/vendor/products" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
-              }`}
-            >
-              <i className="fa-solid fa-list"></i>
-              <span>All Products</span>
-            </NavLink>
-            <NavLink
-              to="/dashboard/vendor/product/add"
-              onClick={() => setActive("AddProduct")}
-              className={`py-1 px-4 flex items-center gap-3 rounded-md ${
-                location.pathname === "/dashboard/vendor/product/add"  ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
-              }`}
-            >
-              <i className="fa-solid fa-plus"></i>
-              <span>Add Product</span>
-            </NavLink>
-          </div>
-        )}
+   
       </div>
 
       {/* Reports */}
@@ -101,11 +76,11 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
       >
         <div className="flex items-center gap-3">
           <i className="fa-solid fa-cart-plus"></i>
-          <span>Manage Orders</span>
+          <span>Orders</span>
         </div>
       </NavLink>
     </nav>
   );
 };
 
-export default VendorNav;
+export default UserNav;

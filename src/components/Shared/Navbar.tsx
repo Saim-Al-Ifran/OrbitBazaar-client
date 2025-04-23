@@ -17,8 +17,11 @@ const Navbar = () => {
   const [searchResults, setSearchResults] = useState<{ id: number; name: string; price: string; image: string; stock: string; }[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const location = useLocation();
-  const {data,isLoading} = useGetUserProfileQuery({}); // Fetch user profile data
-  console.log(data);  
+  
+  const {data} = useGetUserProfileQuery({}); // Fetch user profile data
+  
+  
+   // Extract user data from the response
   
   useEffect(() => {
     if (searchQuery.trim() === "") {
@@ -148,9 +151,7 @@ const Navbar = () => {
 
           </NavLink>
            {/* User Profile Icon */}
-            {isLoading ? (
-              <div className="animate-pulse bg-gray-300 rounded-full h-8 w-8"></div>
-            ) : data ? (
+            { data ? (
               <UserProfile />
             ) : (
               <NavLink

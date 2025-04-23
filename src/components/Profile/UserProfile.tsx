@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import toast from 'react-hot-toast';
-
+import avatar from '../../assets/userAvatar.png'
 import { useGetUserProfileQuery } from '../../features/user/userApi';
 import { useLogoutMutation } from '../../features/auth/authApi';
 import { apiSlice } from '../../features/api/apiSlice';
@@ -10,16 +10,14 @@ import { apiSlice } from '../../features/api/apiSlice';
 const UserProfile: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { data: userData, isLoading } = useGetUserProfileQuery({});
+  const {data:userData} = useGetUserProfileQuery({}); // Fetch user profile data
   const [logout, { isSuccess: logoutSuccess }] = useLogoutMutation();
 
   const { name, image, email } = userData?.data || {};
 
   const handleLogout = async () => {
- 
-
-    try {
-      await logout({});
+     try {
+      await logout({}).unwrap();
       dispatch(apiSlice.util.resetApiState());
     } catch (error) {
       console.error("Logout failed:", error);
@@ -34,10 +32,8 @@ const UserProfile: React.FC = () => {
   }, [logoutSuccess, navigate]);
 
   return (
-    <>
-      {isLoading ? (
-        <div className="w-10 h-10 rounded-full bg-gray-300 animate-pulse"></div>
-      ) : !userData ? (
+    <> 
+      { !userData ? (
         <h1>No user data available</h1>
       ) : (
         <div className="dropdown dropdown-end">
@@ -49,7 +45,7 @@ const UserProfile: React.FC = () => {
             <div className="w-10 rounded-full border border-gray-300">
               <img
                 alt="User avatar"
-                src={image || '/default-avatar.png'}
+                src={image || avatar}
                 referrerPolicy="no-referrer"
               />
             </div>
@@ -66,7 +62,7 @@ const UserProfile: React.FC = () => {
             </li>
             <li>
               <Link
-                to="/account"
+                to="/dashboard/user/home"
                 className="flex items-center gap-2 p-2 rounded hover:bg-gray-100 transition text-sm font-medium"
               >
               <i className="fa-solid fa-chart-line"></i>
@@ -74,16 +70,6 @@ const UserProfile: React.FC = () => {
               </Link>
             </li>
  
-            {!userData?.data?.firebaseUID && (
-              <li>
-                <Link
-                  to="/change-password"
-                  className="hover:bg-gray-100 p-2 rounded transition"
-                >
-                  Change Password
-                </Link>
-              </li>
-            )}
             <li>
               <button
                 onClick={handleLogout}
