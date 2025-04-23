@@ -8,19 +8,24 @@ interface AdminNavProps {
 
 const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
-  const location = useLocation()
+  const location = useLocation();
+
   const toggleSection = (section: string) => {
     setActiveSection(prevSection => (prevSection === section ? null : section));
   };
+
+  const activeBg = "bg-[#374151] text-white";
+  const hoverBg = "hover:bg-[#374151]";
+  const baseItemClasses = "py-2 px-4 flex items-center justify-between rounded-md";
+  const baseSubItemClasses = "py-1 px-4 flex items-center gap-3 rounded-md";
+
   return (
     <nav className="space-y-2">
       {/* Dashboard */}
       <NavLink
         to="/dashboard"
         onClick={() => setActive("Dashboard")}
-        className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Dashboard" ? "bg-[#374151] text-white" : "hover:bg-[#374151]"
-        }`}
+        className={`${baseItemClasses} ${active === "Dashboard" ? activeBg : hoverBg}`}
       >
         <div className="flex items-center gap-3">
           <i className="fas fa-tachometer-alt"></i>
@@ -32,24 +37,19 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
       <NavLink
         to="/dashboard/users"
         onClick={() => setActive("Users")}
-        className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Users" ? "bg-[#374151] text-white" : "hover:bg-[#374151]"
-        }`}
+        className={`${baseItemClasses} ${active === "Users" ? activeBg : hoverBg}`}
       >
         <div className="flex items-center gap-3">
           <i className="fas fa-users"></i>
           <span>Users</span>
         </div>
       </NavLink>
- 
 
       {/* Sellers */}
       <NavLink
         to="/dashboard/sellers"
         onClick={() => setActive("Sellers")}
-        className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Sellers" ? "bg-[#374151] text-white" : "hover:bg-[#374151]"
-        }`}
+        className={`${baseItemClasses} ${active === "Sellers" ? activeBg : hoverBg}`}
       >
         <div className="flex items-center gap-3">
           <i className="fa-solid fa-user-tie"></i>
@@ -61,9 +61,7 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
       <NavLink
         to="/dashboard/sellers/request"
         onClick={() => setActive("Sellers-request")}
-        className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Sellers-request" ? "bg-[#374151] text-white" : "hover:bg-[#374151]"
-        }`}
+        className={`${baseItemClasses} ${active === "Sellers-request" ? activeBg : hoverBg}`}
       >
         <div className="flex items-center gap-3">
           <i className="fa-solid fa-users-gear"></i>
@@ -75,9 +73,7 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
       <NavLink
         to="/dashboard/sellers/deactive"
         onClick={() => setActive("Deactive-sellers")}
-        className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Deactive-sellers" ? "bg-[#374151] text-white" : "hover:bg-[#374151]"
-        }`}
+        className={`${baseItemClasses} ${active === "Deactive-sellers" ? activeBg : hoverBg}`}
       >
         <div className="flex items-center gap-3">
           <i className="fa-solid fa-user-minus"></i>
@@ -85,14 +81,12 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
         </div>
       </NavLink>
 
-      {/* Categories with Dropdown */}
+      {/* Category Dropdown */}
       <div>
         <a
           href="#"
           onClick={() => toggleSection("Categories")}
-          className={`py-2 px-4 flex items-center justify-between rounded-md ${
-            active === "Categories" ? "bg-[#374151] text-white" : "hover:bg-[#374151]"
-          }`}
+          className={`${baseItemClasses} ${active === "Categories" ? activeBg : hoverBg}`}
         >
           <div className="flex items-center gap-3">
             <i className="fa-solid fa-layer-group"></i>
@@ -103,14 +97,13 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
           }`}></i>
         </a>
 
-        {/* Dropdown Items */}
         {activeSection === "Categories" && (
           <div className="ml-6 space-y-2">
             <NavLink
               to="/dashboard/categories"
               onClick={() => setActive("AllCategories")}
-              className={`py-1 px-4 flex items-center gap-3 rounded-md ${
-                location.pathname === "/dashboard/categories" ? "bg-[#374151] text-white" : "hover:bg-[#374151]"
+              className={`${baseSubItemClasses} ${
+                location.pathname === "/dashboard/categories" ? activeBg : hoverBg
               }`}
             >
               <i className="fa-solid fa-list"></i>
@@ -119,8 +112,8 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
             <NavLink
               to="/dashboard/category/add"
               onClick={() => setActive("AddCategory")}
-              className={`py-1 px-4 flex items-center gap-3 rounded-md ${
-                location.pathname === "/dashboard/category/add" ? "bg-[#374151] text-white" : "hover:bg-[#374151]"
+              className={`${baseSubItemClasses} ${
+                location.pathname === "/dashboard/category/add" ? activeBg : hoverBg
               }`}
             >
               <i className="fa-solid fa-plus"></i>
@@ -132,5 +125,4 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
     </nav>
   );
 };
-
 export default AdminNav;

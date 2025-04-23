@@ -13,6 +13,10 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
     setActiveSection(prevSection => (prevSection === section ? null : section));
   };
 
+  // Color constant
+  const activeColor = "bg-[#789DBC]";
+  const hoverColor = "hover:bg-[#789DBC]";
+
   return (
     <nav className="space-y-2">
       {/* Dashboard */}
@@ -20,7 +24,7 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
         to="/dashboard/vendor"
         onClick={() => setActive("Dashboard")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Dashboard" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+          active === "Dashboard" ? `${activeColor} text-white` : `${hoverColor}`
         }`}
       >
         <div className="flex items-center gap-3">
@@ -38,16 +42,18 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
             toggleSection("Products");
           }}
           className={`py-2 px-4 flex items-center justify-between rounded-md ${
-            active === "Products" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+            active === "Products" ? `${activeColor} text-white` : `${hoverColor}`
           }`}
         >
           <div className="flex items-center gap-3">
             <i className="fa-solid fa-bag-shopping"></i>
             <span>Products</span>
           </div>
-          <i className={`fa-solid fa-chevron-down transition-transform duration-300 ${
-            activeSection === "Products" ? "rotate-180" : ""
-          }`}></i>
+          <i
+            className={`fa-solid fa-chevron-down transition-transform duration-300 ${
+              activeSection === "Products" ? "rotate-180" : ""
+            }`}
+          ></i>
         </a>
 
         {/* Dropdown Items */}
@@ -57,7 +63,7 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
               to="/dashboard/vendor/products"
               onClick={() => setActive("AllProducts")}
               className={`py-1 px-4 flex items-center gap-3 rounded-md ${
-                location.pathname === "/dashboard/vendor/products" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+                location.pathname === "/dashboard/vendor/products" ? `${activeColor} text-white` : `${hoverColor}`
               }`}
             >
               <i className="fa-solid fa-list"></i>
@@ -67,7 +73,7 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
               to="/dashboard/vendor/product/add"
               onClick={() => setActive("AddProduct")}
               className={`py-1 px-4 flex items-center gap-3 rounded-md ${
-                location.pathname === "/dashboard/vendor/product/add"  ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+                location.pathname === "/dashboard/vendor/product/add" ? `${activeColor} text-white` : `${hoverColor}`
               }`}
             >
               <i className="fa-solid fa-plus"></i>
@@ -82,7 +88,7 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
         to="/dashboard/vendor/reports"
         onClick={() => setActive("Reports")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Reports" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+          active === "Reports" ? `${activeColor} text-white` : `${hoverColor}`
         }`}
       >
         <div className="flex items-center gap-3">
@@ -96,7 +102,7 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
         to="/dashboard/vendor/orders"
         onClick={() => setActive("Orders")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Orders" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+          active === "Orders" ? `${activeColor} text-white` : `${hoverColor}`
         }`}
       >
         <div className="flex items-center gap-3">

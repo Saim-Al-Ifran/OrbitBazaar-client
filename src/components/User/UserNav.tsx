@@ -7,6 +7,9 @@ interface UserNavProps {
 }
 
 const UserNav: React.FC<UserNavProps> = ({ active, setActive }) => {
+  const activeBgColor = "bg-[#53d0d580]";
+  const hoverBgColor = "hover:bg-[#53d0d580]";
+
   return (
     <nav className="space-y-2">
       {/* User Dashboard */}
@@ -14,7 +17,7 @@ const UserNav: React.FC<UserNavProps> = ({ active, setActive }) => {
         to="/dashboard/user/home"
         onClick={() => setActive("Dashboard")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Dashboard" ? "bg-[#53d0d580] text-white" : "hover:bg-[#53d0d580]"
+          active === "Dashboard" ? `${activeBgColor} text-white` : `${hoverBgColor}`
         }`}
       >
         <div className="flex items-center gap-3">
@@ -28,7 +31,7 @@ const UserNav: React.FC<UserNavProps> = ({ active, setActive }) => {
         to="/dashboard/user/profile"
         onClick={() => setActive("Profile")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Profile" ? "bg-[#53d0d580] text-white" : "hover:bg-[#53d0d580]"
+          active === "Profile" ? `${activeBgColor} text-white` : `${hoverBgColor}`
         }`}
       >
         <div className="flex items-center gap-3">
@@ -42,7 +45,7 @@ const UserNav: React.FC<UserNavProps> = ({ active, setActive }) => {
         to="/dashboard/user/reports"
         onClick={() => setActive("Reports")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Reports" ? "bg-[#53d0d580] text-white" : "hover:bg-[#53d0d580]"
+          active === "Reports" ? `${activeBgColor} text-white` : `${hoverBgColor}`
         }`}
       >
         <div className="flex items-center gap-3">
@@ -56,7 +59,7 @@ const UserNav: React.FC<UserNavProps> = ({ active, setActive }) => {
         to="/dashboard/user/orders"
         onClick={() => setActive("Orders")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Orders" ? "bg-[#53d0d580] text-white" : "hover:bg-[#53d0d580]"
+          active === "Orders" ? `${activeBgColor} text-white` : `${hoverBgColor}`
         }`}
       >
         <div className="flex items-center gap-3">
@@ -65,33 +68,33 @@ const UserNav: React.FC<UserNavProps> = ({ active, setActive }) => {
         </div>
       </NavLink>
 
-     {/* Reviews & ratings */}
+      {/* Reviews & Ratings */}
       <NavLink
         to="/dashboard/user/reviews"
         onClick={() => setActive("Reviews")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
-            active === "Reviews" ? "bg-[#53d0d580] text-white" : "hover:bg-[#53d0d580]"
+          active === "Reviews" ? `${activeBgColor} text-white` : `${hoverBgColor}`
         }`}
-        >
+      >
         <div className="flex items-center gap-3">
-         <i className="fa-solid fa-list-check"></i>
-            <span>Ratings & Reviews</span>
+          <i className="fa-solid fa-list-check"></i>
+          <span>Ratings & Reviews</span>
         </div>
-     </NavLink>
-     {/* change password */}
-        <NavLink
-            to="/dashboard/user/change-password"
-            onClick={() => setActive("Change Password")}
-            className={`py-2 px-4 flex items-center justify-between rounded-md ${
-            active === "Change Password" ? "bg-[#53d0d580] text-white" : "hover:bg-[#53d0d580]"
-            }`}
-        >
-            <div className="flex items-center gap-3">
-            <i className="fa-solid fa-key"></i>
-            <span>Change Password</span>
-            </div>
-        </NavLink>
+      </NavLink>
 
+      {/* Change Password */}
+      <NavLink
+        to="/dashboard/user/change-password"
+        onClick={() => setActive("Change Password")}
+        className={`py-2 px-4 flex items-center justify-between rounded-md ${
+          active === "Change Password" ? `${activeBgColor} text-white` : `${hoverBgColor}`
+        }`}
+      >
+        <div className="flex items-center gap-3">
+          <i className="fa-solid fa-key"></i>
+          <span>Change Password</span>
+        </div>
+      </NavLink>
     </nav>
   );
 };
