@@ -1,21 +1,15 @@
-import React, { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import React from "react";
+import { NavLink } from "react-router-dom";
 
-interface UserNavProps  {
+interface UserNavProps {
   active: string;
   setActive: (section: string) => void;
 }
 
 const UserNav: React.FC<UserNavProps> = ({ active, setActive }) => {
-  const [activeSection, setActiveSection] = useState<string | null>(null);
-  const location = useLocation();
-  const toggleSection = (section: string) => {
-    setActiveSection(prevSection => (prevSection === section ? null : section));
-  };
-
   return (
     <nav className="space-y-2">
-      {/* Dashboard */}
+      {/* User Dashboard */}
       <NavLink
         to="/dashboard/user/home"
         onClick={() => setActive("Dashboard")}
@@ -29,32 +23,23 @@ const UserNav: React.FC<UserNavProps> = ({ active, setActive }) => {
         </div>
       </NavLink>
 
-      {/* Products with Dropdown */}
-      <div>
-        <a
-          href="#"
-          onClick={() => {
-            setActive("Profile");
-            toggleSection("Profile");
-          }}
-          className={`py-2 px-4 flex items-center justify-between rounded-md ${
-            active === "Profile" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
-          }`}
-        >
-          <div className="flex items-center gap-3">
-            <i className="fa-solid fa-bag-shopping"></i>
-            <span>Profile</span>
-          </div>
- 
-        </a>
-
-        {/* Dropdown Items */}
-   
-      </div>
+      {/* Profile */}
+      <NavLink
+        to="/dashboard/user/profile"
+        onClick={() => setActive("Profile")}
+        className={`py-2 px-4 flex items-center justify-between rounded-md ${
+          active === "Profile" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+        }`}
+      >
+        <div className="flex items-center gap-3">
+          <i className="fa-solid fa-user"></i>
+          <span>Profile</span>
+        </div>
+      </NavLink>
 
       {/* Reports */}
       <NavLink
-        to="/dashboard/vendor/reports"
+        to="/dashboard/user/reports"
         onClick={() => setActive("Reports")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
           active === "Reports" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
@@ -62,13 +47,13 @@ const UserNav: React.FC<UserNavProps> = ({ active, setActive }) => {
       >
         <div className="flex items-center gap-3">
           <i className="fa-solid fa-flag"></i>
-          <span>Reports</span>
+          <span>My Reports</span>
         </div>
       </NavLink>
 
       {/* Orders */}
       <NavLink
-        to="/dashboard/vendor/orders"
+        to="/dashboard/user/orders"
         onClick={() => setActive("Orders")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
           active === "Orders" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
@@ -76,9 +61,37 @@ const UserNav: React.FC<UserNavProps> = ({ active, setActive }) => {
       >
         <div className="flex items-center gap-3">
           <i className="fa-solid fa-cart-plus"></i>
-          <span>Orders</span>
+          <span>My Orders</span>
         </div>
       </NavLink>
+
+     {/* Reviews & ratings */}
+      <NavLink
+        to="/dashboard/user/reviews"
+        onClick={() => setActive("Reviews")}
+        className={`py-2 px-4 flex items-center justify-between rounded-md ${
+            active === "Reviews" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+        }`}
+        >
+        <div className="flex items-center gap-3">
+         <i className="fa-solid fa-list-check"></i>
+            <span>Ratings & Reviews</span>
+        </div>
+     </NavLink>
+     {/* change password */}
+        <NavLink
+            to="/dashboard/user/change-password"
+            onClick={() => setActive("Change Password")}
+            className={`py-2 px-4 flex items-center justify-between rounded-md ${
+            active === "Change Password" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+            }`}
+        >
+            <div className="flex items-center gap-3">
+            <i className="fa-solid fa-key"></i>
+            <span>Change Password</span>
+            </div>
+        </NavLink>
+
     </nav>
   );
 };
