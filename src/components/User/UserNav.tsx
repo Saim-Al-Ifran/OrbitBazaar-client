@@ -14,7 +14,7 @@ const UserNav: React.FC<UserNavProps> = ({ active, setActive }) => {
         to="/dashboard/user/home"
         onClick={() => setActive("Dashboard")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Dashboard" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+          active === "Dashboard" ? "bg-[#53d0d580] text-white" : "hover:bg-[#53d0d580]"
         }`}
       >
         <div className="flex items-center gap-3">
@@ -28,7 +28,7 @@ const UserNav: React.FC<UserNavProps> = ({ active, setActive }) => {
         to="/dashboard/user/profile"
         onClick={() => setActive("Profile")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Profile" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+          active === "Profile" ? "bg-[#53d0d580] text-white" : "hover:bg-[#53d0d580]"
         }`}
       >
         <div className="flex items-center gap-3">
@@ -42,7 +42,7 @@ const UserNav: React.FC<UserNavProps> = ({ active, setActive }) => {
         to="/dashboard/user/reports"
         onClick={() => setActive("Reports")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Reports" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+          active === "Reports" ? "bg-[#53d0d580] text-white" : "hover:bg-[#53d0d580]"
         }`}
       >
         <div className="flex items-center gap-3">
@@ -56,7 +56,7 @@ const UserNav: React.FC<UserNavProps> = ({ active, setActive }) => {
         to="/dashboard/user/orders"
         onClick={() => setActive("Orders")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Orders" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+          active === "Orders" ? "bg-[#53d0d580] text-white" : "hover:bg-[#53d0d580]"
         }`}
       >
         <div className="flex items-center gap-3">
@@ -70,7 +70,7 @@ const UserNav: React.FC<UserNavProps> = ({ active, setActive }) => {
         to="/dashboard/user/reviews"
         onClick={() => setActive("Reviews")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
-            active === "Reviews" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+            active === "Reviews" ? "bg-[#53d0d580] text-white" : "hover:bg-[#53d0d580]"
         }`}
         >
         <div className="flex items-center gap-3">
@@ -83,7 +83,7 @@ const UserNav: React.FC<UserNavProps> = ({ active, setActive }) => {
             to="/dashboard/user/change-password"
             onClick={() => setActive("Change Password")}
             className={`py-2 px-4 flex items-center justify-between rounded-md ${
-            active === "Change Password" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+            active === "Change Password" ? "bg-[#53d0d580] text-white" : "hover:bg-[#53d0d580]"
             }`}
         >
             <div className="flex items-center gap-3">

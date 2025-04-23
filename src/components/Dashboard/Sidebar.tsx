@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import AdminNav from "../Admin/AdminNav";
 import VendorNav from "../Vendor/VendorNav";
+import UserNav from "../User/UserNav";
 import useUserRoles from "../../hooks/auth/useCheckRoles";
 import { useLogoutMutation } from "../../features/auth/authApi";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { apiSlice } from '../../features/api/apiSlice';
-import { useDispatch } from 'react-redux';
-import UserNav from "../User/UserNav";
+import { apiSlice } from "../../features/api/apiSlice";
+import { useDispatch } from "react-redux";
+
 interface SidebarProps {
   isActive: boolean;
 }
@@ -15,7 +16,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isActive }) => {
   const [active, setActive] = useState("");
   const dispatch = useDispatch();
-  const { isAdmin, isVendor,isUser, isLoading } = useUserRoles();
+  const { isAdmin, isVendor, isUser, isLoading } = useUserRoles();
   const [logout, { isLoading: logoutLoading, isSuccess: logoutSuccess }] = useLogoutMutation();
   const navigate = useNavigate();
 
@@ -28,7 +29,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isActive }) => {
     }
   };
 
-  // Redirect to login on successful logout
   useEffect(() => {
     if (logoutSuccess) {
       toast.success("Logout successful!");
@@ -36,9 +36,29 @@ const Sidebar: React.FC<SidebarProps> = ({ isActive }) => {
     }
   }, [logoutSuccess, navigate]);
 
+  // Role-based background color for sidebar
+  let roleBasedBgColor = "bg-[#384B70]"; // default
+  // Role-based logout button colors
+  let logoutBg = "bg-[#789DBC]";
+  let logoutHover = "hover:bg-[#7AB2D3]";
+
+  if (isUser) {
+    roleBasedBgColor = "bg-[#275A5C]";
+    logoutBg = "bg-[#53d0d580]";
+    logoutHover = "hover:bg-[#00dae380]";
+  } else if (isVendor) {
+    roleBasedBgColor = "bg-[#384B70]";
+    logoutBg = "bg-[#789DBC]";
+    logoutHover = "hover:bg-[#7AB2D3]";
+  } else if (isAdmin) {
+    roleBasedBgColor = "bg-[#1F2937]";
+    logoutBg = "bg-[#374151]";
+    logoutHover = "hover:bg-[#4B5563]";
+  }
+
   return (
     <aside
-      className={`sm:w-64 z-10 w-full bg-[#384B70] text-white py-7 px-2 fixed top-16 h-[calc(100%-64px)] transform transition-transform ${
+      className={`sm:w-64 z-10 w-full ${roleBasedBgColor} text-white py-7 px-2 fixed top-16 h-[calc(100%-64px)] transform transition-transform ${
         isActive ? "translate-x-0" : "-translate-x-full"
       } md:translate-x-0 flex flex-col`}
     >
@@ -46,6 +66,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isActive }) => {
         <div className="text-center text-xl font-semibold">
           {isAdmin && "Admin Dashboard"}
           {isVendor && "Vendor Dashboard"}
+          {isUser && "User Dashboard"}
         </div>
 
         {isLoading ? (
@@ -61,11 +82,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isActive }) => {
         )}
       </div>
 
-      {/* Logout Button (Fixed at Bottom) */}
+      {/* Logout Button */}
       <div className="py-4 px-2">
         <button
           onClick={handleLogout}
-          className="w-full py-2 px-4 hover:bg-[#7AB2D3] bg-[#789DBC] rounded-md flex items-center justify-center"
+          className={`w-full py-2 px-4 ${logoutBg} ${logoutHover} rounded-md flex items-center justify-center`}
           disabled={logoutLoading}
         >
           {logoutLoading ? (

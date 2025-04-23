@@ -1,6 +1,7 @@
 // components/Navbar.tsx
 import React from "react";
 import { useGetUserProfileQuery } from "../../features/user/userApi";
+import useUserRoles from "../../hooks/auth/useCheckRoles";
 import avatar from "../../assets/userAvatar.png";
 
 interface NavbarProps {
@@ -10,18 +11,25 @@ interface NavbarProps {
 
 const TopNavbar: React.FC<NavbarProps> = ({ toggleSidebar, isSidebarOpen }) => {
   const { data: userData, isLoading } = useGetUserProfileQuery({});
+  const { isAdmin, isVendor, isUser } = useUserRoles();
 
   const user = userData?.data;
 
+  // Dynamic background based on role
+  let roleBgColor = "bg-[#5a75aa]"; // default
+  if (isUser) roleBgColor = "bg-[#275A5C]"; // User - Indigo
+  else if (isVendor) roleBgColor = "bg-[#384B70]"; // Vendor - Gray
+  else if (isAdmin) roleBgColor = "bg-[#1F2937]"; // Admin - Dark Gray
+
   return (
-    <nav className="bg-[#5a75aa] p-4 shadow-md flex justify-between items-center fixed top-0 w-full z-50">
-      <div className="text-white text-lg font-bold">Dashboard</div>
+    <nav className={`${roleBgColor} p-4 shadow-md flex justify-between items-center fixed top-0 w-full z-50`}>
+      <div className="text-white text-lg font-bold">OrbitBazaar</div>
       <div className="space-x-4 flex items-center gap-2">
         {!isLoading && user && (
           <div className="flex items-center gap-2 text-white">
             <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-white">
               <img
-                src={user?.image ||avatar}
+                src={user?.image || avatar}
                 alt="User Avatar"
                 className="w-full h-full object-cover"
               />

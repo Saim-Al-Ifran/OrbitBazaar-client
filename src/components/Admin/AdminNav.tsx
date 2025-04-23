@@ -19,7 +19,7 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
         to="/dashboard"
         onClick={() => setActive("Dashboard")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Dashboard" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+          active === "Dashboard" ? "bg-[#374151] text-white" : "hover:bg-[#374151]"
         }`}
       >
         <div className="flex items-center gap-3">
@@ -33,7 +33,7 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
         to="/dashboard/users"
         onClick={() => setActive("Users")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Users" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+          active === "Users" ? "bg-[#374151] text-white" : "hover:bg-[#374151]"
         }`}
       >
         <div className="flex items-center gap-3">
@@ -48,7 +48,7 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
         to="/dashboard/sellers"
         onClick={() => setActive("Sellers")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Sellers" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+          active === "Sellers" ? "bg-[#374151] text-white" : "hover:bg-[#374151]"
         }`}
       >
         <div className="flex items-center gap-3">
@@ -62,7 +62,7 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
         to="/dashboard/sellers/request"
         onClick={() => setActive("Sellers-request")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Sellers-request" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+          active === "Sellers-request" ? "bg-[#374151] text-white" : "hover:bg-[#374151]"
         }`}
       >
         <div className="flex items-center gap-3">
@@ -76,7 +76,7 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
         to="/dashboard/sellers/deactive"
         onClick={() => setActive("Deactive-sellers")}
         className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Deactive-sellers" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+          active === "Deactive-sellers" ? "bg-[#374151] text-white" : "hover:bg-[#374151]"
         }`}
       >
         <div className="flex items-center gap-3">
@@ -91,7 +91,7 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
           href="#"
           onClick={() => toggleSection("Categories")}
           className={`py-2 px-4 flex items-center justify-between rounded-md ${
-            active === "Categories" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+            active === "Categories" ? "bg-[#374151] text-white" : "hover:bg-[#374151]"
           }`}
         >
           <div className="flex items-center gap-3">
@@ -110,7 +110,7 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
               to="/dashboard/categories"
               onClick={() => setActive("AllCategories")}
               className={`py-1 px-4 flex items-center gap-3 rounded-md ${
-                location.pathname === "/dashboard/categories" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+                location.pathname === "/dashboard/categories" ? "bg-[#374151] text-white" : "hover:bg-[#374151]"
               }`}
             >
               <i className="fa-solid fa-list"></i>
@@ -120,7 +120,7 @@ const AdminNav: React.FC<AdminNavProps> = ({ active, setActive }) => {
               to="/dashboard/category/add"
               onClick={() => setActive("AddCategory")}
               className={`py-1 px-4 flex items-center gap-3 rounded-md ${
-                location.pathname === "/dashboard/category/add" ? "bg-[#789DBC] text-white" : "hover:bg-[#789DBC]"
+                location.pathname === "/dashboard/category/add" ? "bg-[#374151] text-white" : "hover:bg-[#374151]"
               }`}
             >
               <i className="fa-solid fa-plus"></i>
