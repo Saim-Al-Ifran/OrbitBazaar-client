@@ -1,49 +1,47 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
-interface VendorNavProps {
-  active: string;
-  setActive: (section: string) => void;
-}
+// Define the navigation items array for Vendor
+const vendorNavItems = [
+  { to: "/dashboard/vendor", label: "Vendor Dashboard", icon: "fas fa-tachometer-alt" },
+  { to: "/dashboard/vendor/reports", label: "Reports", icon: "fa-solid fa-flag" },
+  { to: "/dashboard/vendor/orders", label: "Manage Orders", icon: "fa-solid fa-cart-plus" },
+];
 
-const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
-  const [activeSection, setActiveSection] = useState<string | null>(null);
+const VendorNav: React.FC = () => {
   const location = useLocation();
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+
   const toggleSection = (section: string) => {
-    setActiveSection(prevSection => (prevSection === section ? null : section));
+    setActiveSection((prev) => (prev === section ? null : section));
   };
 
-  // Color constant
-  const activeColor = "bg-[#789DBC]";
-  const hoverColor = "hover:bg-[#789DBC]";
+  const activeBgColor = "bg-[#789DBC]";
+  const hoverBgColor = "hover:bg-[#789DBC]";
 
   return (
     <nav className="space-y-2">
-      {/* Dashboard */}
-      <NavLink
-        to="/dashboard/vendor"
-        onClick={() => setActive("Dashboard")}
-        className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Dashboard" ? `${activeColor} text-white` : `${hoverColor}`
-        }`}
-      >
-        <div className="flex items-center gap-3">
-          <i className="fas fa-tachometer-alt"></i>
-          <span>Vendor Dashboard</span>
-        </div>
-      </NavLink>
+      {/* Regular Nav Items */}
+      {vendorNavItems.map((item) => (
+        <NavLink
+          key={item.to}
+          to={item.to}
+          className={`py-2 px-4 flex items-center justify-between rounded-md ${
+            location.pathname === item.to ? `${activeBgColor} text-white` : `${hoverBgColor}`
+          }`}
+        >
+          <div className="flex items-center gap-3">
+            <i className={item.icon}></i>
+            <span>{item.label}</span>
+          </div>
+        </NavLink>
+      ))}
 
       {/* Products with Dropdown */}
       <div>
-        <a
-          href="#"
-          onClick={() => {
-            setActive("Products");
-            toggleSection("Products");
-          }}
-          className={`py-2 px-4 flex items-center justify-between rounded-md ${
-            active === "Products" ? `${activeColor} text-white` : `${hoverColor}`
-          }`}
+        <button
+          onClick={() => toggleSection("Products")}
+          className={`w-full text-left py-2 px-4 flex items-center justify-between rounded-md  ${hoverBgColor}`}
         >
           <div className="flex items-center gap-3">
             <i className="fa-solid fa-bag-shopping"></i>
@@ -54,16 +52,15 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
               activeSection === "Products" ? "rotate-180" : ""
             }`}
           ></i>
-        </a>
+        </button>
 
         {/* Dropdown Items */}
         {activeSection === "Products" && (
           <div className="ml-6 space-y-2">
             <NavLink
               to="/dashboard/vendor/products"
-              onClick={() => setActive("AllProducts")}
               className={`py-1 px-4 flex items-center gap-3 rounded-md ${
-                location.pathname === "/dashboard/vendor/products" ? `${activeColor} text-white` : `${hoverColor}`
+                location.pathname === "/dashboard/vendor/products" ? `${activeBgColor} text-white` : `${hoverBgColor}`
               }`}
             >
               <i className="fa-solid fa-list"></i>
@@ -71,9 +68,8 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
             </NavLink>
             <NavLink
               to="/dashboard/vendor/product/add"
-              onClick={() => setActive("AddProduct")}
               className={`py-1 px-4 flex items-center gap-3 rounded-md ${
-                location.pathname === "/dashboard/vendor/product/add" ? `${activeColor} text-white` : `${hoverColor}`
+                location.pathname === "/dashboard/vendor/product/add" ? `${activeBgColor} text-white` : `${hoverBgColor}`
               }`}
             >
               <i className="fa-solid fa-plus"></i>
@@ -82,34 +78,6 @@ const VendorNav: React.FC<VendorNavProps> = ({ active, setActive }) => {
           </div>
         )}
       </div>
-
-      {/* Reports */}
-      <NavLink
-        to="/dashboard/vendor/reports"
-        onClick={() => setActive("Reports")}
-        className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Reports" ? `${activeColor} text-white` : `${hoverColor}`
-        }`}
-      >
-        <div className="flex items-center gap-3">
-          <i className="fa-solid fa-flag"></i>
-          <span>Reports</span>
-        </div>
-      </NavLink>
-
-      {/* Orders */}
-      <NavLink
-        to="/dashboard/vendor/orders"
-        onClick={() => setActive("Orders")}
-        className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Orders" ? `${activeColor} text-white` : `${hoverColor}`
-        }`}
-      >
-        <div className="flex items-center gap-3">
-          <i className="fa-solid fa-cart-plus"></i>
-          <span>Manage Orders</span>
-        </div>
-      </NavLink>
     </nav>
   );
 };

@@ -1,100 +1,39 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
-interface UserNavProps {
-  active: string;
-  setActive: (section: string) => void;
-}
+// Define the navigation items array for User
+const navItems = [
+  { to: "/dashboard/user/home", label: "User Dashboard", icon: "fas fa-tachometer-alt" },
+  { to: "/dashboard/user/profile", label: "Profile", icon: "fa-solid fa-user" },
+  { to: "/dashboard/user/reports", label: "My Reports", icon: "fa-solid fa-flag" },
+  { to: "/dashboard/user/orders", label: "My Orders", icon: "fa-solid fa-cart-plus" },
+  { to: "/dashboard/user/reviews", label: "Ratings & Reviews", icon: "fa-solid fa-list-check" },
+  { to: "/dashboard/user/change-password", label: "Change Password", icon: "fa-solid fa-key" },
+];
 
-const UserNav: React.FC<UserNavProps> = ({ active, setActive }) => {
+const UserNav: React.FC = () => {
+  const location = useLocation();
+
+  // Color constants
   const activeBgColor = "bg-[#53d0d580]";
   const hoverBgColor = "hover:bg-[#53d0d580]";
 
   return (
     <nav className="space-y-2">
-      {/* User Dashboard */}
-      <NavLink
-        to="/dashboard/user/home"
-        onClick={() => setActive("Dashboard")}
-        className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Dashboard" ? `${activeBgColor} text-white` : `${hoverBgColor}`
-        }`}
-      >
-        <div className="flex items-center gap-3">
-          <i className="fas fa-tachometer-alt"></i>
-          <span>User Dashboard</span>
-        </div>
-      </NavLink>
-
-      {/* Profile */}
-      <NavLink
-        to="/dashboard/user/profile"
-        onClick={() => setActive("Profile")}
-        className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Profile" ? `${activeBgColor} text-white` : `${hoverBgColor}`
-        }`}
-      >
-        <div className="flex items-center gap-3">
-          <i className="fa-solid fa-user"></i>
-          <span>Profile</span>
-        </div>
-      </NavLink>
-
-      {/* Reports */}
-      <NavLink
-        to="/dashboard/user/reports"
-        onClick={() => setActive("Reports")}
-        className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Reports" ? `${activeBgColor} text-white` : `${hoverBgColor}`
-        }`}
-      >
-        <div className="flex items-center gap-3">
-          <i className="fa-solid fa-flag"></i>
-          <span>My Reports</span>
-        </div>
-      </NavLink>
-
-      {/* Orders */}
-      <NavLink
-        to="/dashboard/user/orders"
-        onClick={() => setActive("Orders")}
-        className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Orders" ? `${activeBgColor} text-white` : `${hoverBgColor}`
-        }`}
-      >
-        <div className="flex items-center gap-3">
-          <i className="fa-solid fa-cart-plus"></i>
-          <span>My Orders</span>
-        </div>
-      </NavLink>
-
-      {/* Reviews & Ratings */}
-      <NavLink
-        to="/dashboard/user/reviews"
-        onClick={() => setActive("Reviews")}
-        className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Reviews" ? `${activeBgColor} text-white` : `${hoverBgColor}`
-        }`}
-      >
-        <div className="flex items-center gap-3">
-          <i className="fa-solid fa-list-check"></i>
-          <span>Ratings & Reviews</span>
-        </div>
-      </NavLink>
-
-      {/* Change Password */}
-      <NavLink
-        to="/dashboard/user/change-password"
-        onClick={() => setActive("Change Password")}
-        className={`py-2 px-4 flex items-center justify-between rounded-md ${
-          active === "Change Password" ? `${activeBgColor} text-white` : `${hoverBgColor}`
-        }`}
-      >
-        <div className="flex items-center gap-3">
-          <i className="fa-solid fa-key"></i>
-          <span>Change Password</span>
-        </div>
-      </NavLink>
+      {navItems.map((item) => (
+        <NavLink
+          key={item.to}
+          to={item.to}
+          className={`py-2 px-4 flex items-center justify-between rounded-md ${
+            location.pathname === item.to ? `${activeBgColor} text-white` : `${hoverBgColor}`
+          }`}
+        >
+          <div className="flex items-center gap-3">
+            <i className={item.icon}></i>
+            <span>{item.label}</span>
+          </div>
+        </NavLink>
+      ))}
     </nav>
   );
 };

@@ -17,7 +17,7 @@ const TopNavbar: React.FC<NavbarProps> = ({ toggleSidebar, isSidebarOpen }) => {
 
   // Dynamic background based on role
   let roleBgColor = "bg-[#5a75aa]"; // default
-  if (isUser) roleBgColor = "bg-[#275A5C]"; // User - Indigo
+  if (isUser) roleBgColor = "bg-[#123458]"; // User - Indigo
   else if (isVendor) roleBgColor = "bg-[#384B70]"; // Vendor - Gray
   else if (isAdmin) roleBgColor = "bg-[#1F2937]"; // Admin - Dark Gray
 

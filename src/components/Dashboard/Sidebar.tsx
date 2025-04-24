@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {  useEffect } from "react";
 import AdminNav from "../Admin/AdminNav";
 import VendorNav from "../Vendor/VendorNav";
 import UserNav from "../User/UserNav";
@@ -14,7 +14,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isActive }) => {
-  const [active, setActive] = useState("");
+ 
   const dispatch = useDispatch();
   const { isAdmin, isVendor, isUser, isLoading } = useUserRoles();
   const [logout, { isLoading: logoutLoading, isSuccess: logoutSuccess }] = useLogoutMutation();
@@ -43,7 +43,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isActive }) => {
   let logoutHover = "hover:bg-[#7AB2D3]";
 
   if (isUser) {
-    roleBasedBgColor = "bg-[#275A5C]";
+    roleBasedBgColor = "bg-[#123458]";
     logoutBg = "bg-[#53d0d580]";
     logoutHover = "hover:bg-[#00dae380]";
   } else if (isVendor) {
@@ -75,9 +75,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isActive }) => {
           </div>
         ) : (
           <>
-            {isAdmin && <AdminNav active={active} setActive={setActive} />}
-            {isVendor && <VendorNav active={active} setActive={setActive} />}
-            {isUser && <UserNav active={active} setActive={setActive} />}
+            {isAdmin && <AdminNav />}
+            {isVendor && <VendorNav   />}
+            {isUser && <UserNav />}
           </>
         )}
       </div>

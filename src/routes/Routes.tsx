@@ -194,6 +194,14 @@ const AppRouter = () => {
               </PrivateRoute>
             }
           />
+          <Route
+            path="user/profile"
+            element={
+              <PrivateRoute>
+                <h1>welcome to my profile</h1>
+              </PrivateRoute>
+            }
+          />
 
         </Route>
       </Routes>
