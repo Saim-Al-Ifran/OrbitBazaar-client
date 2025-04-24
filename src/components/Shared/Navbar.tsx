@@ -157,7 +157,10 @@ const Navbar = () => {
               <NavLink
                 to="/login"
                 className="btn btn-primary btn-sm bg-black border-black text-white hover:bg-gray-800"
-              >Login</NavLink>
+              >
+                <i className="fa-solid fa-user"></i>
+                Login
+              </NavLink>
             )}
             
           {/* Login Button */}

@@ -41,6 +41,7 @@ import AllOrders from '../pages/Dashboard/Vendor/Orders/AllOrders';
 import AdminOrSuperAdmin from './AdminOrSuperAdmin';
 import VendorRoute from './VendorRoute';
 import PrivateRoute from './PrivateRoute';
+import ProfileForm from '../components/User/ProfileForm';
 
 const AppRouter = () => {
   return (
@@ -198,7 +199,7 @@ const AppRouter = () => {
             path="user/profile"
             element={
               <PrivateRoute>
-                <h1>welcome to my profile</h1>
+                 <ProfileForm/>
               </PrivateRoute>
             }
           />
