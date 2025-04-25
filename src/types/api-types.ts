@@ -36,3 +36,28 @@ export interface RefreshTokenResponse extends LoginResponse{};
 export interface FirebaseLoginInput{
     idToken: string;
 };
+export interface ProfileResponse {
+    success: boolean;
+    message: string;
+    data: {
+        id: string;
+        name: string;
+        email: string;
+        phoneNumber: string;
+        image: string;
+    }
+}
+export interface UpdateProfileRequest {
+    name: string;
+    phoneNumber: string;
+  }
+  export interface ProfileUpdateResponse {
+    message: string;
+    data: {
+      id: string;
+      name: string;
+      email: string;
+      phoneNumber: string;
+    };
+  }
+

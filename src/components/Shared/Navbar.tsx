@@ -18,7 +18,7 @@ const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const location = useLocation();
   
-  const {data} = useGetUserProfileQuery({}); // Fetch user profile data
+  const {data} = useGetUserProfileQuery(); // Fetch user profile data
   
   
    // Extract user data from the response

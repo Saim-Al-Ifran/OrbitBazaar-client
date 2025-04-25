@@ -10,7 +10,7 @@ import { apiSlice } from '../../features/api/apiSlice';
 const UserProfile: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {data:userData} = useGetUserProfileQuery({}); // Fetch user profile data
+  const {data:userData} = useGetUserProfileQuery(); // Fetch user profile data
   const [logout, { isSuccess: logoutSuccess }] = useLogoutMutation();
 
   const { name, image, email } = userData?.data || {};

@@ -3,7 +3,7 @@ import { useGetUserProfileQuery } from "../../features/user/userApi";
 import avatar from '../../assets/userAvatar.png'
 
 const UpdateProfile: React.FC = () => {
-  const { data: userData, isLoading } = useGetUserProfileQuery({});
+  const { data: userData, isLoading } = useGetUserProfileQuery();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -19,7 +19,7 @@ const UpdateProfile: React.FC = () => {
       setUsername(name || "");
       setEmail(email || "");
       setPhoneNumber( phoneNumber|| "");
-      setProfileImage(image || "/default-avatar.png");
+      setProfileImage(image || avatar);
     }
   }, [userData]);
 

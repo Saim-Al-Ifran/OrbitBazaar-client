@@ -10,7 +10,7 @@ interface NavbarProps {
 }
 
 const TopNavbar: React.FC<NavbarProps> = ({ toggleSidebar, isSidebarOpen }) => {
-  const { data: userData, isLoading } = useGetUserProfileQuery({});
+  const { data: userData, isLoading } = useGetUserProfileQuery();
   const { isAdmin, isVendor, isUser } = useUserRoles();
 
   const user = userData?.data;
