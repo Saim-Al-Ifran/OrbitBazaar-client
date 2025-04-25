@@ -13,12 +13,13 @@ import {
 } from "../../features/auth/authApi";
 import { useGetUserProfileQuery } from "../../features/user/userApi";
 import app from "../../firebase/firebase.config";
+import useUserRoles from "../../hooks/auth/useCheckRoles";
 
 const LoginForm = () => {
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
   const navigate = useNavigate();
-
+  const {isUser,isVendor} = useUserRoles();
   const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
 
   const {
@@ -41,8 +42,16 @@ const LoginForm = () => {
   const {
     data: userData,
     refetch: refetchUser,
-  } = useGetUserProfileQuery({});
+  } = useGetUserProfileQuery();
   const role = userData?.data?.role;
+
+  useEffect(() => {
+    if (isUser) {
+      navigate("/");
+    } else if (isVendor) {
+      navigate("/dashboard/vendor");
+    }
+  }, [isUser, isVendor, navigate]);
 
   // Role-based redirection after login
   useEffect(() => {

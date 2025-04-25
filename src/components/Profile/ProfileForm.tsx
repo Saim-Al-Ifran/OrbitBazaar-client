@@ -95,7 +95,7 @@ const UpdateProfile: React.FC = () => {
 
       <div className="flex justify-center mb-4">
         <img
-          src={newImage ? URL.createObjectURL(newImage) : profileImage}
+          src={userData?.data?.image || avatar}
           alt="Profile"
           className="w-24 h-24 rounded-full object-cover"
         />

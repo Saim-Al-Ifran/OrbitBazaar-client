@@ -38,7 +38,7 @@ import AllReports from '../pages/Dashboard/Vendor/Reports/AllReports';
 import AllOrders from '../pages/Dashboard/Vendor/Orders/AllOrders';
 
 // Pages - User
-import ProfileForm from '../components/User/ProfileForm';
+import ProfileForm from '../components/Profile/ProfileForm';
 import ChangePassword from '../components/Profile/ChangePassword';
 
 
