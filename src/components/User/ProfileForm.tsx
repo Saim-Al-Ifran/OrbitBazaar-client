@@ -1,27 +1,73 @@
 import React, { useEffect, useState } from "react";
-import { useGetUserProfileQuery } from "../../features/user/userApi";
-import avatar from '../../assets/userAvatar.png'
+import {
+  useGetUserProfileQuery,
+  useUpdateUserProfileMutation,
+  useUpdateUserProfileImageMutation,
+} from "../../features/user/userApi";
+import avatar from "../../assets/userAvatar.png";
+import toast from "react-hot-toast";
 
 const UpdateProfile: React.FC = () => {
-  const { data: userData, isLoading } = useGetUserProfileQuery();
+  const { data: userData, isLoading: profileLoading, refetch } = useGetUserProfileQuery();
+
+  const [
+    updateProfile,
+    {
+      isLoading: isUpdatingProfile,
+      isSuccess: isProfileUpdated,
+      isError: isProfileUpdateError,
+      error: profileUpdateError,
+    },
+  ] = useUpdateUserProfileMutation();
+
+  const [
+    updateProfileImage,
+    {
+      isLoading: isUploadingImage,
+      isSuccess: isImageUpdated,
+      isError: isImageUpdateError,
+      error: imageUpdateError,
+    },
+  ] = useUpdateUserProfileImageMutation();
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [profileImage, setProfileImage] = useState(avatar);
   const [newImage, setNewImage] = useState<File | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log("User Data:", userData?.data);
-  
-  // Populate user data into state once fetched
+
   useEffect(() => {
     if (userData?.data) {
       const { name, email, phoneNumber, image } = userData.data;
       setUsername(name || "");
       setEmail(email || "");
-      setPhoneNumber( phoneNumber|| "");
+      setPhoneNumber(phoneNumber || "");
       setProfileImage(image || avatar);
     }
   }, [userData]);
+
+  useEffect(() => {
+    if (isProfileUpdated) {
+      toast.success("Profile updated successfully!");
+      refetch();
+    }
+    if (isProfileUpdateError) {
+      toast.error((profileUpdateError as any)?.data?.message || "Profile update failed!");
+    }
+  }, [isProfileUpdated, isProfileUpdateError, profileUpdateError, refetch]);
+
+  useEffect(() => {
+    if (isImageUpdated) {
+      toast.success("Profile image updated successfully!");
+      setIsModalOpen(false);
+      setNewImage(null);
+      refetch();
+    }
+    if (isImageUpdateError) {
+      toast.error((imageUpdateError as any)?.data?.message || "Image upload failed!");
+    }
+  }, [isImageUpdated, isImageUpdateError, imageUpdateError, refetch]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -31,25 +77,17 @@ const UpdateProfile: React.FC = () => {
 
   const handleSaveImage = () => {
     if (newImage) {
-      const imageUrl = URL.createObjectURL(newImage);
-      setProfileImage(imageUrl);
-      setIsModalOpen(false);
-      // TODO: upload image to server here
+      const formData = new FormData();
+      formData.append("image", newImage);
+      updateProfileImage(formData);
     }
   };
 
   const handleUpdateProfile = () => {
-    const updatedData = {
-      username,
-      phoneNumber,
-      // image: newImage (or profileImage URL if uploading separately)
-    };
-    console.log("Updated data to submit:", updatedData);
-
-    // TODO: Call mutation to update profile
+    updateProfile({ name: username, phoneNumber });
   };
 
-  if (isLoading) return <p className="text-center py-8">Loading...</p>;
+  if (profileLoading) return <p className="text-center py-8">Loading...</p>;
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-md shadow">
@@ -109,9 +147,10 @@ const UpdateProfile: React.FC = () => {
       <div className="mt-6">
         <button
           onClick={handleUpdateProfile}
-          className="bg-[#123458] text-white px-4 py-2 rounded hover:bg-[#134a85] w-full"
+          disabled={isUpdatingProfile}
+          className="bg-[#123458] text-white px-4 py-2 rounded hover:bg-[#134a85] w-full disabled:opacity-50"
         >
-          Update
+          {isUpdatingProfile ? "Updating..." : "Update"}
         </button>
       </div>
 
@@ -131,7 +170,7 @@ const UpdateProfile: React.FC = () => {
               type="file"
               accept="image/*"
               onChange={handleImageChange}
-              className="mb-4"
+              className="file-input file-input-neutral mb-4"
             />
             <div className="flex justify-end gap-2">
               <button
@@ -142,9 +181,10 @@ const UpdateProfile: React.FC = () => {
               </button>
               <button
                 onClick={handleSaveImage}
-                className="bg-[#123458] text-white px-3 py-1 rounded"
+                disabled={isUploadingImage}
+                className="bg-[#123458] text-white px-3 py-1 rounded disabled:opacity-50"
               >
-                Save
+                {isUploadingImage ? "Uploading..." : "Save"}
               </button>
             </div>
           </div>

@@ -12,13 +12,15 @@ const userApi = apiSlice.injectEndpoints({
       query: () => ({
         url: `/user/profile`,
       }),
+      providesTags: ["UserProfile"],
     }),
     updateUserProfile: builder.mutation<ProfileUpdateResponse, UpdateProfileRequest>({
       query: (profileData) => ({
-        url: `/user/profile`,
+        url: `/users/profile`,
         method: "PUT",
         body: profileData,
       }),
+      invalidatesTags: ["UserProfile"],
     }),
     updateUserProfileImage: builder.mutation<ProfileUpdateResponse, FormData>({
       query: (formData) => ({
@@ -26,6 +28,7 @@ const userApi = apiSlice.injectEndpoints({
         method: "PUT",
         body: formData,
       }),
+      invalidatesTags: ["UserProfile"],
     }),
   }),
 });
