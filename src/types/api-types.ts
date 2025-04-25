@@ -45,13 +45,15 @@ export interface ProfileResponse {
         email: string;
         phoneNumber: string;
         image: string;
+        firebaseUID: string;
+        role: string;
     }
 }
 export interface UpdateProfileRequest {
     name: string;
     phoneNumber: string;
   }
-  export interface ProfileUpdateResponse {
+export interface ProfileUpdateResponse {
     message: string;
     data: {
       id: string;
@@ -60,4 +62,12 @@ export interface UpdateProfileRequest {
       phoneNumber: string;
     };
   }
+export interface ChangePasswordRequest {
+    oldPassword: string;
+    newPassword: string;
+  }
+export interface ChangePasswordResponse {
+  success: boolean;
+  message: string;
+}
 

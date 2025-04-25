@@ -2,6 +2,8 @@
 import { BaseQueryFn, EndpointBuilder } from "@reduxjs/toolkit/query";
 import { apiSlice } from "../api/apiSlice";
 import {
+  ChangePasswordRequest,
+  ChangePasswordResponse,
   FirebaseLoginInput,
   LoginInput,
   LoginResponse,
@@ -110,6 +112,13 @@ const authApi = apiSlice.injectEndpoints({
         body: credentials,
       }),
     }),
+    changePassword: builder.mutation<ChangePasswordResponse, ChangePasswordRequest>({
+          query: (credentials) => ({ 
+            url: `/auth/reset_password`,
+            method: "PUT",
+            body: credentials,
+          }),
+        }),
     logout: builder.mutation({
       query: () => ({
         url: "/auth/logout",
@@ -139,4 +148,5 @@ export const {
   useGetUserQuery,
   useRegisterUserMutation,
   useFirebaseUserLoginMutation,
+  useChangePasswordMutation,
 } = authApi;

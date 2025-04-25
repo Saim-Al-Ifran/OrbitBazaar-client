@@ -37,11 +37,15 @@ import EditProduct from '../pages/Dashboard/Vendor/Products/EditProduct';
 import AllReports from '../pages/Dashboard/Vendor/Reports/AllReports';
 import AllOrders from '../pages/Dashboard/Vendor/Orders/AllOrders';
 
+// Pages - User
+import ProfileForm from '../components/User/ProfileForm';
+import ChangePassword from '../components/Profile/ChangePassword';
+
+
 // Guards
 import AdminOrSuperAdmin from './AdminOrSuperAdmin';
 import VendorRoute from './VendorRoute';
 import PrivateRoute from './PrivateRoute';
-import ProfileForm from '../components/User/ProfileForm';
 
 const AppRouter = () => {
   return (
@@ -200,6 +204,14 @@ const AppRouter = () => {
             element={
               <PrivateRoute>
                  <ProfileForm/>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="user/change-password"
+            element={
+              <PrivateRoute>
+                  <ChangePassword/>
               </PrivateRoute>
             }
           />
