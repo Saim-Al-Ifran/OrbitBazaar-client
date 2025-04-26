@@ -47,7 +47,7 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (isUser) {
-      navigate("/");
+      navigate("/dashboard/user/home");
     } else if (isVendor) {
       navigate("/dashboard/vendor");
     }

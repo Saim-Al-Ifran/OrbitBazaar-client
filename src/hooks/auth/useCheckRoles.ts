@@ -2,7 +2,7 @@
 import { useGetUserProfileQuery } from "../../features/user/userApi";
 
 const useUserRoles = () => {
-  const { data:user, isLoading, isError,error} = useGetUserProfileQuery({});
+  const { data:user, isLoading, isError,error} = useGetUserProfileQuery();
 
   const role = user?.data?.role;
   console.log(error);

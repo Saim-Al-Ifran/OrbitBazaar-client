@@ -13,6 +13,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
 
   // Show loading spinner while determining roles
   if (isLoading || (!isUser && !isAdmin && !isSuperAdmin && !isVendor && !isError)) {
+    console.log("Loading user roles...");
     return (
       <div className="flex justify-center items-center h-screen">
         <span className="loading loading-dots loading-lg"></span>
@@ -20,11 +21,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
     );
   }
 
-  // Redirect to login if there's an error
-  if (isError) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
-
+ 
   // Redirect admins/super admins to admin dashboard
   if (isAdmin || isSuperAdmin) return <Navigate to="/dashboard/admin" replace />;
 

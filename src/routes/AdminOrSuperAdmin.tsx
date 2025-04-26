@@ -19,11 +19,7 @@ const AdminOrSuperAdmin: React.FC<AdminOrSuperAdminProps> = ({ children }) => {
     );
   }
 
-  // Error or unknown role
-  if (isError) {
-    return <Navigate to="/admin/login" state={{ from: location }} replace />;
-  }
-
+ 
   // Redirect users and vendors to their dashboards
   if (isUser) return <Navigate to="/" replace />;
   if (isVendor) return <Navigate to="/dashboard/vendor" replace />;

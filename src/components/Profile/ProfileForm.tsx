@@ -8,7 +8,7 @@ import avatar from "../../assets/userAvatar.png";
 import toast from "react-hot-toast";
 
 const UpdateProfile: React.FC = () => {
-  const { data: userData, isLoading: profileLoading, refetch } = useGetUserProfileQuery();
+  const { data: userData, isLoading: profileLoading,  } = useGetUserProfileQuery();
 
   const [
     updateProfile,
@@ -50,24 +50,24 @@ const UpdateProfile: React.FC = () => {
   useEffect(() => {
     if (isProfileUpdated) {
       toast.success("Profile updated successfully!");
-      refetch();
+       
     }
     if (isProfileUpdateError) {
       toast.error((profileUpdateError as any)?.data?.message || "Profile update failed!");
     }
-  }, [isProfileUpdated, isProfileUpdateError, profileUpdateError, refetch]);
+  }, [isProfileUpdated, isProfileUpdateError, profileUpdateError,  ]);
 
   useEffect(() => {
     if (isImageUpdated) {
       toast.success("Profile image updated successfully!");
       setIsModalOpen(false);
       setNewImage(null);
-      refetch();
+      
     }
     if (isImageUpdateError) {
       toast.error((imageUpdateError as any)?.data?.message || "Image upload failed!");
     }
-  }, [isImageUpdated, isImageUpdateError, imageUpdateError, refetch]);
+  }, [isImageUpdated, isImageUpdateError, imageUpdateError,  ]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
