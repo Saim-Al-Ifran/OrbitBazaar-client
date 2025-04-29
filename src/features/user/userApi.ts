@@ -33,9 +33,14 @@ const userApi = apiSlice.injectEndpoints({
     }),
     getSellerRequest: builder.query<VendorListResponse,void>({
       query: () => ({
-        url: `admin/users?role=vendor`,
+        url: `admin/users?vendorRequestStatus=requested&role=vendor`,
       }),
-    })
+    }),
+    getSeller:builder.query<VendorListResponse,void>({
+      query: () => ({
+        url: `admin/users?vendorRequestStatus=approved&role=vendor`,
+      }),
+    }),
   }),
 });
 
@@ -43,5 +48,6 @@ export const {
   useGetUserProfileQuery,
   useUpdateUserProfileMutation,
   useUpdateUserProfileImageMutation,
- 
+  useGetSellerQuery,
+  useGetSellerRequestQuery,
 } = userApi;
