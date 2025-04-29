@@ -175,3 +175,22 @@ export interface VendorListResponse {
   data: VendorUser[];
   pagination: PaginationMeta;
 }
+
+// Request type for updating user status
+export interface UpdateUserStatusRequest {
+  id: string;
+}
+
+// Response type after updating user status
+export interface UpdateUserStatusResponse {
+  success: boolean;
+  message: string;
+  data: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+    status: string;
+    updatedAt: string;
+  };
+}

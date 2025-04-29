@@ -5,6 +5,8 @@ import {
   UpdateProfileRequest,
   ProfileUpdateResponse,
   VendorListResponse,
+  UpdateUserStatusResponse,
+  UpdateUserStatusRequest,
 } from "../../types/api-types";
 
 const userApi = apiSlice.injectEndpoints({
@@ -41,6 +43,18 @@ const userApi = apiSlice.injectEndpoints({
         url: `admin/users?vendorRequestStatus=approved&role=vendor`,
       }),
     }),
+    getDeactivatedUser:builder.query<VendorListResponse,void>({
+      query: () => ({
+        url: `admin/users?status=block`,
+      }),
+    }),
+    updateUserStatus: builder.mutation<UpdateUserStatusResponse, UpdateUserStatusRequest>({
+      query: ({ id }) => ({
+        url: `users/${id}/status`,
+        method: 'PATCH', 
+      }),
+    }),
+    
   }),
 });
 
@@ -50,4 +64,5 @@ export const {
   useUpdateUserProfileImageMutation,
   useGetSellerQuery,
   useGetSellerRequestQuery,
+  useGetDeactivatedUserQuery,
 } = userApi;
