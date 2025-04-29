@@ -4,6 +4,14 @@ export interface PaginationParams {
   search?: string;
 }
 
+export interface PaginationMeta {
+  totalRecords: number;
+  totalPages: number;
+  prevPage: number | null;
+  nextPage: number | null;
+  currentPage: number;
+}
+
 // Auth
 export interface LoginInput {
   email: string;
@@ -118,11 +126,7 @@ export interface AdminCategoryResponse {
   success: boolean;
   message: string;
   data: Category[];
-  meta: {
-    page: number;
-    limit: number;
-    total: number;
-  };
+  pagination: PaginationMeta;
 }
 export interface AdminCategoryRequest {
   page?: number;
@@ -150,3 +154,24 @@ export interface CategoryUpdateInput {
   };
 }
 export interface CategoryUpdateResponse  extends CategoryCreateResponse {}
+
+export interface VendorUser {
+  _id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  role: 'vendor';
+  status: 'active' | 'inactive';
+  vendorRequestStatus: 'requested' | 'approved' | 'rejected';
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface VendorListResponse {
+  success: boolean;
+  message: string;
+  data: VendorUser[];
+  pagination: PaginationMeta;
+}

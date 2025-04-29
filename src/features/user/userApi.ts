@@ -4,6 +4,7 @@ import {
   ProfileResponse,
   UpdateProfileRequest,
   ProfileUpdateResponse,
+  VendorListResponse,
 } from "../../types/api-types";
 
 const userApi = apiSlice.injectEndpoints({
@@ -30,6 +31,11 @@ const userApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["UserProfile"],
     }),
+    getSellerRequest: builder.query<VendorListResponse,void>({
+      query: () => ({
+        url: `admin/users?role=vendor`,
+      }),
+    })
   }),
 });
 
