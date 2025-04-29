@@ -16,7 +16,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isActive }) => {
  
   const dispatch = useDispatch();
-  const { isAdmin, isVendor, isUser, isLoading } = useUserRoles();
+  const { isAdmin, isVendor, isUser, isLoading,isSuperAdmin} = useUserRoles();
   const [logout, { isLoading: logoutLoading, isSuccess: logoutSuccess }] = useLogoutMutation();
   const navigate = useNavigate();
 
@@ -50,7 +50,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isActive }) => {
     roleBasedBgColor = "bg-[#384B70]";
     logoutBg = "bg-[#789DBC]";
     logoutHover = "hover:bg-[#7AB2D3]";
-  } else if (isAdmin) {
+  } else if (isAdmin || isSuperAdmin) {
     roleBasedBgColor = "bg-[#1F2937]";
     logoutBg = "bg-[#374151]";
     logoutHover = "hover:bg-[#4B5563]";
@@ -75,7 +75,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isActive }) => {
           </div>
         ) : (
           <>
-            {isAdmin && <AdminNav />}
+            {isAdmin || isSuperAdmin && <AdminNav />}
             {isVendor && <VendorNav   />}
             {isUser && <UserNav />}
           </>

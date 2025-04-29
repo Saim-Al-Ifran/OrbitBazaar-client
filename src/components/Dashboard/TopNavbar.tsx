@@ -11,15 +11,15 @@ interface NavbarProps {
 
 const TopNavbar: React.FC<NavbarProps> = ({ toggleSidebar, isSidebarOpen }) => {
   const { data: userData, isLoading } = useGetUserProfileQuery();
-  const { isAdmin, isVendor, isUser } = useUserRoles();
+  const { isAdmin, isVendor, isUser,isSuperAdmin } = useUserRoles();
 
   const user = userData?.data;
 
   // Dynamic background based on role
   let roleBgColor = "bg-[#5a75aa]"; // default
   if (isUser) roleBgColor = "bg-[#123458]"; // User - Indigo
-  else if (isVendor) roleBgColor = "bg-[#384B70]"; // Vendor - Gray
-  else if (isAdmin) roleBgColor = "bg-[#1F2937]"; // Admin - Dark Gray
+  else if (isVendor) roleBgColor = "bg-[#5A75AA]"; // Vendor - Gray
+  else if (isAdmin || isSuperAdmin) roleBgColor = "bg-[#21324a]"; // Admin - Dark Gray
 
   return (
     <nav className={`${roleBgColor} p-4 shadow-md flex justify-between items-center fixed top-0 w-full z-50`}>

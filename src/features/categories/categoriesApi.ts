@@ -1,7 +1,17 @@
 import { apiSlice } from "../api/apiSlice";
 import { BaseQueryFn } from '@reduxjs/toolkit/query';
 import { EndpointBuilder } from '@reduxjs/toolkit/query';
-import { AdminCategoryRequest, AdminCategoryResponse, CategoriesResponse, CategoryCreateInput, CategoryCreateResponse, CategoryUpdateInput, CategoryUpdateResponse, DeleteCategoryResponse, SingleCategoryResponse } from "../../types/api-types";
+import {
+  AdminCategoryRequest, 
+  AdminCategoryResponse,
+  CategoriesResponse,
+  CategoryCreateInput,
+  CategoryCreateResponse,
+  CategoryUpdateInput,
+  CategoryUpdateResponse,
+  DeleteCategoryResponse,
+  SingleCategoryResponse
+} from "../../types/api-types";
 
 
 const categoriesApi = apiSlice.injectEndpoints({
