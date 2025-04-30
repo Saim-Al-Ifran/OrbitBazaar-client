@@ -7,6 +7,12 @@ import {
   VendorListResponse,
   UpdateUserStatusResponse,
   UpdateUserStatusRequest,
+  CreateUserResponse,
+  CreateUserInput,
+  UpdateVendorStatusResponse,
+  UpdateVendorStatusInput,
+  UpdateUserRoleResponse,
+  UpdateUserRoleInput,
 } from "../../types/api-types";
 
 const userApi = apiSlice.injectEndpoints({
@@ -50,11 +56,32 @@ const userApi = apiSlice.injectEndpoints({
     }),
     updateUserStatus: builder.mutation<UpdateUserStatusResponse, UpdateUserStatusRequest>({
       query: ({ id }) => ({
-        url: `users/${id}/status`,
+        url: `/admin/users/${id}/status`,
         method: 'PATCH', 
       }),
     }),
-    
+    createUser: builder.mutation<CreateUserResponse, CreateUserInput>({
+      query: (user) => ({
+        url: '/admin/users',
+        method: 'POST',
+        body: user,
+      }),
+      
+    }),
+    updateVendorStatus: builder.mutation<UpdateVendorStatusResponse, UpdateVendorStatusInput>({
+      query: ({ id, status }) => ({
+        url: `/admin/vendors/${id}/status`,
+        method: 'PATCH',
+        body: { status },
+      }),
+    }),
+    updateUserRole: builder.mutation<UpdateUserRoleResponse, UpdateUserRoleInput>({
+      query: ({ id, role }) => ({
+        url: `/super-admin/${id}/role`,
+        method: 'PATCH',
+        body: { role },
+      }),
+    }),
   }),
 });
 

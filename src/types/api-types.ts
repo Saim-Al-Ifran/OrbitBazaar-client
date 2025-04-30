@@ -176,12 +176,12 @@ export interface VendorListResponse {
   pagination: PaginationMeta;
 }
 
-// Request type for updating user status
+ 
 export interface UpdateUserStatusRequest {
   id: string;
 }
 
-// Response type after updating user status
+
 export interface UpdateUserStatusResponse {
   success: boolean;
   message: string;
@@ -193,4 +193,73 @@ export interface UpdateUserStatusResponse {
     status: string;
     updatedAt: string;
   };
+}
+
+ 
+
+export interface CreateUserInput {
+  name: string;
+  email: string;
+  password: string;
+  phoneNumber: string;
+  role: 'admin' | 'user' | 'vendor'; 
+}
+
+export interface CreatedUser {
+  id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateUserResponse {
+  success: boolean;
+  message: string;
+  data: CreatedUser;
+}
+
+
+ 
+export interface UpdateVendorStatusInput {
+  id: string;
+  status: 'approved' | 'rejected' | 'pending'; // adjust based on possible values
+}
+
+export interface UpdatedVendor {
+  id: string;
+  name: string;
+  email: string;
+  vendorRequestStatus: string;
+  updatedAt: string;
+}
+
+export interface UpdateVendorStatusResponse {
+  success: boolean;
+  message: string;
+  data: UpdatedVendor;
+}
+
+ 
+
+export interface UpdateUserRoleInput {
+  id: string;
+  role: 'user' | 'admin' | 'vendor' | 'super-admin'; // adjust roles as needed
+}
+
+export interface UpdatedUserRole {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+  updatedAt: string;
+}
+
+export interface UpdateUserRoleResponse {
+  success: boolean;
+  message: string;
+  data: UpdatedUserRole;
 }
