@@ -175,8 +175,7 @@ export interface VendorListResponse {
   data: VendorUser[];
   pagination: PaginationMeta;
 }
-
- 
+export interface UserListResponse extends VendorListResponse{};
 export interface UpdateUserStatusRequest {
   id: string;
 }

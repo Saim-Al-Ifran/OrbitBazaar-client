@@ -1,5 +1,11 @@
 // Grouped tagTypes by module
-const userTags = ["UserProfile"] as const;
+const userTags = [
+  "UserProfile",
+  "UserList",
+  "SellerRequest",
+  "ApprovedVendors",
+  "BlockedUsers",
+] as const;
 const bookTags = ["Book", "BookList"] as const;
 const authTags = ["Auth"] as const;
 const dashboardTags = ["Dashboard"] as const;

@@ -15,6 +15,7 @@ import {
   UpdateUserRoleInput,
   DeleteUserResponse,
   DeleteEntityResponse,
+  UserListResponse,
 } from "../../types/api-types";
 
 const userApi = apiSlice.injectEndpoints({
@@ -25,78 +26,103 @@ const userApi = apiSlice.injectEndpoints({
       }),
       providesTags: ["UserProfile"],
     }),
+
     updateUserProfile: builder.mutation<ProfileUpdateResponse, UpdateProfileRequest>({
       query: (profileData) => ({
         url: `/users/profile`,
         method: "PUT",
         body: profileData,
       }),
-      invalidatesTags: ["UserProfile"],
+      invalidatesTags: ["UserProfile", "UserList"],
     }),
+
     updateUserProfileImage: builder.mutation<ProfileUpdateResponse, FormData>({
       query: (formData) => ({
         url: `/user/profile-image`,
         method: "PUT",
         body: formData,
       }),
-      invalidatesTags: ["UserProfile"],
+      invalidatesTags: ["UserProfile", "UserList"],
     }),
-    getSellerRequest: builder.query<VendorListResponse,void>({
+
+    getAllUsers: builder.query<UserListResponse, void>({
+      query: () => ({
+        url: `/admin/users`,
+      }),
+      providesTags: ["UserList"],
+    }),
+
+    getSellerRequest: builder.query<VendorListResponse, void>({
       query: () => ({
         url: `admin/users?vendorRequestStatus=requested&role=vendor`,
       }),
+      providesTags: ["SellerRequest"],
     }),
-    getSeller:builder.query<VendorListResponse,void>({
+
+    getSeller: builder.query<VendorListResponse, void>({
       query: () => ({
         url: `admin/users?vendorRequestStatus=approved&role=vendor`,
       }),
+      providesTags: ["ApprovedVendors"],
     }),
-    getDeactivatedUser:builder.query<VendorListResponse,void>({
+
+    getDeactivatedUser: builder.query<VendorListResponse, void>({
       query: () => ({
         url: `admin/users?status=block`,
       }),
+      providesTags: ["BlockedUsers"],
     }),
+
     updateUserStatus: builder.mutation<UpdateUserStatusResponse, UpdateUserStatusRequest>({
       query: ({ id }) => ({
         url: `/admin/users/${id}/status`,
-        method: 'PATCH', 
+        method: "PATCH",
       }),
+      invalidatesTags: ["UserList", "BlockedUsers"],
     }),
+
     createUser: builder.mutation<CreateUserResponse, CreateUserInput>({
       query: (user) => ({
-        url: '/admin/users',
-        method: 'POST',
+        url: "/admin/users",
+        method: "POST",
         body: user,
       }),
-      
+      invalidatesTags: ["UserList"],
     }),
+
     updateVendorStatus: builder.mutation<UpdateVendorStatusResponse, UpdateVendorStatusInput>({
       query: ({ id, status }) => ({
         url: `/admin/vendors/${id}/status`,
-        method: 'PATCH',
+        method: "PATCH",
         body: { status },
       }),
+      invalidatesTags: ["SellerRequest", "ApprovedVendors"],
     }),
+
     updateUserRole: builder.mutation<UpdateUserRoleResponse, UpdateUserRoleInput>({
       query: ({ id, role }) => ({
         url: `/super-admin/${id}/role`,
-        method: 'PATCH',
+        method: "PATCH",
         body: { role },
       }),
+      invalidatesTags: ["UserList"],
     }),
+
     deleteUser: builder.mutation<DeleteUserResponse, string>({
       query: (userId) => ({
         url: `/admin/users/${userId}`,
-        method: 'DELETE',
+        method: "DELETE",
       }),
+      invalidatesTags: ["UserList"],
     }),
+
     deleteEntity: builder.mutation<DeleteEntityResponse, string>({
       query: (entityId) => ({
         url: `/super-admin/entity/${entityId}`,
-        method: 'DELETE',
+        method: "DELETE",
       }),
+      invalidatesTags: ["UserList"],
     }),
-    
   }),
 });
 
@@ -107,4 +133,11 @@ export const {
   useGetSellerQuery,
   useGetSellerRequestQuery,
   useGetDeactivatedUserQuery,
+  useGetAllUsersQuery,
+  useUpdateUserStatusMutation,
+  useCreateUserMutation,
+  useUpdateVendorStatusMutation,
+  useUpdateUserRoleMutation,
+  useDeleteUserMutation,
+  useDeleteEntityMutation,
 } = userApi;
