@@ -13,6 +13,8 @@ import {
   UpdateVendorStatusInput,
   UpdateUserRoleResponse,
   UpdateUserRoleInput,
+  DeleteUserResponse,
+  DeleteEntityResponse,
 } from "../../types/api-types";
 
 const userApi = apiSlice.injectEndpoints({
@@ -82,6 +84,19 @@ const userApi = apiSlice.injectEndpoints({
         body: { role },
       }),
     }),
+    deleteUser: builder.mutation<DeleteUserResponse, string>({
+      query: (userId) => ({
+        url: `/admin/users/${userId}`,
+        method: 'DELETE',
+      }),
+    }),
+    deleteEntity: builder.mutation<DeleteEntityResponse, string>({
+      query: (entityId) => ({
+        url: `/super-admin/entity/${entityId}`,
+        method: 'DELETE',
+      }),
+    }),
+    
   }),
 });
 

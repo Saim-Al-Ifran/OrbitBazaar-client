@@ -263,3 +263,8 @@ export interface UpdateUserRoleResponse {
   message: string;
   data: UpdatedUserRole;
 }
+export interface DeleteUserResponse {
+  success: boolean;
+  message: string;
+}
+export interface DeleteEntityResponse extends DeleteUserResponse {}
