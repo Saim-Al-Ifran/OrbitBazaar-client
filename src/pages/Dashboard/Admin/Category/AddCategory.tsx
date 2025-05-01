@@ -1,5 +1,9 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { XCircleIcon } from "@heroicons/react/24/solid";
+import { useCreateCategoryMutation } from "../../../../features/categories/categoriesApi";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { ClipLoader } from "react-spinners";
 
 const AddCategory = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -10,13 +14,27 @@ const AddCategory = () => {
   });
 
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [createCategory, { isLoading, isError, isSuccess, error }] = useCreateCategoryMutation();
+  const navigate = useNavigate();
 
-  // Handle input changes
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Successfully created category");
+      navigate("/dashboard/categories");
+      setCategory({ name: "", description: "", image: null });
+      setPreviewImage(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+
+    if (isError) {
+      toast.error((error as any)?.data?.message || "Something went wrong");
+    }
+  }, [isSuccess, isError, error, navigate]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setCategory({ ...category, [e.target.name]: e.target.value });
   };
 
-  // Handle image upload
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     setCategory({ ...category, image: file });
@@ -30,22 +48,29 @@ const AddCategory = () => {
     }
   };
 
-  // Remove selected image
   const handleRemoveImage = () => {
     setCategory({ ...category, image: null });
     setPreviewImage(null);
-
-    // Reset the file input field using ref
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
 
-  // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Category Data:", category);
-    alert("Category Created Successfully!");
+
+    const formData = new FormData();
+    formData.append("name", category.name);
+    formData.append("description", category.description);
+    if (category.image) {
+      formData.append("image", category.image);
+    }
+
+    try {
+      await createCategory(formData).unwrap(); 
+    } catch (err) {
+      console.error("Error creating category:", err);
+    }
   };
 
   return (
@@ -53,7 +78,7 @@ const AddCategory = () => {
       <h2 className="text-2xl font-semibold text-gray-700 mb-4">Create New Category</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Name Input */}
+        {/* Name */}
         <div>
           <label className="block text-sm font-medium text-gray-700">Category Name</label>
           <input
@@ -79,7 +104,7 @@ const AddCategory = () => {
             required
           />
 
-          {/* Image Preview Section */}
+          {/* Preview */}
           {previewImage ? (
             <div className="relative mt-4 w-full">
               <img
@@ -116,9 +141,22 @@ const AddCategory = () => {
           />
         </div>
 
-        {/* Submit Button */}
-        <button type="submit" className="btn btn-primary w-full">
-          Create Category
+        {/* Submit */}
+        <button
+          type="submit"
+          disabled={isLoading}
+          className={`w-full text-[15px] bg-[#21324A] hover:bg-[#102e50e8] text-white font-semibold py-3 px-2 rounded-lg transition duration-300 flex items-center justify-center gap-2 ${
+            isLoading ? "opacity-60 cursor-not-allowed" : ""
+          }`}
+        >
+          {isLoading ? (
+            <>
+              <ClipLoader size={20} color="#e8e7e7" />
+              <span>Creating...</span>
+            </>
+          ) : (
+            "Create Category"
+          )}
         </button>
       </form>
     </div>

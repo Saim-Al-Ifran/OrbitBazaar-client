@@ -32,7 +32,7 @@ const AllCategories = () => {
   const [deleteCategory,{isSuccess:delSuccess,isError:delError}] = useDeleteCategoryMutation();
   const [deletingCategoryId, setDeletingCategoryId] = useState<string | null>(null);
 
-  console.log(categories ,error);
+ 
   useEffect(()=>{
     if(delSuccess){
       Swal.fire({

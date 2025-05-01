@@ -5,7 +5,6 @@ import {
   AdminCategoryRequest, 
   AdminCategoryResponse,
   CategoriesResponse,
-  CategoryCreateInput,
   CategoryCreateResponse,
   CategoryUpdateInput,
   CategoryUpdateResponse,
@@ -36,7 +35,7 @@ const categoriesApi = apiSlice.injectEndpoints({
     getSingleCategory: builder.query<SingleCategoryResponse, string>({
       query: (id) => `/categories/${id}`,
     }),
-    createCategory: builder.mutation<CategoryCreateInput,CategoryCreateResponse>({
+    createCategory: builder.mutation<CategoryCreateResponse,FormData>({
       query: (category) => ({
         url: '/admin/categories',
         method: 'POST',

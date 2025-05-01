@@ -20,7 +20,7 @@ const AdminLogin = () => {
   const {
     data: userData,
     refetch: refetchUser, // 👈 refetch function
-  } = useGetUserProfileQuery({});
+  } = useGetUserProfileQuery();
 
   //Redirect based on user role
   useEffect(() => {
