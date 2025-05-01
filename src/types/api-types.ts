@@ -97,7 +97,7 @@ export interface ChangePasswordResponse {
 
 // Categories
 export interface Category {
-  id: string;
+  _id: string;
   name: string;
   image: string;
   description: string;

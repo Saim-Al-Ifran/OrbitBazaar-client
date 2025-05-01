@@ -11,7 +11,7 @@ const authTags = ["Auth"] as const;
 const dashboardTags = ["Dashboard"] as const;
 const orderTags = ["Order"] as const;
 const reviewTags = ["Review"] as const;
-const categoryTags = ["Category"] as const;
+const categoryTags = ['Categories', 'Category'] as const;
  
 
 // Export a flat list

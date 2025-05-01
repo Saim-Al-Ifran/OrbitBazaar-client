@@ -2,7 +2,7 @@ import { apiSlice } from "../api/apiSlice";
 import { BaseQueryFn } from '@reduxjs/toolkit/query';
 import { EndpointBuilder } from '@reduxjs/toolkit/query';
 import {
-  AdminCategoryRequest, 
+  AdminCategoryRequest,
   AdminCategoryResponse,
   CategoriesResponse,
   CategoryCreateResponse,
@@ -12,55 +12,77 @@ import {
   SingleCategoryResponse
 } from "../../types/api-types";
 
-
 const categoriesApi = apiSlice.injectEndpoints({
   endpoints: (builder: EndpointBuilder<BaseQueryFn, string, string>) => ({
 
-    getAdminCategories: builder.query<AdminCategoryResponse,AdminCategoryRequest>({
+    // GET all categories for admin (paginated)
+    getAdminCategories: builder.query<AdminCategoryResponse, AdminCategoryRequest>({
       query: ({ page, limit, search } = {}) => {
         let base = '/admin/categories';
         const params = new URLSearchParams();
-        
+
         if (page) params.append('page', page.toString());
         if (limit) params.append('limit', limit.toString());
         if (search) params.append('search', search);
 
         const queryString = params.toString();
         return queryString ? `${base}?${queryString}` : base;
-      }
+      },
+      providesTags: ['Categories'],
     }),
+
+    // GET all categories (public)
     getCategories: builder.query<CategoriesResponse, void>({
       query: () => '/categories',
+      providesTags: ['Categories'],
     }),
+
+    // GET a single category by ID
     getSingleCategory: builder.query<SingleCategoryResponse, string>({
       query: (id) => `/categories/${id}`,
+      providesTags: (_result, _error, id) => [{ type: 'Category', id }],
     }),
-    createCategory: builder.mutation<CategoryCreateResponse,FormData>({
+
+    // POST create a new category
+    createCategory: builder.mutation<CategoryCreateResponse, FormData>({
       query: (category) => ({
         url: '/admin/categories',
         method: 'POST',
         body: category,
       }),
+      invalidatesTags: ['Categories'],
     }),
-    updateCategory: builder.mutation<CategoryUpdateResponse,CategoryUpdateInput>({
+
+    // PUT update category
+    updateCategory: builder.mutation<CategoryUpdateResponse, CategoryUpdateInput>({
       query: ({ id, category }) => ({
-        url: `/categories/${id}`,
+        url: `/admin/categories/${id}`,
         method: 'PUT',
         body: category,
       }),
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: 'Category', id },
+        'Categories',
+      ],
     }),
+
+    // DELETE category
     deleteCategory: builder.mutation<DeleteCategoryResponse, string>({
       query: (id) => ({
-        url: `/categories/${id}`,
+        url: `/admin/categories/${id}`,
         method: 'DELETE',
       }),
+      invalidatesTags: (_result, _error, id) => [
+        { type: 'Category', id },
+        'Categories',
+      ],
     }),
   }),
- 
 });
 
 export const {
   useGetAdminCategoriesQuery,
+  useGetCategoriesQuery,
   useGetSingleCategoryQuery,
   useCreateCategoryMutation,
   useUpdateCategoryMutation,

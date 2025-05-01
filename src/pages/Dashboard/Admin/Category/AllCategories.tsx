@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useDeleteCategoryMutation, useGetAdminCategoriesQuery } from "../../../../features/categories/categoriesApi";
 import Swal from 'sweetalert2';
-import {   PacmanLoader, ScaleLoader } from "react-spinners";
+import {   ClipLoader, PacmanLoader, ScaleLoader } from "react-spinners";
 import { Category } from "../../../../types/api-types";
 
 const TABLE_HEAD = ["Category-image", "Category-name", "Actions"];
@@ -29,9 +29,10 @@ const AllCategories = () => {
   const [paginationLoading, setPaginationLoading] = useState(false);
   const limit = 5;
   const { data: categories, isLoading, isError:categoriesIsError, error } = useGetAdminCategoriesQuery({ page, limit, search: searchQuery });
-  const [deleteCategory,{isSuccess:delSuccess,isError:delError}] = useDeleteCategoryMutation();
+  const [deleteCategory,{isSuccess:delSuccess,isError:isDelError,error:delError}] = useDeleteCategoryMutation();
   const [deletingCategoryId, setDeletingCategoryId] = useState<string | null>(null);
-
+ 
+ 
  
   useEffect(()=>{
     if(delSuccess){
@@ -39,11 +40,12 @@ const AllCategories = () => {
         title: '<span>Deleted!</span>',
         html: '<span>The category has been deleted.</span>',
         icon: 'success',
-        confirmButtonColor:'#607D8B'
+        confirmButtonColor:'#21324A'
       });
     }
 
-    if(delError){
+    if(isDelError){
+      console.log("Error deleting category: ",delError);
       Swal.fire(
         'Error!',
         'Failed to delete the application.',
@@ -51,7 +53,7 @@ const AllCategories = () => {
       );
     }
 
-},[delSuccess,delError]);
+},[delSuccess,isDelError]);
 
 useEffect(() => {
   setPaginationLoading(false);  
@@ -93,7 +95,7 @@ const handleDeleteCategory = async (id:string)=>{
     text: "You won't be able to revert this!",
     icon: 'warning',
     showCancelButton: true,
-    confirmButtonColor: '#607D8B',
+    confirmButtonColor: '#21324A',
     cancelButtonColor: '#F44336',
     confirmButtonText: 'Yes, delete it!'
   });
@@ -233,20 +235,27 @@ return (
                       <td className={classes}>
                           <div className="flex items-center gap-4">
                             <NavLink to="/dashboard/category/edit/1">
-                              <Tooltip content="Edit User" >  
+                              <Tooltip content="Edit Category" >  
                                 <IconButton variant="filled"   {...(undefined as any)}>
                                   <PencilIcon className="h-4 w-4" />
                                 </IconButton>
                               </Tooltip>
                             </NavLink>
       
-                            <Tooltip content="Delete User">
+                            <Tooltip content="Delete Category">
                                 <IconButton
                                   variant="filled"
                                   className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-md"
+                                  onClick={() => handleDeleteCategory(category._id)}
+                                  disabled={deletingCategoryId === category._id} 
                                   {...(undefined as any)}
                                 >
-                                  <TrashIcon className="h-4 w-4" />
+                                {deletingCategoryId === category._id ? (
+                                    <span><ClipLoader color="white" size={15} /></span>
+                                  ) : (
+                                    <TrashIcon className="h-4 w-4" /> 
+                                  )}
+                                  {/* <TrashIcon className="h-4 w-4" /> */}
                                 </IconButton>
                               </Tooltip>
                           </div>
