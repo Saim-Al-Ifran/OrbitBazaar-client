@@ -2,10 +2,10 @@
 import { useGetUserProfileQuery } from "../../features/user/userApi";
 
 const useUserRoles = () => {
-  const { data:user, isLoading, isError,error} = useGetUserProfileQuery();
+  const { data:user, isLoading, isError} = useGetUserProfileQuery();
 
   const role = user?.data?.role;
-  console.log(error);
+ 
   return {
     isSuperAdmin: role === "super-admin",
     isAdmin: role === "admin",

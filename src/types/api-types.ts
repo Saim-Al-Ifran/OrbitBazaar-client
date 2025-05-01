@@ -224,7 +224,7 @@ export interface CreateUserResponse {
  
 export interface UpdateVendorStatusInput {
   id: string;
-  status: 'approved' | 'rejected' | 'pending'; // adjust based on possible values
+  status: 'approved' | 'rejected' | 'pending'; 
 }
 
 export interface UpdatedVendor {
