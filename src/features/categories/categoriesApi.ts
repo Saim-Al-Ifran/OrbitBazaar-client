@@ -39,7 +39,7 @@ const categoriesApi = apiSlice.injectEndpoints({
 
     // GET a single category by ID
     getSingleCategory: builder.query<SingleCategoryResponse, string>({
-      query: (id) => `/categories/${id}`,
+      query: (id) => `/admin/categories/${id}`,
       providesTags: (_result, _error, id) => [{ type: 'Category', id }],
     }),
 

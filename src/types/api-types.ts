@@ -147,11 +147,7 @@ export interface CategoryCreateResponse {
 
 export interface CategoryUpdateInput {
   id: string;
-  category: {
-    name?: string;
-    description?: string;
-    image?: File; 
-  };
+  category: FormData;
 }
 export interface CategoryUpdateResponse  extends CategoryCreateResponse {}
 

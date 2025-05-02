@@ -174,7 +174,7 @@ return (
       <CardBody className="overflow-scroll px-0" {...(undefined as any)}>
         {paginationLoading || (searchLoading && !noCategoriesFound) ? (
                       <div className="flex justify-center">
-                          {/* <ClipLoader color="#607D8B" size={30} /> */}
+
                           <ScaleLoader />
                       </div>
                   ) : noCategoriesFound ? (
@@ -234,7 +234,7 @@ return (
        
                       <td className={classes}>
                           <div className="flex items-center gap-4">
-                            <NavLink to="/dashboard/category/edit/1">
+                            <NavLink to={`/dashboard/category/edit/${category._id}`}>
                               <Tooltip content="Edit Category" >  
                                 <IconButton variant="filled"   {...(undefined as any)}>
                                   <PencilIcon className="h-4 w-4" />
