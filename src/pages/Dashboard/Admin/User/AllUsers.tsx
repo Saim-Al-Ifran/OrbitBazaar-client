@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { useGetAllUsersQuery } from "../../../../features/user/userApi";
 import { PacmanLoader, ScaleLoader } from "react-spinners";
 import UserTable from "../../../../components/Admin/User/UserTable";
+import { NavLink } from "react-router-dom";
 
 const AllUsers = () => {
   const [page, setPage] = useState(1);
@@ -86,9 +87,11 @@ const AllUsers = () => {
             </Typography>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-            <Button className="flex items-center gap-3" size="sm" {...(undefined as any)}>
-              <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add Member
-            </Button>
+            <NavLink to="/dashboard/users/add-user">
+                <Button className="flex items-center gap-3" size="sm" {...(undefined as any)}>
+                    <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add Member
+                </Button>
+            </NavLink>
           </div>
         </div>
 

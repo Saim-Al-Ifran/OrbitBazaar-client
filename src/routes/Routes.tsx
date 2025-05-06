@@ -46,6 +46,7 @@ import ChangePassword from '../components/Profile/ChangePassword';
 import AdminOrSuperAdmin from './AdminOrSuperAdmin';
 import VendorRoute from './VendorRoute';
 import PrivateRoute from './PrivateRoute';
+import AddUser from '../pages/Dashboard/Admin/User/AddUser';
 
 const AppRouter = () => {
   return (
@@ -88,6 +89,14 @@ const AppRouter = () => {
             element={
               <AdminOrSuperAdmin>
                 <AllUsers />
+              </AdminOrSuperAdmin>
+            }
+          />
+          <Route
+            path="users/add-user"
+            element={
+              <AdminOrSuperAdmin>
+                 <AddUser/>
               </AdminOrSuperAdmin>
             }
           />
