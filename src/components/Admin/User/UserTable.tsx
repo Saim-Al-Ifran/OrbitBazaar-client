@@ -10,70 +10,29 @@ import { useState } from "react";
 
 const TABLE_HEAD = ["User", "Phone-Number", "Status", "Role", "Action"];
 
-const TABLE_ROWS = [
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg",
-    name: "John Michael",
-    email: "john@creative-tim.com",
-    job: "Manager",
-    org: "Organization",
-    status: "Active",
-    role: "Admin",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
-    name: "Alexa Liras",
-    email: "alexa@creative-tim.com",
-    job: "Programmer",
-    org: "Developer",
-    status: "Blocked",
-    role: "User",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg",
-    name: "Laurent Perrier",
-    email: "laurent@creative-tim.com",
-    job: "Executive",
-    org: "Projects",
-    status: "Active",
-    role: "User",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-4.jpg",
-    name: "Michael Levi",
-    email: "michael@creative-tim.com",
-    job: "Programmer",
-    org: "Developer",
-    status: "Blocked",
-    role: "Admin",
-  },
-  {
-    img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-5.jpg",
-    name: "Richard Gran",
-    email: "richard@creative-tim.com",
-    job: "Manager",
-    org: "Executive",
-    status: "Active",
-    role: "User",
-  },
-];
+ 
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  status: string;
+  role: string;
+  img?: string;
+}
 
-const UserTable = () => {
+interface UserTableProps {
+  users: User[];
+}
+
+
+const UserTable = ({ users }: UserTableProps) => {
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [role, setRole] = useState("");
   const [status, setStatus] = useState("");
  
-  interface User {
-    img: string;
-    name: string;
-    email: string;
-    job: string;
-    org: string;
-    status: string;
-    role: string;
-  }
-
+  
   const handleOpen = (user: User): void => {
     setSelectedUser(user);
     setRole(user.role);
@@ -103,9 +62,9 @@ const UserTable = () => {
           </tr>
         </thead>
         <tbody>
-          {TABLE_ROWS.map((user, index) => {
-            const { img, name, email, job, org, status, role } = user;
-            const isLast = index === TABLE_ROWS.length - 1;
+          {users.map((user, index) => {
+            const { img, name, email ,status, role ,phoneNumber} = user;
+            const isLast = index === users.length - 1;
             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
             return (
@@ -141,16 +100,9 @@ const UserTable = () => {
                       className="font-normal"
                       {...(undefined as any)}
                     >
-                      {job}
+                      {phoneNumber}
                     </Typography>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal opacity-70"
-                      {...(undefined as any)}
-                    >
-                      {org}
-                    </Typography>
+ 
                   </div>
                 </td>
                 <td className={classes}>
@@ -159,7 +111,7 @@ const UserTable = () => {
                       variant="ghost"
                       size="sm"
                       value={status}
-                      color={status === "Active" ? "green" : "red"}
+                      color={status === "active" ? "green" : "red"}
                     />
                   </div>
                 </td>

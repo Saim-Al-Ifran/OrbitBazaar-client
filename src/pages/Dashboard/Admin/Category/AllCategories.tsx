@@ -1,4 +1,4 @@
-import { MagnifyingGlassIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
 import {
   Card,
   CardHeader,
@@ -104,9 +104,7 @@ const handleDeleteCategory = async (id:string)=>{
     await deleteCategory(id)
   }
 }
-
-console.log("pagination loading: ",paginationLoading);
-console.log("search  loading: ", searchLoading);
+ 
 
 
 return (
@@ -237,7 +235,7 @@ return (
                             <NavLink to={`/dashboard/category/edit/${category._id}`}>
                               <Tooltip content="Edit Category" >  
                                 <IconButton variant="filled"   {...(undefined as any)}>
-                                  <PencilIcon className="h-4 w-4" />
+                                  <PencilIcon  className="h-4 w-4" />
                                 </IconButton>
                               </Tooltip>
                             </NavLink>

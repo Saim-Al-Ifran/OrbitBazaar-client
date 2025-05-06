@@ -99,12 +99,7 @@ const authApi = apiSlice.injectEndpoints({
         body: credentials,
       }),
     }),
-    getUser: builder.query({
-      query: () => ({
-        url: "/admin/users",
-        method: "GET",
-      }),
-    }),
+ 
     vendorRegister: builder.mutation<VendorRegisterResponse, VendorRegisterInput>({
       query: (credentials) => ({
         url: "/auth/vendors/register",
@@ -145,7 +140,6 @@ export const {
   useVendorRegisterMutation,
   useRefreshTokenMutation,
   useLogoutMutation,
-  useGetUserQuery,
   useRegisterUserMutation,
   useFirebaseUserLoginMutation,
   useChangePasswordMutation,

@@ -263,3 +263,11 @@ export interface DeleteUserResponse {
   message: string;
 }
 export interface DeleteEntityResponse extends DeleteUserResponse {}
+
+export interface UserRequestParams{
+  page?: number;
+  limit?: number;
+  search?: string;
+  sort?: string; 
+}
+

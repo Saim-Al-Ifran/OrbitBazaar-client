@@ -16,6 +16,7 @@ import {
   DeleteUserResponse,
   DeleteEntityResponse,
   UserListResponse,
+  UserRequestParams,
 } from "../../types/api-types";
 
 const userApi = apiSlice.injectEndpoints({
@@ -45,10 +46,18 @@ const userApi = apiSlice.injectEndpoints({
       invalidatesTags: ["UserProfile", "UserList"],
     }),
 
-    getAllUsers: builder.query<UserListResponse, void>({
-      query: () => ({
-        url: `/admin/users`,
-      }),
+    getAllUsers: builder.query<UserListResponse, UserRequestParams>({
+      query: ({ page, limit, search ,sort } = {}) => {
+        let base = `/admin/users`;
+        const params = new URLSearchParams();
+        if (page) params.append('page', page.toString());
+        if (limit) params.append('limit', limit.toString());
+        if (sort) params.append('sort', sort.toString());
+        if (search) params.append('search', search);
+
+        const queryString = params.toString();
+        return queryString ? `${base}?${queryString}` : base;
+      },
       providesTags: ["UserList"],
     }),
 
