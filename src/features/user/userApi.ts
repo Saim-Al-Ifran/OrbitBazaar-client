@@ -83,9 +83,10 @@ const userApi = apiSlice.injectEndpoints({
     }),
 
     updateUserStatus: builder.mutation<UpdateUserStatusResponse, UpdateUserStatusRequest>({
-      query: ({ id }) => ({
+      query: ({ id , data}) => ({
         url: `/admin/users/${id}/status`,
         method: "PATCH",
+        body:data
       }),
       invalidatesTags: ["UserList", "BlockedUsers"],
     }),

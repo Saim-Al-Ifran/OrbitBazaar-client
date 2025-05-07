@@ -174,6 +174,9 @@ export interface VendorListResponse {
 export interface UserListResponse extends VendorListResponse{};
 export interface UpdateUserStatusRequest {
   id: string;
+  data:{
+    status:string;
+  }
 }
 
 

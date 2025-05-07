@@ -30,7 +30,7 @@ const AllUsers = () => {
     isError,
     error,
   } = useGetAllUsersQuery({ page, limit, search: searchQuery, sort: sortOrder });
-  console.log(users);
+ 
   
   useEffect(() => {
     setPaginationLoading(false);  

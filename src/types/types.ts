@@ -22,3 +22,4 @@ export interface AuthState {
     refreshToken?: string;
     user?: User;
   }
+
