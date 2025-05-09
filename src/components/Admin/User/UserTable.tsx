@@ -7,20 +7,26 @@ import {
   Tooltip,
 } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+
 import useUserRoles from "../../../hooks/auth/useCheckRoles";
-import {   useUpdateUserStatusMutation } from "../../../features/user/userApi";
-import toast from "react-hot-toast";
+import {
+  useUpdateUserRoleMutation,
+  useUpdateUserStatusMutation,
+} from "../../../features/user/userApi";
+import ChangeUserStatusModal from "./ChangeUserStatusModal";
+import ChangeUserRoleModal from "./ChangeUserRoleModal";
 
 const TABLE_HEAD = ["User", "Phone-Number", "Status", "Role", "Action"];
-
+import avatar from '../../../assets/userAvatar2.png';
 interface User {
   _id: string;
   name: string;
   email: string;
   phoneNumber: string;
   status: string;
-  role: string;
-  img?: string;
+  role: "user" | "admin" | "vendor" | "super-admin";
+  image?: string;
 }
 
 interface UserTableProps {
@@ -28,45 +34,58 @@ interface UserTableProps {
 }
 
 const UserTable = ({ users }: UserTableProps) => {
-  const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [role, setRole] = useState("");
   const [status, setStatus] = useState("");
-  const { isSuperAdmin,isAdmin } = useUserRoles();
-  const [updateUserStatus, { isLoading, isSuccess, isError  }] =
-    useUpdateUserStatusMutation();
- 
+  const [role, setRole] = useState<"user" | "admin" | "vendor" | "super-admin">("user");
 
-  const handleOpen = (user: User): void => {
+  const [showStatusModal, setShowStatusModal] = useState(false);
+  const [showRoleModal, setShowRoleModal] = useState(false);
+
+ 
+  const { isSuperAdmin  } = useUserRoles();
+
+  const [updateUserStatus, { isLoading: isUsersStatusLoading, isSuccess: isUserStatusSuccess }] =
+    useUpdateUserStatusMutation();
+
+  const [updateUserRole, { isLoading: isUpdateRoleLoading, isSuccess: isUpdateRoleSuccess }] =
+    useUpdateUserRoleMutation();
+
+  useEffect(() => {
+    if (isUserStatusSuccess) {
+      setShowStatusModal(false);
+    }
+    if (isUpdateRoleSuccess) {
+      setShowRoleModal(false);
+    }
+  }, [isUserStatusSuccess, isUpdateRoleSuccess]);
+
+  const openStatusModal = (user: User) => {
+    setSelectedUser(user);
+    setStatus(user.status);
+    setShowStatusModal(true);
+  };
+
+  const openRoleModal = (user: User) => {
     setSelectedUser(user);
     setRole(user.role);
-    setStatus(user.status);
-    setOpen(true);
-    
+    setShowRoleModal(true);
   };
-  console.log(selectedUser)
-  
- useEffect(()=>{
-        if(isSuccess){
-          toast.success("Updated user status successfully!");
-          setOpen(false);
-        }
-       
- },[isSuccess,isError]);
 
-  const handleSaveChanges = async () => {
+  const handleStatusSave = async () => {
     if (!selectedUser) return;
+    await updateUserStatus({ id: selectedUser._id, data: { status } }).unwrap();
+    toast.success("User status updated!");
+  };
 
-    try {
-      if(isAdmin){
-        await updateUserStatus({
-          id: selectedUser._id,
-          data: {status }
-        }).unwrap();
-      }      
-    } catch (err) {
-      console.error("Failed to update user:", err);
-    }
+  const handleRoleSave = async () => {
+    if (!selectedUser) return;
+    await updateUserRole({ id: selectedUser._id, data: { role } }).unwrap();
+    toast.success("User role updated!");
+  };
+
+  const handleDeleteUser = (userId: string) => {
+    // You can implement delete logic here
+    toast.success(`User with ID ${userId} deleted (not implemented)`);
   };
 
   return (
@@ -93,7 +112,7 @@ const UserTable = ({ users }: UserTableProps) => {
         </thead>
         <tbody>
           {users.map((user, index) => {
-            const { img, name, email, status, role, phoneNumber } = user;
+            const { image, name, email, status, role, phoneNumber } = user;
             const isLast = index === users.length - 1;
             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
@@ -101,7 +120,12 @@ const UserTable = ({ users }: UserTableProps) => {
               <tr key={user._id}>
                 <td className={classes}>
                   <div className="flex items-center gap-3">
-                    <Avatar src={img} alt={name} size="sm" {...(undefined as any)}/>
+                    <Avatar
+                      src={image || avatar}
+                      alt={name}
+                      size="sm"  {...(undefined as any)}
+                      referrerPolicy="no-referrer"  
+                    />
                     <div className="flex flex-col">
                       <Typography variant="small" color="blue-gray" className="font-normal" {...(undefined as any)}>
                         {name}
@@ -119,30 +143,51 @@ const UserTable = ({ users }: UserTableProps) => {
                 </td>
                 <td className={classes}>
                   <div className="w-max">
-                      <Chip
-                        variant="ghost"
-                        size="sm"
-                        value={status}
-                        color={status === "active" ? "green" : "red"}
-                      />
-                    </div>
+                    <Chip
+                      variant="ghost"
+                      size="sm"
+                      value={status}
+                      color={status === "active" ? "green" : "red"}
+                    />
+                  </div>
                 </td>
                 <td className={classes}>
-                  <Typography variant="small" color="blue-gray" className="font-normal" {...(undefined as any)} >
+                  <Typography variant="small" color="blue-gray" className="font-normal" {...(undefined as any)}>
                     {role}
                   </Typography>
                 </td>
                 <td className={classes}>
                   <div className="flex items-center gap-4">
-                    <Tooltip content="Edit User">
-                      <IconButton variant="filled" onClick={() => handleOpen(user)} {...(undefined as any)}>
+                    <Tooltip content="Edit Status">
+                      <IconButton
+                        variant="filled"
+                        aria-label="Edit Status"
+                        onClick={() => openStatusModal(user)}
+                        {...(undefined as any)}
+                      >
                         <PencilIcon className="h-4 w-4" />
                       </IconButton>
                     </Tooltip>
+                     {isSuperAdmin && (
+                      <Tooltip content="Edit Role">
+                          <IconButton
+                            variant="filled"
+                            aria-label="Edit Role"
+                            onClick={() => openRoleModal(user)}
+                            className="bg-indigo-500 hover:bg-indigo-600 text-white"
+                            {...(undefined as any)}
+                          >
+                            <PencilIcon className="h-4 w-4" />
+                          </IconButton>
+                        </Tooltip>
+                  )}
+
                     <Tooltip content="Delete User">
                       <IconButton
                         variant="filled"
-                        className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-md"
+                        aria-label="Delete User"
+                        className="bg-red-500 hover:bg-red-600 text-white"
+                        onClick={() => handleDeleteUser(user._id)}
                         {...(undefined as any)}
                       >
                         <TrashIcon className="h-4 w-4" />
@@ -156,56 +201,24 @@ const UserTable = ({ users }: UserTableProps) => {
         </tbody>
       </table>
 
-      {/* Modal */}
-      {open && (
-        <div className="modal modal-open fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="modal-box bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <h3 className="font-bold text-lg mb-4">Edit User</h3>
-
-            {/* Role Selection */}
-            {isSuperAdmin && (
-              <div className="mb-4">
-                <label className="block font-medium mb-1">User Role</label>
-                <select
-                  className="select select-bordered w-full"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                >
-                  <option value="admin">Admin</option>
-                  <option value="user">User</option>
-                </select>
-              </div>
-            )}
-
-            {/* Status Selection */}
-            <div className="mb-4">
-              <label className="block font-medium mb-1">User Status</label>
-              <select
-                className="select select-bordered w-full"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-              >
-                <option value="active">Active</option>
-                <option value="block">Blocked</option>
-              </select>
-            </div>
-
- 
-            {/* Buttons */}
-            <div className="modal-action flex justify-end gap-3">
-              <button className="btn" onClick={() => setOpen(false)}>
-                Cancel
-              </button>
-              <button
-                className={`btn btn-primary ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
-                onClick={handleSaveChanges}
-                disabled={isLoading}
-              >
-                {isLoading ? "Saving..." : "Save Changes"}
-              </button>
-            </div>
-          </div>
-        </div>
+      {/* Modals */}
+      {showStatusModal && (
+        <ChangeUserStatusModal
+          status={status}
+          setStatus={setStatus}
+          onClose={() => setShowStatusModal(false)}
+          onSave={handleStatusSave}
+          isLoading={isUsersStatusLoading}
+        />
+      )}
+      {showRoleModal && (
+        <ChangeUserRoleModal
+          role={role}
+          setRole={setRole}
+          onClose={() => setShowRoleModal(false)}
+          onSave={handleRoleSave}
+          isLoading={isUpdateRoleLoading}
+        />
       )}
     </>
   );

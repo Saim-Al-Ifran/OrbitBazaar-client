@@ -110,10 +110,10 @@ const userApi = apiSlice.injectEndpoints({
     }),
 
     updateUserRole: builder.mutation<UpdateUserRoleResponse, UpdateUserRoleInput>({
-      query: ({ id, role }) => ({
+      query: ({ id, data }) => ({
         url: `/super-admin/${id}/role`,
         method: "PATCH",
-        body: { role },
+        body: data,
       }),
       invalidatesTags: ["UserList"],
     }),

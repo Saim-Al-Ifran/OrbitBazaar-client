@@ -244,7 +244,10 @@ export interface UpdateVendorStatusResponse {
 
 export interface UpdateUserRoleInput {
   id: string;
-  role: 'user' | 'admin' | 'vendor' | 'super-admin'; // adjust roles as needed
+  data:{
+     role: 'user' | 'admin' | 'vendor' | 'super-admin'; 
+  }
+ 
 }
 
 export interface UpdatedUserRole {
