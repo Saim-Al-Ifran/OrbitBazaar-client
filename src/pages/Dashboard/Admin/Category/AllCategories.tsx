@@ -29,7 +29,7 @@ const AllCategories = () => {
   const [paginationLoading, setPaginationLoading] = useState(false);
   const limit = 5;
   const { data: categories, isLoading, isError:categoriesIsError, error } = useGetAdminCategoriesQuery({ page, limit, search: searchQuery });
-  const [deleteCategory,{isSuccess:delSuccess,isError:isDelError,error:delError}] = useDeleteCategoryMutation();
+  const [deleteCategory,{isSuccess:delSuccess,isError:isDelError}] = useDeleteCategoryMutation();
   const [deletingCategoryId, setDeletingCategoryId] = useState<string | null>(null);
  
  
@@ -42,13 +42,13 @@ const AllCategories = () => {
         icon: 'success',
         confirmButtonColor:'#21324A'
       });
+      setPage(1);
     }
 
     if(isDelError){
-      console.log("Error deleting category: ",delError);
       Swal.fire(
         'Error!',
-        'Failed to delete the application.',
+        'Failed to delete the category.',
         'error'
       );
     }
@@ -253,7 +253,6 @@ return (
                                   ) : (
                                     <TrashIcon className="h-4 w-4" /> 
                                   )}
-                                  {/* <TrashIcon className="h-4 w-4" /> */}
                                 </IconButton>
                               </Tooltip>
                           </div>

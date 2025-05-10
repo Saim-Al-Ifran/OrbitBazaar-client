@@ -11,14 +11,19 @@ import { toast } from "react-hot-toast";
 
 import useUserRoles from "../../../hooks/auth/useCheckRoles";
 import {
+  useDeleteUserMutation,
   useUpdateUserRoleMutation,
   useUpdateUserStatusMutation,
 } from "../../../features/user/userApi";
 import ChangeUserStatusModal from "./ChangeUserStatusModal";
 import ChangeUserRoleModal from "./ChangeUserRoleModal";
-
 const TABLE_HEAD = ["User", "Phone-Number", "Status", "Role", "Action"];
 import avatar from '../../../assets/userAvatar2.png';
+import Swal from 'sweetalert2';
+import { ClipLoader } from "react-spinners";
+ 
+
+
 interface User {
   _id: string;
   name: string;
@@ -30,26 +35,23 @@ interface User {
 }
 
 interface UserTableProps {
-  users: User[];
+  users: User[]; 
 }
 
-const UserTable = ({ users }: UserTableProps) => {
+const UserTable = ({ users  }: UserTableProps) => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [status, setStatus] = useState("");
   const [role, setRole] = useState<"user" | "admin" | "vendor" | "super-admin">("user");
-
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
-
- 
-  const { isSuperAdmin  } = useUserRoles();
-
+  const { isSuperAdmin } = useUserRoles();
   const [updateUserStatus, { isLoading: isUsersStatusLoading, isSuccess: isUserStatusSuccess }] =
     useUpdateUserStatusMutation();
-
   const [updateUserRole, { isLoading: isUpdateRoleLoading, isSuccess: isUpdateRoleSuccess }] =
     useUpdateUserRoleMutation();
-
+  const [deleteUser, { isLoading: isDeleteLoading, isSuccess: isDeleteSuccess,isError:isDeleteError}] = useDeleteUserMutation();
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null)
+ 
   useEffect(() => {
     if (isUserStatusSuccess) {
       setShowStatusModal(false);
@@ -59,6 +61,24 @@ const UserTable = ({ users }: UserTableProps) => {
     }
   }, [isUserStatusSuccess, isUpdateRoleSuccess]);
 
+  useEffect(() => {
+    if (isDeleteSuccess) {
+          Swal.fire({
+            title: '<span>Deleted!</span>',
+            html: '<span>The user has been deleted.</span>',
+            icon: 'success',
+            confirmButtonColor:'#21324A'
+          });
+         // setPage(1);
+    }
+    if(isDeleteError){
+            Swal.fire(
+              'Error!',
+              'Failed to delete the user.',
+              'error'
+            );
+    }
+  }, [isDeleteSuccess,isDeleteError]);
   const openStatusModal = (user: User) => {
     setSelectedUser(user);
     setStatus(user.status);
@@ -83,9 +103,21 @@ const UserTable = ({ users }: UserTableProps) => {
     toast.success("User role updated!");
   };
 
-  const handleDeleteUser = (userId: string) => {
-    // You can implement delete logic here
-    toast.success(`User with ID ${userId} deleted (not implemented)`);
+  const handleDeleteUser = async(id: string) => {
+        const result = await Swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#21324A',
+          cancelButtonColor: '#F44336',
+          confirmButtonText: 'Yes, delete it!'
+        });
+        if(result.isConfirmed){  
+          setDeletingUserId(id)
+ 
+          await deleteUser(id)
+        }
   };
 
   return (
@@ -189,8 +221,14 @@ const UserTable = ({ users }: UserTableProps) => {
                         className="bg-red-500 hover:bg-red-600 text-white"
                         onClick={() => handleDeleteUser(user._id)}
                         {...(undefined as any)}
+                        disabled={isDeleteLoading && deletingUserId === user._id}
                       >
-                        <TrashIcon className="h-4 w-4" />
+                        {isDeleteLoading && deletingUserId === user._id ? (
+                            <span><ClipLoader color="white" size={15} /></span>
+                        ):(
+                            <TrashIcon className="h-4 w-4" />
+                        )}
+                      
                       </IconButton>
                     </Tooltip>
                   </div>

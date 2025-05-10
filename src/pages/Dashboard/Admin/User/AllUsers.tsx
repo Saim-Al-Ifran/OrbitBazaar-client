@@ -31,17 +31,25 @@ const AllUsers = () => {
     error,
   } = useGetAllUsersQuery({ page, limit, search: searchQuery, sort: sortOrder });
  
+  console.log("users", users);
   
-  useEffect(() => {
-    setPaginationLoading(false);  
+useEffect(() => {
+  setPaginationLoading(false);  
+  setSearchLoading(false);
+  setSortingLoading(false);
+
+  if (isError) {
+    setPaginationLoading(false);
     setSearchLoading(false);
     setSortingLoading(false);
-    if (isError) {
-      setPaginationLoading(false);
-      setSearchLoading(false);
-      setSortingLoading(false);
-    }  
-  }, [users,isError]);
+  }
+
+  //  Handle page shift if current page has no users but previous pages exist
+  if ((error as any)?.status === 404 && (users?.pagination?.currentPage ?? 0) > 1) {
+    setPage((users?.pagination?.currentPage ?? 1) - 1);
+  }
+}, [users, isError, isLoading, page]);
+
 
   const noUsersFound =
     isError &&
@@ -49,6 +57,7 @@ const AllUsers = () => {
     (error as any)?.data?.message === "No users found";
 
  
+  
 
   const handlePrevious = () => {
     setPaginationLoading(true);
@@ -147,21 +156,24 @@ const AllUsers = () => {
       </CardHeader>
 
       <CardBody className="overflow-scroll px-0" {...(undefined as any)}>
-                {paginationLoading || sortingLoading || (searchLoading && !noUsersFound) ? (
-                              <div className="flex justify-center">
-        
-                                  <ScaleLoader />
-                              </div>
-                          ) : noUsersFound ? (
-                              <div className="text-center p-4">
-                                <Typography variant="h6" color="red" className="font-normal" {...(undefined as any)}> 
-                                  No categories found for the search term "{searchQuery}"
-                                </Typography>
-                              </div>
-                          ) : (
-                            <UserTable users={users?.data || []} />
-                          )}
-        
+        {paginationLoading || sortingLoading || (searchLoading && !noUsersFound) ? (
+                  <div className="flex justify-center">
+
+                      <ScaleLoader />
+                  </div>
+              ) : noUsersFound ? (
+                  <div className="text-center p-4">
+                    <Typography variant="h6" color="red" className="font-normal" {...(undefined as any)}> 
+                      No user found for the search term "{searchQuery}"
+                    </Typography>
+                  </div>
+              ) : (
+                <UserTable
+                  key={page}
+                  users={users?.data || []}
+                />
+           )}
+
       </CardBody>
 
       {!noUsersFound && (
