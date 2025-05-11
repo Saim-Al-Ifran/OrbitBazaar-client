@@ -31,7 +31,6 @@ const AllUsers = () => {
     error,
   } = useGetAllUsersQuery({ page, limit, search: searchQuery, sort: sortOrder });
  
-  console.log("users", users);
   
 useEffect(() => {
   setPaginationLoading(false);  
@@ -55,10 +54,7 @@ useEffect(() => {
     isError &&
     (error as any)?.status === 404 &&
     (error as any)?.data?.message === "No users found";
-
  
-  
-
   const handlePrevious = () => {
     setPaginationLoading(true);
     if (page > 1) setPage(page - 1);

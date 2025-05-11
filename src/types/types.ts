@@ -23,3 +23,22 @@ export interface AuthState {
     user?: User;
   }
 
+export interface UserInfo {
+  _id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  status: string;
+  role: "user" | "admin" | "vendor" | "super-admin";
+  image?: string;
+}
+
+export interface UserTableProps {
+  users: UserInfo[]; 
+}
+
+export interface SellerInfo extends UserInfo {}
+export interface SellerTableProps {
+  // other properties
+  sellers: SellerInfo[];
+}

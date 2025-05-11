@@ -17,6 +17,7 @@ import {
   DeleteEntityResponse,
   UserListResponse,
   UserRequestParams,
+  vendorRequestParams,
 } from "../../types/api-types";
 
 const userApi = apiSlice.injectEndpoints({
@@ -60,6 +61,23 @@ const userApi = apiSlice.injectEndpoints({
       },
       providesTags: ["UserList"],
     }),
+    getSellers: builder.query<VendorListResponse, vendorRequestParams>({
+      query: ({ page, limit, search ,sort } = {}) => {
+        let base = `admin/users`;
+        const params = new URLSearchParams();
+        // Append query parameters to the URL
+        params.append('vendorRequestStatus', 'approved');
+        params.append('role', 'vendor');
+        if (page) params.append('page', page.toString());
+        if (limit) params.append('limit', limit.toString());
+        if (sort) params.append('sort', sort.toString());
+        if (search) params.append('search', search);
+
+        const queryString = params.toString();
+        return queryString ? `${base}?${queryString}` : base;
+      },
+      providesTags: ["ApprovedVendors"],
+    }),
 
     getSellerRequest: builder.query<VendorListResponse, void>({
       query: () => ({
@@ -68,12 +86,6 @@ const userApi = apiSlice.injectEndpoints({
       providesTags: ["SellerRequest"],
     }),
 
-    getSeller: builder.query<VendorListResponse, void>({
-      query: () => ({
-        url: `admin/users?vendorRequestStatus=approved&role=vendor`,
-      }),
-      providesTags: ["ApprovedVendors"],
-    }),
 
     getDeactivatedUser: builder.query<VendorListResponse, void>({
       query: () => ({
@@ -88,7 +100,7 @@ const userApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body:data
       }),
-      invalidatesTags: ["UserList", "BlockedUsers"],
+      invalidatesTags: ["UserList", "BlockedUsers","ApprovedVendors"],
     }),
 
     createUser: builder.mutation<CreateUserResponse, CreateUserInput>({
@@ -101,10 +113,10 @@ const userApi = apiSlice.injectEndpoints({
     }),
 
     updateVendorStatus: builder.mutation<UpdateVendorStatusResponse, UpdateVendorStatusInput>({
-      query: ({ id, status }) => ({
+      query: ({ id, data}) => ({
         url: `/admin/vendors/${id}/status`,
         method: "PATCH",
-        body: { status },
+        body: data,
       }),
       invalidatesTags: ["SellerRequest", "ApprovedVendors"],
     }),
@@ -115,7 +127,7 @@ const userApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: ["UserList"],
+      invalidatesTags: ["UserList","ApprovedVendors"],
     }),
 
     deleteUser: builder.mutation<DeleteUserResponse, string>({
@@ -123,7 +135,7 @@ const userApi = apiSlice.injectEndpoints({
         url: `/admin/users/${userId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["UserList"],
+      invalidatesTags: ["UserList","ApprovedVendors"],
     }),
 
     deleteEntity: builder.mutation<DeleteEntityResponse, string>({
@@ -140,7 +152,7 @@ export const {
   useGetUserProfileQuery,
   useUpdateUserProfileMutation,
   useUpdateUserProfileImageMutation,
-  useGetSellerQuery,
+  useGetSellersQuery,
   useGetSellerRequestQuery,
   useGetDeactivatedUserQuery,
   useGetAllUsersQuery,

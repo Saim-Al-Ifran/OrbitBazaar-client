@@ -223,7 +223,9 @@ export interface CreateUserResponse {
  
 export interface UpdateVendorStatusInput {
   id: string;
-  status: 'approved' | 'rejected' | 'pending'; 
+  data:{
+    status:string;
+  }
 }
 
 export interface UpdatedVendor {
@@ -276,4 +278,4 @@ export interface UserRequestParams{
   search?: string;
   sort?: string; 
 }
-
+export interface vendorRequestParams extends UserRequestParams{};

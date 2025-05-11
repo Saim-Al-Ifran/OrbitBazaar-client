@@ -47,7 +47,7 @@ const AddUser = () => {
       }).unwrap();
       setFormData({ name: "", email: "", password: "", phoneNumber:"", role: "user" });
     } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to add user");
+       console.log(err)
     }
   };
 

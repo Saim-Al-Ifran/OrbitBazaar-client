@@ -21,25 +21,13 @@ const TABLE_HEAD = ["User", "Phone-Number", "Status", "Role", "Action"];
 import avatar from '../../../assets/userAvatar2.png';
 import Swal from 'sweetalert2';
 import { ClipLoader } from "react-spinners";
+import { UserInfo, UserTableProps } from "../../../types/types";
  
 
 
-interface User {
-  _id: string;
-  name: string;
-  email: string;
-  phoneNumber: string;
-  status: string;
-  role: "user" | "admin" | "vendor" | "super-admin";
-  image?: string;
-}
-
-interface UserTableProps {
-  users: User[]; 
-}
-
+ 
 const UserTable = ({ users  }: UserTableProps) => {
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedUser, setSelectedUser] = useState<UserInfo | null>(null);
   const [status, setStatus] = useState("");
   const [role, setRole] = useState<"user" | "admin" | "vendor" | "super-admin">("user");
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -69,7 +57,7 @@ const UserTable = ({ users  }: UserTableProps) => {
             icon: 'success',
             confirmButtonColor:'#21324A'
           });
-         // setPage(1);
+
     }
     if(isDeleteError){
             Swal.fire(
@@ -79,13 +67,13 @@ const UserTable = ({ users  }: UserTableProps) => {
             );
     }
   }, [isDeleteSuccess,isDeleteError]);
-  const openStatusModal = (user: User) => {
+  const openStatusModal = (user: UserInfo) => {
     setSelectedUser(user);
     setStatus(user.status);
     setShowStatusModal(true);
   };
 
-  const openRoleModal = (user: User) => {
+  const openRoleModal = (user: UserInfo) => {
     setSelectedUser(user);
     setRole(user.role);
     setShowRoleModal(true);
@@ -196,6 +184,7 @@ const UserTable = ({ users  }: UserTableProps) => {
                         aria-label="Edit Status"
                         onClick={() => openStatusModal(user)}
                         {...(undefined as any)}
+                        disabled={isDeleteLoading && deletingUserId === user._id}
                       >
                         <PencilIcon className="h-4 w-4" />
                       </IconButton>
@@ -208,6 +197,7 @@ const UserTable = ({ users  }: UserTableProps) => {
                             onClick={() => openRoleModal(user)}
                             className="bg-indigo-500 hover:bg-indigo-600 text-white"
                             {...(undefined as any)}
+                            disabled={isDeleteLoading && deletingUserId === user._id}
                           >
                             <PencilIcon className="h-4 w-4" />
                           </IconButton>
