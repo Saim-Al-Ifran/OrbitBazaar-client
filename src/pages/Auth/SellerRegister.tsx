@@ -17,7 +17,7 @@ const SellerRegister = () => {
   } = useForm<IRegistrationFormInput>();
   
   const [vendorRegister, {isLoading, isSuccess }] = useVendorRegisterMutation();
-  const { data: userData, refetch: refetchUser } = useGetUserProfileQuery({});
+  const { data: userData, refetch: refetchUser } = useGetUserProfileQuery();
   const role = userData?.data?.role;
   const navigate = useNavigate();
   // Redirect based on user role

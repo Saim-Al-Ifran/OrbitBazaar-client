@@ -78,13 +78,24 @@ const userApi = apiSlice.injectEndpoints({
       },
       providesTags: ["ApprovedVendors"],
     }),
+    getSellerRequest: builder.query<VendorListResponse, vendorRequestParams>({
+      query: ({ page, limit, search ,sort } = {}) => {
+        let base = `admin/users`;
+        const params = new URLSearchParams();
+        // Append query parameters to the URL
+        params.append('vendorRequestStatus', 'requested');
+        params.append('role', 'vendor');
+        if (page) params.append('page', page.toString());
+        if (limit) params.append('limit', limit.toString());
+        if (sort) params.append('sort', sort.toString());
+        if (search) params.append('search', search);
 
-    getSellerRequest: builder.query<VendorListResponse, void>({
-      query: () => ({
-        url: `admin/users?vendorRequestStatus=requested&role=vendor`,
-      }),
+        const queryString = params.toString();
+        return queryString ? `${base}?${queryString}` : base;
+      },
       providesTags: ["SellerRequest"],
     }),
+
 
 
     getDeactivatedUser: builder.query<VendorListResponse, void>({

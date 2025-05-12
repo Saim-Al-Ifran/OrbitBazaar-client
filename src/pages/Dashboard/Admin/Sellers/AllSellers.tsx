@@ -148,7 +148,6 @@ const AllSellers = () => {
       <CardBody className="overflow-scroll px-0" {...(undefined as any)}>
         {paginationLoading || sortingLoading || (searchLoading && !noUsersFound) ? (
                   <div className="flex justify-center">
-
                       <ScaleLoader />
                   </div>
               ) : noUsersFound ? (
