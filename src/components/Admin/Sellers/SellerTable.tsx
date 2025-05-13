@@ -35,7 +35,7 @@ const SellerTable = ({sellers}:SellerTableProps) => {
       if (isDeleteSuccess) {
             Swal.fire({
               title: '<span>Deleted!</span>',
-              html: '<span>The user has been deleted.</span>',
+              html: '<span>The seller has been deleted.</span>',
               icon: 'success',
               confirmButtonColor:'#21324A'
             });

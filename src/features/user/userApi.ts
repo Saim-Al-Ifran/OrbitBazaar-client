@@ -144,7 +144,7 @@ const userApi = apiSlice.injectEndpoints({
         url: `/admin/users/${userId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["UserList","ApprovedVendors"],
+      invalidatesTags: ["UserList","ApprovedVendors","SellerRequest"]
     }),
 
     deleteEntity: builder.mutation<DeleteEntityResponse, string>({
