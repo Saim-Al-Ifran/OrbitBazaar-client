@@ -96,8 +96,6 @@ const userApi = apiSlice.injectEndpoints({
       providesTags: ["SellerRequest"],
     }),
 
-
-
     getDeactivatedUser: builder.query<VendorListResponse, void>({
       query: () => ({
         url: `admin/users?status=block`,

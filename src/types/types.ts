@@ -37,7 +37,9 @@ export interface UserTableProps {
   users: UserInfo[]; 
 }
 
-export interface SellerInfo extends UserInfo {}
+export interface SellerInfo extends UserInfo {
+    vendorRequestStatus: string;
+}
 export interface SellerTableProps {
   // other properties
   sellers: SellerInfo[];

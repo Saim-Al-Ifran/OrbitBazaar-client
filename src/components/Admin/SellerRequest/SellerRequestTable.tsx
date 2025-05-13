@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { SellerInfo, SellerTableProps } from "../../../types/types";
 import avatar from '../../../assets/userAvatar2.png';
 import toast from "react-hot-toast";
-import {  useDeleteUserMutation, useUpdateUserStatusMutation  } from "../../../features/user/userApi";
+import {  useDeleteUserMutation,useUpdateVendorStatusMutation  } from "../../../features/user/userApi";
 import { ClipLoader } from "react-spinners";
 import Swal from 'sweetalert2';
 const TABLE_HEAD = ["User", "Phone-Number", "Status", "Role", "Action"];
@@ -21,16 +21,15 @@ const SellerRequestTable = ({sellers}:SellerTableProps) => {
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<SellerInfo | null>(null);
   const [status, setStatus] = useState("");
-  const [updateUserStatus, { isLoading: isUserStatusLoading, isSuccess: isUserStatusSuccess }] =
-      useUpdateUserStatusMutation();
+  const [updateVendorStatus, { isLoading: isVendorStatusLoading, isSuccess: isVendorStatusSuccess }] =
+      useUpdateVendorStatusMutation();
   const [deleteUser, { isLoading: isDeleteLoading, isSuccess: isDeleteSuccess,isError:isDeleteError}] = useDeleteUserMutation();
-  const [deletingUserId, setDeletingUserId] = useState<string | null>(null)
- 
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
   useEffect(() => {
-    if (isUserStatusSuccess) {
+    if (isVendorStatusSuccess) {
       setOpen(false);
     }
-  }, [isUserStatusSuccess]);
+  }, [isVendorStatusSuccess]);
     useEffect(() => {
       if (isDeleteSuccess) {
             Swal.fire({
@@ -52,13 +51,13 @@ const SellerRequestTable = ({sellers}:SellerTableProps) => {
  
   const handleOpen = (seller: SellerInfo): void => {
     setSelectedUser(seller);
-    setStatus(seller.status);
+    setStatus("approved");
     setOpen(true);
   };
-
+ console.log(status); 
   const handleStatusSave = async () => {
-    if (!selectedUser) return;
-    await updateUserStatus({ id: selectedUser._id, data: { status } }).unwrap();
+    if (!selectedUser) return;  
+    await updateVendorStatus({ id: selectedUser._id, data: { status } }).unwrap();
     toast.success("Vendor status updated!");
   };
   const handleDeleteSeller = async(id: string) => {
@@ -205,13 +204,13 @@ const SellerRequestTable = ({sellers}:SellerTableProps) => {
               <button className="btn" onClick={() => setOpen(false)}>Cancel</button>
           <button
             type="submit"
-            disabled={isUserStatusLoading}
+            disabled={isVendorStatusLoading}
             className={`  text-[14px] bg-[#21324A] hover:bg-[#102e50e8] text-white font-semibold px-3  rounded-lg transition duration-300 flex items-center justify-center gap-2 ${
-             isUserStatusLoading ? "opacity-60 cursor-not-allowed" : ""
+             isVendorStatusLoading? "opacity-60 cursor-not-allowed" : ""
             }`}
             onClick={handleStatusSave}
           >
-            {isUserStatusLoading ? (
+            {isVendorStatusLoading ? (
               <>
                 <ClipLoader size={20} color="#e8e7e7" />
                 <span>Savings...</span>
