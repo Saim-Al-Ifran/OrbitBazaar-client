@@ -47,6 +47,7 @@ import AdminOrSuperAdmin from './AdminOrSuperAdmin';
 import VendorRoute from './VendorRoute';
 import PrivateRoute from './PrivateRoute';
 import AddUser from '../pages/Dashboard/Admin/User/AddUser';
+import AdminDashboard from '../pages/Dashboard/Admin/AdminDashboard/AdminDashboard';
 
 const AppRouter = () => {
   return (
@@ -80,7 +81,7 @@ const AppRouter = () => {
             index
             element={
               <AdminOrSuperAdmin>
-                <h1>Hello Admin</h1>
+                   <AdminDashboard />
               </AdminOrSuperAdmin>
             }
           />

@@ -279,3 +279,36 @@ export interface UserRequestParams{
   sort?: string; 
 }
 export interface vendorRequestParams extends UserRequestParams{};
+
+
+
+// types/dashboardTypes.ts
+
+export interface MonthlyRevenue {
+  _id: number; // represents the month (e.g., 2 = February)
+  total: number;
+}
+
+export interface MonthlySignup {
+  _id: number; // represents the month (e.g., 4 = April)
+  count: number;
+}
+
+export interface DashboardStats {
+  totalUsers: number;
+  totalVendors: number;
+  totalProducts: number;
+  totalOrders: number;
+  activeVendors: number;
+  deactiveVendors: number;
+  totalRevenue: number;
+  monthlyRevenue: MonthlyRevenue[];
+  monthlySignups: MonthlySignup[];
+}
+
+export interface DashboardResponse {
+  success: boolean;
+  message: string;
+  data: DashboardStats;
+}
+
