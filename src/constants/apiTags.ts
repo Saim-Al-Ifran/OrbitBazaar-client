@@ -4,7 +4,7 @@ const userTags = [
   "UserList",
   "SellerRequest",
   "ApprovedVendors",
-  "BlockedUsers",
+  "BlockedVendors",
 ] as const;
 const bookTags = ["Book", "BookList"] as const;
 const authTags = ["Auth"] as const;
