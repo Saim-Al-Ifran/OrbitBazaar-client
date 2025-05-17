@@ -3,12 +3,19 @@ import { useGetAdminDashboardDataQuery } from '../../../../features/dashboard/da
 import DashboardStats from '../../../../components/Admin/Dashboard/DashboardStats';
 import MonthlyRevenueChart from '../../../../components/Admin/Dashboard/MonthlyRevenueChart';
 import MonthlySignupsChart from '../../../../components/Admin/Dashboard/MonthlySignupsChart';
+import { PacmanLoader } from 'react-spinners';
  
 
 const AdminDashboard: React.FC = () => {
   const { data, isLoading, isError } = useGetAdminDashboardDataQuery();
 
-  if (isLoading) return <p className="text-center mt-10">Loading...</p>;
+    if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <PacmanLoader />
+      </div>
+    );
+  }
   if (isError || !data?.success) return <p className="text-center mt-10 text-red-500">Failed to load dashboard data.</p>;
 
   const stats = data.data;
