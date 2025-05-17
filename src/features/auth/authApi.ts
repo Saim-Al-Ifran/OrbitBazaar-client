@@ -1,10 +1,10 @@
  
 import { BaseQueryFn, EndpointBuilder } from "@reduxjs/toolkit/query";
 import { apiSlice } from "../api/apiSlice";
+ 
+import { Dispatch } from "redux";
+import { userLoggedIn} from './authSlice';
 import {
-  ChangePasswordRequest,
-  ChangePasswordResponse,
-  FirebaseLoginInput,
   LoginInput,
   LoginResponse,
   RefreshTokenInput,
@@ -12,10 +12,10 @@ import {
   UserRegisterInput,
   UserRegisterResponse,
   VendorRegisterInput,
-  VendorRegisterResponse,
-} from "../../types/api-types";
-import { Dispatch } from "redux";
-import { userLoggedIn} from './authSlice';
+  VendorRegisterResponse
+} from "../../types/api-types/auth/auth.types";
+import { FirebaseLoginInput } from "../../types/api-types/auth/firebase.types";
+import { ChangePasswordRequest, ChangePasswordResponse } from "../../types/api-types/profile/profile.types";
 
  
 

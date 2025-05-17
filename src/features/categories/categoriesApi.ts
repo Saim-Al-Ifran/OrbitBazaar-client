@@ -10,7 +10,7 @@ import {
   CategoryUpdateResponse,
   DeleteCategoryResponse,
   SingleCategoryResponse
-} from "../../types/api-types";
+} from "../../types/api-types/category/category.types";
 
 const categoriesApi = apiSlice.injectEndpoints({
   endpoints: (builder: EndpointBuilder<BaseQueryFn, string, string>) => ({

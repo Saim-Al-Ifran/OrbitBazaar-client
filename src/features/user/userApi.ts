@@ -2,23 +2,30 @@ import { BaseQueryFn, EndpointBuilder } from "@reduxjs/toolkit/query";
 import { apiSlice } from "../api/apiSlice";
 import {
   ProfileResponse,
-  UpdateProfileRequest,
   ProfileUpdateResponse,
-  VendorListResponse,
-  UpdateUserStatusResponse,
-  UpdateUserStatusRequest,
-  CreateUserResponse,
-  CreateUserInput,
-  UpdateVendorStatusResponse,
-  UpdateVendorStatusInput,
-  UpdateUserRoleResponse,
-  UpdateUserRoleInput,
-  DeleteUserResponse,
+  UpdateProfileRequest
+} from "../../types/api-types/profile/profile.types";
+import {
   DeleteEntityResponse,
+  UpdateUserStatusRequest,
+  UpdateUserStatusResponse,
   UserListResponse,
-  UserRequestParams,
-  vendorRequestParams,
-} from "../../types/api-types";
+  UserRequestParams
+} from "../../types/api-types/user/user.types";
+import {
+  UpdateVendorStatusInput,
+  UpdateVendorStatusResponse,
+  VendorListResponse,
+  vendorRequestParams
+} from "../../types/api-types/user/vendor.types";
+ 
+import {
+  CreateUserInput,
+  CreateUserResponse,
+  DeleteUserResponse,
+  UpdateUserRoleInput,
+  UpdateUserRoleResponse } from "../../types/api-types/user/admin.types";
+ 
 
 const userApi = apiSlice.injectEndpoints({
   endpoints: (builder: EndpointBuilder<BaseQueryFn, string, string>) => ({

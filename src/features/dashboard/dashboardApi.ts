@@ -1,4 +1,4 @@
-import { DashboardResponse } from "../../types/api-types";
+import { DashboardResponse } from "../../types/api-types/dashboard/dashboard.types";
 import { apiSlice } from "../api/apiSlice";
 
 const dashboardApi = apiSlice.injectEndpoints({
