@@ -1,6 +1,7 @@
-import { PencilIcon, EyeIcon } from "@heroicons/react/24/solid";
+import { PencilIcon } from "@heroicons/react/24/solid";
 import { Typography, IconButton, Tooltip, Chip } from "@material-tailwind/react";
 import { useState } from "react";
+ 
 
 const TABLE_HEAD = ["Order ID", "User Email", "Total Quantity", "Total Price", "Status", "Action"];
 const TABLE_ROWS = [
@@ -48,29 +49,28 @@ const TABLE_ROWS = [
     }
   ];
 
-interface Order {
-  orderId: string;
+
+ interface Order {
+  _id: string;
   userEmail: string;
   totalQuantity: number;
   totalPrice: number;
   status: string;
-  items: any[];
 }
 
-const OrdersTable = ( ) => {
-  const [editOpen, setEditOpen] = useState(false);
-  const [viewOpen, setViewOpen] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [status, setStatus] = useState("");
+interface OrdersTableProps {
+  orders: Order[];
+}
+ 
 
+const OrdersTable = ({ orders }: OrdersTableProps) => {
+  const [editOpen, setEditOpen] = useState(false);
+  const [status, setStatus] = useState("");
+  
   const handleEditOpen = (): void => {
     setEditOpen(true);
   };
-
-  const handleViewOpen = (order: Order) => {
-    setSelectedOrder(order);
-    setViewOpen(true);
-  };
+ 
 
   const getStatusChipColor = (status: string) => {
     switch (status) {
@@ -102,8 +102,8 @@ const OrdersTable = ( ) => {
           </tr>
         </thead>
         <tbody>
-        {TABLE_ROWS.map((order, index) => {
-            const { orderId,  userEmail, totalQuantity, totalPrice, status } = order;
+        {orders.map((order, index) => {
+            const { _id,  userEmail, totalQuantity, totalPrice, status } = order;
             const isLast = index === TABLE_ROWS.length - 1;
             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
@@ -114,7 +114,7 @@ const OrdersTable = ( ) => {
 
                     <div className="flex flex-col">
                         <Typography variant="small" color="blue-gray" className="font-normal" {...(undefined as any)}>
-                        {orderId}
+                        {_id}
                         </Typography>
                     </div>
                     </div>
@@ -139,12 +139,7 @@ const OrdersTable = ( ) => {
                 </td>
                 <td className={classes}>
                     <div className="flex items-center gap-3">
-                    {/* View Order Button */}
-                    <Tooltip content="View Order">
-                        <IconButton color="blue" variant="filled" onClick={() => handleViewOpen(order)} {...(undefined as any)}>
-                        <EyeIcon className="h-4 w-4" />
-                        </IconButton>
-                    </Tooltip>
+
 
                     {/* Edit Order Button */}
                     <Tooltip content="Edit Order">
@@ -184,25 +179,7 @@ const OrdersTable = ( ) => {
         </div>
       )}
 
-      {/* View Order Modal */}
-      {viewOpen && selectedOrder && (
-        <div className="modal modal-open">
-          <div className="modal-box">
-            <h3 className="font-bold text-lg">Order Details</h3>
-            <div className="mt-4">
-              <p><strong>Product:</strong> {selectedOrder.orderId}</p>
-              <p><strong>User Email:</strong> {selectedOrder.userEmail}</p>
-              <p><strong>Total Quantity:</strong> {selectedOrder.totalQuantity}</p>
-              <p><strong>Total Price:</strong> ${selectedOrder.totalPrice.toFixed(2)}</p>
-              <p><strong>Status:</strong> {selectedOrder.status}</p>
-              {/* Add any other details you want to show here */}
-            </div>
-            <div className="modal-action">
-              <button className="btn btn-secondary" onClick={() => setViewOpen(false)}>Close</button>
-            </div>
-          </div>
-        </div>
-      )}
+ 
     </>
   );
 };

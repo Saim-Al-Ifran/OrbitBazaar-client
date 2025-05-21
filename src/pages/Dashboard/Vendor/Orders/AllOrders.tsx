@@ -1,10 +1,48 @@
 import { Card, CardHeader, Typography, CardBody, CardFooter, Button } from "@material-tailwind/react";
-import  { useState } from "react";
-import OrdersTable from "../../../../components/Vendor/Order/OrdersTable"; // Adjust the path based on the actual location of OrdersTable
+import  { useEffect, useState } from "react";
+import OrdersTable from "../../../../components/Vendor/Order/OrdersTable"; 
+import { useGetVendorOrdersQuery } from "../../../../features/orders/ordersApi";
+import { ScaleLoader } from "react-spinners";
  
 
 const AllOrders = () => {
-  const [sortOrder, setSortOrder] = useState("asc");
+  const [page, setPage] = useState(1);
+  const limit = 5;
+  const [paginationLoading, setPaginationLoading] = useState(false);
+  const [sortingLoading, setSortingLoading] = useState(false);
+  const [sortOrder, setSortOrder] = useState("createdAt:desc");
+    const {
+      data: orders,
+      isLoading,
+      isError,
+      error,
+    } = useGetVendorOrdersQuery({ page, limit, sort: sortOrder })
+    console.log(orders);
+
+  useEffect(() => {
+    setPaginationLoading(false);  
+    setSortingLoading(false);
+    if (isError) {
+      setPaginationLoading(false);
+      setSortingLoading(false);
+    }
+},[orders, isError, isLoading, page]);
+  const noOrdersFound =
+    isError &&
+    (error as any)?.status === 404 &&
+    (error as any)?.data?.message === "No orders found!";
+
+  const handlePrevious = () => {
+    setPaginationLoading(true);
+    if (page > 1) setPage(page - 1);
+  };
+
+  const handleNext = () => {
+    if (orders?.pagination?.totalPages && page < orders.pagination.totalPages) {
+      setPaginationLoading(true);
+      setPage(page + 1);
+    }
+  };
 
   return (
     <Card className="h-full w-full" {...(undefined as any)}>
@@ -40,8 +78,8 @@ const AllOrders = () => {
                   focus:outline-none focus:ring-1 focus:ring-blue-500
                 "
               >
-                <option value="asc">Ascending</option>
-                <option value="desc">Descending</option>
+                <option value="createdAt:asc">Ascending</option>
+                <option value="createdAt:desc">Descending</option>
               </select>
 
               {/* Dropdown Arrow Icon */}
@@ -63,23 +101,48 @@ const AllOrders = () => {
       </CardHeader>
 
       <CardBody className="overflow-scroll px-0" {...(undefined as any)}>
-         <OrdersTable/>
+                {paginationLoading || sortingLoading ? (
+                          <div className="flex justify-center">
+        
+                              <ScaleLoader />
+                          </div>
+                      ) : noOrdersFound ? (
+                          <div className="text-center p-4">
+                            <Typography variant="h6" color="red" className="font-normal" {...(undefined as any)}> 
+                              No Order found! 
+                            </Typography>
+                          </div>
+                      ) : (
+                        <OrdersTable
+                          key={page}
+                          orders={orders?.data || []}
+                        />
+                   )}
+         
       </CardBody>
 
-         <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4" {...(undefined as any)}>
-           <Typography variant="small" color="blue-gray" className="font-normal" {...(undefined as any)}>
-             Page 1 of 10
-           </Typography>
-           <div className="flex gap-2">
-             <Button variant="outlined" size="sm" {...(undefined as any)}>
-               Previous
-             </Button>
-             <Button variant="outlined" size="sm" {...(undefined as any)}>
-               Next
-             </Button>
-           </div>
-         </CardFooter>
-       </Card>
+      {!noOrdersFound && (
+        <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4" {...(undefined as any)}>
+          <Typography variant="small" color="blue-gray" className="font-normal" {...(undefined as any)}>
+            Page {page} of {orders?.pagination?.totalPages || 1}
+          </Typography>
+          <div className="flex gap-2">
+            <Button variant="outlined" size="sm" onClick={handlePrevious} disabled={page === 1} {...(undefined as any)}>
+              Previous
+            </Button>
+            <Button
+              variant="outlined"
+              size="sm"
+              onClick={handleNext}
+              disabled={page === orders?.pagination?.totalPages}
+              {...(undefined as any)}
+            >
+              Next
+            </Button>
+          </div>
+        </CardFooter>
+      )}
+     </Card>
     
   );
 };
