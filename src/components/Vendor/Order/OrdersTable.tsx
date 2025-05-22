@@ -4,51 +4,7 @@ import { useState } from "react";
  
 
 const TABLE_HEAD = ["Order ID", "User Email", "Total Quantity", "Total Price", "Status", "Action"];
-const TABLE_ROWS = [
-    {
-      orderId: "60b9f1c0d1c6e9a8f5e33f9e",
-      userEmail: "user1@example.com",
-      totalQuantity: 3,
-      totalPrice: 120.99,
-      status: "confirmed",
-      items: [
-        { orderId: "60b9f1c0d1c6e9a8f5e33f9e", quantity: 1, price: 40.33, total: 40.33 },
-        { orderId: "60b9f1c0d1c6e9a8f5e33f9f", quantity: 2, price: 40.33, total: 80.66 },
-      ]
-    },
-    {
-      orderId: "60b9f1c0d1c6e9a8f5e33f9g",
-      name: "Bluetooth Headphones",
-      userEmail: "user2@example.com",
-      totalQuantity: 2,
-      totalPrice: 99.98,
-      status: "processing",
-      items: [
-        { orderId: "60b9f1c0d1c6e9a8f5e33f9g", quantity: 2, price: 49.99, total: 99.98 },
-      ]
-    },
-    {
-      orderId: "60b9f1c0d1c6e9a8f5e33f9h",
-      userEmail: "user3@example.com",
-      totalQuantity: 1,
-      totalPrice: 29.99,
-      status: "delivered",
-      items: [
-        { orderId: "60b9f1c0d1c6e9a8f5e33f9h", quantity: 1, price: 29.99, total: 29.99 },
-      ]
-    },
-    {
-      orderId: "60b9f1c0d1c6e9a8f5e33f9i",
-      userEmail: "user4@example.com",
-      totalQuantity: 1,
-      totalPrice: 799.99,
-      status: "cancelled",
-      items: [
-        { orderId: "60b9f1c0d1c6e9a8f5e33f9i", quantity: 1, price: 799.99, total: 799.99 },
-      ]
-    }
-  ];
-
+ 
 
  interface Order {
   _id: string;
@@ -104,54 +60,53 @@ const OrdersTable = ({ orders }: OrdersTableProps) => {
         <tbody>
         {orders.map((order, index) => {
             const { _id,  userEmail, totalQuantity, totalPrice, status } = order;
-            const isLast = index === TABLE_ROWS.length - 1;
+            const isLast = index === orders.length - 1;
             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
-
             return (
-                <tr key={userEmail}>
-                <td className={classes}>
+              <tr key={_id}>
+                  <td className={classes}>
                     <div className="flex items-center gap-3">
-
-                    <div className="flex flex-col">
-                        <Typography variant="small" color="blue-gray" className="font-normal" {...(undefined as any)}>
+                        <div className="flex flex-col">
+                              <Typography variant="small" color="blue-gray" className="font-normal" {...(undefined as any)}>
                         {_id}
-                        </Typography>
-                    </div>
-                    </div>
-                </td>
-                <td className={classes}>
-                    <Typography variant="small" color="blue-gray" className="font-normal" {...(undefined as any)}> 
+                            </Typography>
+                        </div>
+                   </div>
+                 </td>
+                 <td className={classes}>
+                     <Typography variant="small" color="blue-gray" className="font-normal" {...(undefined as any)}> 
                     {userEmail}
-                    </Typography>
-                </td>
-                <td className={classes}>
-                    <Typography variant="small" color="blue-gray" className="font-normal" {...(undefined as any)}>
+                     </Typography>
+                 </td>
+                 <td className={classes}>
+                      <Typography variant="small" color="blue-gray" className="font-normal" {...(undefined as any)}>
                     {totalQuantity}
                     </Typography>
                 </td>
                 <td className={classes}>
                     <Typography variant="small" color="blue-gray" className="font-normal" {...(undefined as any)}>
-                    ${totalPrice.toFixed(2)}
+                     ${totalPrice.toFixed(2)}
                     </Typography>
                 </td>
-                <td className={classes}>
+                            <td className={classes}>
                     <Chip value={status} className={getStatusChipColor(status)} variant="filled" size="sm" />
                 </td>
-                <td className={classes}>
-                    <div className="flex items-center gap-3">
+                              <td className={classes}>
+                     <div className="flex items-center gap-3">
 
 
-                    {/* Edit Order Button */}
+                   {/* Edit Order Button */}
                     <Tooltip content="Edit Order">
-                        <IconButton variant="filled" onClick={handleEditOpen} {...(undefined as any)}>
-                        <PencilIcon className="h-4 w-4" />
-                        </IconButton>
-                    </Tooltip>
+                       <IconButton variant="filled" onClick={handleEditOpen} {...(undefined as any)}>
+                       <PencilIcon className="h-4 w-4" />
+                         </IconButton>
+                   </Tooltip>
  
-                    </div>
+                     </div>
                 </td>
-                </tr>
-            );
+              </tr>
+            )
+ 
 })}
 
         </tbody>

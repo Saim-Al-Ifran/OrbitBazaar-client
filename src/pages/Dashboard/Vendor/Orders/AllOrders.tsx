@@ -2,7 +2,7 @@ import { Card, CardHeader, Typography, CardBody, CardFooter, Button } from "@mat
 import  { useEffect, useState } from "react";
 import OrdersTable from "../../../../components/Vendor/Order/OrdersTable"; 
 import { useGetVendorOrdersQuery } from "../../../../features/orders/ordersApi";
-import { ScaleLoader } from "react-spinners";
+import { ClockLoader,  ScaleLoader } from "react-spinners";
  
 
 const AllOrders = () => {
@@ -18,7 +18,7 @@ const AllOrders = () => {
       error,
     } = useGetVendorOrdersQuery({ page, limit, sort: sortOrder })
     console.log(orders);
-
+ 
   useEffect(() => {
     setPaginationLoading(false);  
     setSortingLoading(false);
@@ -43,6 +43,15 @@ const AllOrders = () => {
       setPage(page + 1);
     }
   };
+
+    if (isLoading) {
+      return (
+        <div className="flex justify-center items-center h-screen">
+          <ClockLoader />
+        </div>
+      );
+    }
+  
 
   return (
     <Card className="h-full w-full" {...(undefined as any)}>
@@ -127,14 +136,20 @@ const AllOrders = () => {
             Page {page} of {orders?.pagination?.totalPages || 1}
           </Typography>
           <div className="flex gap-2">
-            <Button variant="outlined" size="sm" onClick={handlePrevious} disabled={page === 1} {...(undefined as any)}>
+            <Button
+              variant="outlined"
+              size="sm"
+              onClick={handlePrevious}
+              disabled={page === 1 || paginationLoading}
+              {...(undefined as any)}
+            >
               Previous
             </Button>
             <Button
               variant="outlined"
               size="sm"
               onClick={handleNext}
-              disabled={page === orders?.pagination?.totalPages}
+              disabled={page === orders?.pagination?.totalPages || paginationLoading }
               {...(undefined as any)}
             >
               Next

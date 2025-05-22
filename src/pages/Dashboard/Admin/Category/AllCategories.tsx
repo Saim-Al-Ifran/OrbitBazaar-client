@@ -18,8 +18,8 @@ import { Link, NavLink } from "react-router-dom";
 import { useDeleteCategoryMutation, useGetAdminCategoriesQuery } from "../../../../features/categories/categoriesApi";
 import Swal from 'sweetalert2';
 import {   ClipLoader, PacmanLoader, ScaleLoader } from "react-spinners";
-import { Category } from "../../../../types/api-types";
-
+import { Category } from "../../../../types/api-types/category/category.types";
+ 
 const TABLE_HEAD = ["Category-image", "Category-name", "Actions"];
 
 const AllCategories = () => {
