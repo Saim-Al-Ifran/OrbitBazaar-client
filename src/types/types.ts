@@ -1,3 +1,5 @@
+import { Order } from "./api-types/orders/orders.type";
+
 export interface ILoginFormInput {
   email: string;
   password: string;
@@ -46,13 +48,7 @@ export interface SellerTableProps {
 }
 
 
-export interface OrderInfo {
-  _id: string;
-  userEmail: string;
-  totalQuantity: number;
-  totalPrice: number;
-  status: 'confirmed' | 'processing' | 'delivered' | 'cancelled';
-}
+export interface OrderInfo extends Order {}
 
 
 export interface OrdersTableProps {
