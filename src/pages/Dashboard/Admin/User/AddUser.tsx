@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
  
 import { toast } from "react-hot-toast";
 import { useCreateUserMutation } from "../../../../features/user/userApi";
-import { CreateUserInput } from "../../../../types/api-types";
+ 
 import useUserRoles from "../../../../hooks/auth/useCheckRoles";
 import { ClipLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
+import { CreateUserInput } from "../../../../types/api-types/user/admin.types";
 
 const AddUser = () => {
   const [formData, setFormData] = useState<CreateUserInput>({

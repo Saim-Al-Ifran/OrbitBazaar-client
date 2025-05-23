@@ -16,12 +16,12 @@ const AdminLogin = () => {
     reset,
   } = useForm<ILoginFormInput>();
 
-  const [adminLogin, { isLoading }] = useAdminLoginMutation();
+  const [adminLogin, { isLoading,error }] = useAdminLoginMutation();
   const {
     data: userData,
     refetch: refetchUser, // 👈 refetch function
   } = useGetUserProfileQuery();
-
+ console.log(error)
   //Redirect based on user role
   useEffect(() => {
     const role = userData?.data?.role;
