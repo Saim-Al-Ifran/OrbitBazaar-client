@@ -52,6 +52,8 @@ const AllOrders = () => {
       );
     }
   
+const isPrevDisabled = (page === 1) || paginationLoading || sortingLoading;
+const isNextDisabled = (page === orders?.pagination?.totalPages) || paginationLoading || sortingLoading;
 
   return (
     <Card className="h-full w-full" {...(undefined as any)}>
@@ -79,7 +81,11 @@ const AllOrders = () => {
                 id="sortOrder"
                 name="sortOrder"
                 value={sortOrder}
-                onChange={(e) => setSortOrder(e.target.value)}
+                onChange={(e) => {
+                  setSortOrder(e.target.value)
+                  setSortingLoading(true);
+                  setPage(1);
+                }}
                 className="
                   block w-full appearance-none rounded-md border 
                   border-gray-300 bg-white px-3 py-2 pr-10 
@@ -110,7 +116,7 @@ const AllOrders = () => {
       </CardHeader>
 
       <CardBody className="overflow-scroll px-0" {...(undefined as any)}>
-                {paginationLoading || sortingLoading ? (
+                {(paginationLoading || sortingLoading) ? (
                           <div className="flex justify-center">
         
                               <ScaleLoader />
@@ -140,7 +146,7 @@ const AllOrders = () => {
               variant="outlined"
               size="sm"
               onClick={handlePrevious}
-              disabled={page === 1 || paginationLoading}
+              disabled={isPrevDisabled}
               {...(undefined as any)}
             >
               Previous
@@ -149,7 +155,7 @@ const AllOrders = () => {
               variant="outlined"
               size="sm"
               onClick={handleNext}
-              disabled={page === orders?.pagination?.totalPages || paginationLoading }
+              disabled={isNextDisabled}
               {...(undefined as any)}
             >
               Next
