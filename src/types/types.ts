@@ -44,3 +44,17 @@ export interface SellerTableProps {
   // other properties
   sellers: SellerInfo[];
 }
+
+
+export interface OrderInfo {
+  _id: string;
+  userEmail: string;
+  totalQuantity: number;
+  totalPrice: number;
+  status: 'confirmed' | 'processing' | 'delivered' | 'cancelled';
+}
+
+
+export interface OrdersTableProps {
+  orders: OrderInfo [];
+}

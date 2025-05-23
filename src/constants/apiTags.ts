@@ -9,7 +9,7 @@ const userTags = [
 const bookTags = ["Book", "BookList"] as const;
 const authTags = ["Auth"] as const;
 const dashboardTags = ["Dashboard"] as const;
-const orderTags = ["Order"] as const;
+const orderTags = ["Orders"] as const;
 const reviewTags = ["Review"] as const;
 const categoryTags = ['Categories', 'Category'] as const;
  

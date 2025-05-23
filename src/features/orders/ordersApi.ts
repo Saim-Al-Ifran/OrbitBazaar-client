@@ -12,15 +12,20 @@ const ordersApi = apiSlice.injectEndpoints({
                 const queryString = params.toString();
                 return queryString ? `${base}?${queryString}` : base;
             },
+            providesTags:['Orders'],
         }),
-        editOrderStatus: builder.mutation<any, { id: string; data: string }>({
-            query: ({ id, data }) => ({
-                url: `/reports/vendor/${id}/status`,
+        editOrderStatus: builder.mutation<any, { orderId: string; status: string }>({
+            query: ({ orderId, status }) => ({
+                url: `/orders/vendor/${orderId}`,
                 method: 'PATCH',
-                body: data,
+                body: { status },
             }),
+            invalidatesTags: ['Orders'],
         }),
     }),
 });
 
-export const { useGetVendorOrdersQuery } = ordersApi;
+export const {
+    useGetVendorOrdersQuery,
+    useEditOrderStatusMutation
+} = ordersApi;

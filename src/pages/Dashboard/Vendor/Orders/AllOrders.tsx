@@ -62,7 +62,7 @@ const AllOrders = () => {
               Order List
             </Typography>
             <Typography color="gray" className="mt-1 font-normal" {...(undefined as any)}>
-              See all the orders and their statuses
+              See all the orders and their status
             </Typography>
           </div>
         </div>
