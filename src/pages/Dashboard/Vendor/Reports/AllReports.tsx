@@ -104,8 +104,8 @@ const AllReports = () => {
                   focus:outline-none focus:ring-1 focus:ring-blue-500
                 "
               >
-                <option value="asc">Ascending</option>
-                <option value="desc">Descending</option>
+                <option value="createdAt:asc">Ascending</option>
+                <option value="createdAt:desc">Descending</option>
               </select>
 
               {/* Dropdown Arrow Icon */}

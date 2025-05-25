@@ -1,4 +1,4 @@
-import { PencilIcon, TrashIcon, EyeIcon } from "@heroicons/react/24/solid";
+import { PencilIcon,  EyeIcon } from "@heroicons/react/24/solid";
 import {
   Typography,
   IconButton,
@@ -158,15 +158,7 @@ const ReportTable = ({ reports }: ReportsTableProps) => {
                         <PencilIcon className="h-4 w-4" />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip content="Delete Report">
-                      <IconButton
-                        variant="filled"
-                        className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-md"
-                        {...undefined as any}
-                      >
-                        <TrashIcon className="h-4 w-4" />
-                      </IconButton>
-                    </Tooltip>
+ 
                   </div>
                 </td>
               </tr>

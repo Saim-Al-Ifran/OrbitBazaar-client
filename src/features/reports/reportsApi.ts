@@ -45,7 +45,7 @@ const reportsApi = apiSlice.injectEndpoints({
                 url: `/reports/user/${id}`,
             }),
         }),
-        deleteVendorReport: builder.mutation<DeleteReportResponse,void>({
+        deleteReport: builder.mutation<DeleteReportResponse,{id:string}>({
             query: (id) => ({
                 url: `/reports/user/${id}`,
                 method: "DELETE",
@@ -80,7 +80,7 @@ export const {
     useGetVendorReportsDataQuery,
     useGetSingleVendorReportDataQuery,
     useGetUserSingleReportDataQuery,
-    useDeleteVendorReportMutation,
+    useDeleteReportMutation,
     useUserUpdateReportMutation,
     useGetUserReportsDataQuery,
     useUpdateVendorReportStatusMutation,
