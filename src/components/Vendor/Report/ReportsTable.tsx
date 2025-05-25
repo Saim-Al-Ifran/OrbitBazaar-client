@@ -6,33 +6,59 @@ import {
   Chip,
   Avatar,
 } from "@material-tailwind/react";
-import { useState } from "react";
-import { ReportsTableProps } from "../../../types/types";
+import { useEffect, useState } from "react";
+import { ReportsInfo, ReportsTableProps } from "../../../types/types";
+import { useUpdateVendorReportStatusMutation } from "../../../features/reports/reportsApi";
+import toast from "react-hot-toast";
+import { ClipLoader } from "react-spinners";
 
 const TABLE_HEAD = ["Product", "User Email", "Reason", "Status", "Action"];
 
 const ReportTable = ({ reports }: ReportsTableProps) => {
   const [editOpen, setEditOpen] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
-  const [status, setStatus] = useState("");
-  const [selectedReport, setSelectedReport] = useState<any>(null);
+  const [editableStatus, setEditableStatus] = useState<"pending" | "resolve" | "reject">("pending");
+  const [selectedReport, setSelectedReport] = useState<ReportsInfo | null>(null);
+  const [updateVendorReportStatus,{isLoading,isSuccess,isError}] = useUpdateVendorReportStatusMutation();
 
-  const handleEditOpen = (): void => {
-    setEditOpen(true);
+  useEffect(()=>{
+    if (isSuccess) {
+      toast.success("Report status updated successfully");
+      setEditOpen(false);
+    }
+    if (isError) {
+      toast.error("Failed to update report status");
+    }
+  },[isSuccess,isError]);
+
+  const handleEditOpen = (report:ReportsInfo): void => {
+      setSelectedReport(report);
+      setEditableStatus(report?.status || "");
+      setEditOpen(true);
+
+
   };
 
-  const handleViewOpen = (report: any) => {
+  const handleViewOpen = (report:ReportsInfo) => {
     setSelectedReport(report);
     setViewOpen(true);
   };
-
+  const handleStatusSave = async() => {
+    if (selectedReport) {
+        await updateVendorReportStatus({
+          reportId: selectedReport._id,
+          status: editableStatus,
+        }).unwrap();
+ 
+    }
+  };
   const getStatusChipColor = (status: string) => {
     switch (status) {
-      case "Pending":
+      case "pending":
         return "bg-yellow-500 text-black";
-      case "Resolved":
+      case "resolve":
         return "bg-green-500 text-black";
-      case "Rejected":
+      case "reject":
         return "bg-red-500 text-black";
       default:
         return "bg-gray-500 text-black text-center";
@@ -128,7 +154,7 @@ const ReportTable = ({ reports }: ReportsTableProps) => {
                       </IconButton>
                     </Tooltip>
                     <Tooltip content="Edit Report">
-                      <IconButton variant="filled" onClick={handleEditOpen} {...undefined as any}>
+                      <IconButton variant="filled" onClick={() => handleEditOpen(report)} {...undefined as any}>
                         <PencilIcon className="h-4 w-4" />
                       </IconButton>
                     </Tooltip>
@@ -151,27 +177,44 @@ const ReportTable = ({ reports }: ReportsTableProps) => {
 
       {/* Edit Report Modal */}
       {editOpen && (
+        
         <div className="modal modal-open">
+          
           <div className="modal-box">
             <h3 className="font-bold text-lg">Edit Report Status</h3>
             <div className="mt-4">
-              <label className="block font-medium">Report Status</label>
-              <select
-                className="select select-bordered w-full"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-              >
-                <option value="Pending">Pending</option>
-                <option value="Resolved">Resolved</option>
-                <option value="Rejected">Rejected</option>
-              </select>
+           <label className="block font-medium">Report Status</label>
+          <select
+            className="select select-bordered w-full"
+            value={editableStatus}
+            onChange={(e) => setEditableStatus(e.target.value as "pending" | "resolve" | "reject")}
+          >
+            <option value="pending">Pending</option>
+            <option value="resolve">Resolved</option>
+            <option value="reject">Rejected</option>
+          </select>
+
             </div>
             <div className="modal-action">
               <button className="btn" onClick={() => setEditOpen(false)}>
                 Cancel
               </button>
-              <button className="btn btn-primary" onClick={() => setEditOpen(false)}>
-                Save Changes
+              <button
+                type="submit"
+                disabled={isLoading || (editableStatus === selectedReport?.status)}
+                className={`text-[14px] bg-[#21324A] hover:bg-[#102e50e8] text-white font-semibold px-3 rounded-lg transition duration-300 flex items-center justify-center gap-2 ${
+                  isLoading || (editableStatus === selectedReport?.status) ? "opacity-60 cursor-not-allowed" : ""
+                }`}
+                onClick={handleStatusSave}
+              >
+                {isLoading ? (
+                  <>
+                    <ClipLoader size={20} color="#e8e7e7" />
+                    <span>Saving...</span>
+                  </>
+                ) : (
+                  "Save Changes"
+                )}
               </button>
             </div>
           </div>
@@ -186,12 +229,6 @@ const ReportTable = ({ reports }: ReportsTableProps) => {
             <div className="mt-4 space-y-2">
               <p>
                 <strong>Product Name:</strong> {selectedReport.productID?.name}
-              </p>
-              <p>
-                <strong>Category:</strong> {selectedReport.productID?.category}
-              </p>
-              <p>
-                <strong>Price:</strong> ${selectedReport.productID?.price}
               </p>
               <p>
                 <strong>User Email:</strong> {selectedReport.userEmail}

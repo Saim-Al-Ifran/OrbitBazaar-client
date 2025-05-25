@@ -33,6 +33,7 @@ const reportsApi = apiSlice.injectEndpoints({
                 return queryString ? `${base}?${queryString}` : base;
                 
             },
+            providesTags:["VendorReports"],
         }),
         getSingleVendorReportData: builder.query<VendorSingleReportResponse,string>({
             query: (id) => ({
@@ -49,6 +50,7 @@ const reportsApi = apiSlice.injectEndpoints({
                 url: `/reports/user/${id}`,
                 method: "DELETE",
             }),
+            invalidatesTags: ["VendorReports"],
         }),
         userUpdateReport: builder.mutation<UserUpdateReportResponse,UserUpdateReportRequest>({
             query: ({ id, data }) => ({
@@ -63,11 +65,12 @@ const reportsApi = apiSlice.injectEndpoints({
             }),
         }),
         updateVendorReportStatus: builder.mutation<UpdateVendorReportStatusResponse,UpdateVendorReportStatusRequest>({
-            query: ({ id, status }) => ({
-                url: `/reports/vendor/${id}/status`,
+            query: ({ reportId, status }) => ({
+                url: `/reports/vendor/${reportId}/status`,
                 method: "PATCH",
                 body: { status },
             }),
+            invalidatesTags: ["VendorReports"],
         }),
 
     }),

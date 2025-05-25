@@ -78,6 +78,6 @@ export interface UpdateVendorReportStatusResponse {
 }
 
 export interface UpdateVendorReportStatusRequest {
-  id: string;
+  reportId: string;
   status: 'pending' | 'resolve' | 'reject';
 }
