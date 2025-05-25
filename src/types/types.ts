@@ -1,4 +1,5 @@
 import { Order } from "./api-types/orders/orders.type";
+import { Report } from "./api-types/reports/reports.types";
 
 export interface ILoginFormInput {
   email: string;
@@ -53,4 +54,9 @@ export interface OrderInfo extends Order {}
 
 export interface OrdersTableProps {
   orders: OrderInfo [];
+}
+export interface ReportsInfo extends Report{}
+
+export interface ReportsTableProps {
+  reports: ReportsInfo[];
 }

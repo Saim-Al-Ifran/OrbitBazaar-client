@@ -7,13 +7,63 @@ import {
   CardBody,
   CardFooter,
 } from "@material-tailwind/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReportTable from "../../../../components/Vendor/Report/ReportsTable";
+import { useGetVendorReportsDataQuery } from "../../../../features/reports/reportsApi";
+import { ClockLoader, ScaleLoader } from "react-spinners";
  
 const AllReports = () => {
-  const [sortOrder, setSortOrder] = useState("asc");
- 
+  const [page, setPage] = useState(1);
+  const limit = 5;
+  const [paginationLoading, setPaginationLoading] = useState(false);
+  const [sortingLoading, setSortingLoading] = useState(false);
+  const [sortOrder, setSortOrder] = useState("createdAt:desc");
+  const {
+      data: reports,
+      isLoading,
+      isError,
+      error,
+    } = useGetVendorReportsDataQuery({ page, limit, sort: sortOrder });
+  console.log("reports", reports);
+   useEffect(() => {
+        setPaginationLoading(false);  
+        setSortingLoading(false);
+        if (isError) {
+          setPaginationLoading(false);
+          setSortingLoading(false);
+        }
+        //  Handle page shift if current page has no users but previous pages exist
+        if ((error as any)?.status === 404 && (reports?.pagination?.currentPage ?? 0) > 1) {
+          setPage((reports?.pagination?.currentPage ?? 1) - 1);
+        }
+    },[reports, isError, isLoading, page]);
 
+  const noReportsFound =
+    isError &&
+    (error as any)?.status === 404 &&
+    (error as any)?.data?.message === "No orders found!";
+
+  const handlePrevious = () => {
+    setPaginationLoading(true);
+    if (page > 1) setPage(page - 1);
+  };
+
+  const handleNext = () => {
+    if (reports?.pagination?.totalPages && page < reports?.pagination.totalPages) {
+      setPaginationLoading(true);
+      setPage(page + 1);
+    }
+  };
+
+   if (isLoading) {
+      return (
+        <div className="flex justify-center items-center h-screen">
+          <ClockLoader />
+        </div>
+      );
+    }
+ const isPrevDisabled = (page === 1) || paginationLoading || sortingLoading;
+ const isNextDisabled = (page === reports?.pagination?.totalPages) || paginationLoading || sortingLoading;
 
   return (
     <Card className="h-full w-full" {...(undefined as any)}>
@@ -42,7 +92,11 @@ const AllReports = () => {
                 id="sortOrder"
                 name="sortOrder"
                 value={sortOrder}
-                onChange={(e) => setSortOrder(e.target.value)}
+                onChange={(e) => {
+                  setSortOrder(e.target.value)
+                  setSortingLoading(true)
+                  setPage(1)
+                }}
                 className="
                   block w-full appearance-none rounded-md border 
                   border-gray-300 bg-white px-3 py-2 pr-10 
@@ -74,22 +128,51 @@ const AllReports = () => {
       </CardHeader>
  
       <CardBody className="overflow-scroll px-0" {...(undefined as any)}>
-          <ReportTable/>
+        {paginationLoading || sortingLoading ? (
+          <div className="flex justify-center">
+            <ScaleLoader />
+          </div>
+        ) : noReportsFound ? (
+          <div className="flex justify-center items-center h-full">
+            <Typography variant="h6" color="gray" className="font-normal" {...(undefined as any)}>
+              No reports found!
+            </Typography>
+          </div>
+        ) : (
+          <ReportTable
+           key={page}
+           reports={reports?.data || []}
+           />
+        )}
       </CardBody>
 
-      <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4" {...(undefined as any)}>
-        <Typography variant="small" color="blue-gray" className="font-normal" {...(undefined as any)}>
-          Page 1 of 10
-        </Typography>
-        <div className="flex gap-2">
-          <Button variant="outlined" size="sm" {...(undefined as any)}>
-            Previous
-          </Button>
-          <Button variant="outlined" size="sm" {...(undefined as any)}>
-            Next
-          </Button>
-        </div>
-      </CardFooter>
+      {!noReportsFound && (
+        <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4" {...(undefined as any)}>
+          <Typography variant="small" color="blue-gray" className="font-normal" {...(undefined as any)}>
+            Page {page} of {reports?.pagination?.totalPages || 1}
+          </Typography>
+          <div className="flex gap-2">
+            <Button
+              variant="outlined"
+              size="sm"
+              onClick={handlePrevious}
+              disabled={isPrevDisabled}
+              {...(undefined as any)}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="outlined"
+              size="sm"
+              onClick={handleNext}
+              disabled={isNextDisabled}
+              {...(undefined as any)}
+            >
+              Next
+            </Button>
+          </div>
+        </CardFooter>
+      )}
     </Card>
   );
 };

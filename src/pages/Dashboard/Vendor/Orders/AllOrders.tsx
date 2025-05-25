@@ -17,7 +17,7 @@ const AllOrders = () => {
       isError,
       error,
     } = useGetVendorOrdersQuery({ page, limit, sort: sortOrder })
-    console.log(orders);
+
  
   useEffect(() => {
     setPaginationLoading(false);  

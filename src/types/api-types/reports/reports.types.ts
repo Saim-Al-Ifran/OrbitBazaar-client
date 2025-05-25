@@ -18,6 +18,8 @@ export interface Report {
     _id: string;
     name: string;
     vendorEmail: string;
+    images: string[];
+    
   };
   userEmail: string;
   reason: string;
