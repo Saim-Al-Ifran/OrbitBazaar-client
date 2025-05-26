@@ -243,7 +243,7 @@ const ReportTable = ({ reports }: ReportsTableProps) => {
               )}
             </div>
             <div className="modal-action">
-              <button className="btn btn-secondary" onClick={() => setViewOpen(false)}>
+              <button className="btn bg-[#002039] text-white" onClick={() => setViewOpen(false)}>
                 Close
               </button>
             </div>
