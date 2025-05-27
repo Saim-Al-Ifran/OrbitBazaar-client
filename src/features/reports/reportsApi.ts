@@ -1,3 +1,4 @@
+import { BaseQueryFn, EndpointBuilder } from "@reduxjs/toolkit/query";
 import {
     DeleteReportResponse,
     SubmitReportRequest,
@@ -14,7 +15,7 @@ import {
 import { apiSlice } from "../api/apiSlice";
 
 const reportsApi = apiSlice.injectEndpoints({
-    endpoints: (builder) => ({
+    endpoints: (builder: EndpointBuilder<BaseQueryFn, string, string>) => ({
         submitReport: builder.mutation<SubmitReportResponse,SubmitReportRequest>({
             query: (reportData) => ({
                 url: `/reports`,

@@ -1,8 +1,9 @@
+import { BaseQueryFn, EndpointBuilder } from "@reduxjs/toolkit/query";
 import { GetVendorOrdersResponse } from "../../types/api-types/orders/orders.type";
 import { apiSlice } from "../api/apiSlice";
 
 const ordersApi = apiSlice.injectEndpoints({
-    endpoints: (builder) => ({
+    endpoints: (builder: EndpointBuilder<BaseQueryFn, string, string>) => ({
         getVendorOrders: builder.query<GetVendorOrdersResponse, { page?: number; limit?: number; sort?: string }>({
             query: ({ page, limit, sort } = {}) => {
                 let base = `/orders/vendor`;

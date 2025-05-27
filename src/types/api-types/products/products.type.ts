@@ -1,0 +1,67 @@
+import { PaginationMeta } from "../common/pagination.types";
+
+export interface VendorProductsParams {
+    page?: number;
+    limit?: number;
+    sort?: string;
+    search?: string;
+}
+
+export interface Product {
+    _id: string;
+    name: string;
+    description: string;
+    category:{
+        _id: string;
+        image: string;
+        name: string;
+        description: string;
+        createdAt: string;
+        updatedAt: string;
+    },
+    vendorEmail: string;
+    images: string[];
+    price: number;
+    stock: number;
+    ratings: number;
+    isFeatured: boolean;
+    isArchived: boolean;
+    salesCount: number;
+    totalRevenue: number;
+    analytics: {
+        views: number;
+        clicks: number;
+    };
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface VendorProductsResponse {
+    success: boolean;
+    message: string;
+    data: Product[];
+    pagination: PaginationMeta;
+}
+export interface GetSingleProductResponse {
+    success: boolean;
+    message: string;
+    data: Product;
+}
+export interface DeleteProductResponse {
+    success: boolean;
+    message: string;
+}
+
+ 
+export interface AddProductResponse {
+    success: boolean;
+    message: string;
+    data: Product;
+}
+
+export interface UpdateProductResponse extends AddProductResponse {};
+export interface ProductUpdateRequest {
+    productId: string;
+    productData: FormData;
+}
+export interface ArcheivedProductResponse extends AddProductResponse{};
