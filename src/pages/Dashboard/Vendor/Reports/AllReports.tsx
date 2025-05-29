@@ -36,7 +36,7 @@ const AllReports = () => {
         if ((error as any)?.status === 404 && (reports?.pagination?.currentPage ?? 0) > 1) {
           setPage((reports?.pagination?.currentPage ?? 1) - 1);
         }
-    },[reports, isError, isLoading, page]);
+    },[reports, isError]);
 
   const noReportsFound =
     isError &&

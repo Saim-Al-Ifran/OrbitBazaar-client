@@ -20,7 +20,7 @@ const AllSellers = () => {
   const [paginationLoading, setPaginationLoading] = useState(false);
   const [sortingLoading, setSortingLoading] = useState(false);
   const [sortOrder, setSortOrder] = useState("createdAt:desc");
-  const limit = 5;
+  const limit = 1;
 
   const {
       data: sellers,
@@ -44,7 +44,7 @@ const AllSellers = () => {
     if ((error as any)?.status === 404 && (sellers?.pagination?.currentPage ?? 0) > 1) {
       setPage((sellers?.pagination?.currentPage ?? 1) - 1);
     }
-  }, [sellers, isError, isLoading, page]);
+  }, [sellers, isError]);
 
     const noUsersFound =
       isError &&

@@ -26,7 +26,7 @@ const AllOrders = () => {
       setPaginationLoading(false);
       setSortingLoading(false);
     }
-},[orders, isError, isLoading, page]);
+},[orders, isError]);
   const noOrdersFound =
     isError &&
     (error as any)?.status === 404 &&

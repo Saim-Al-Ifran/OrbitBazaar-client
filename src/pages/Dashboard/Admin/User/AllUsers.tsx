@@ -22,7 +22,7 @@ const AllUsers = () => {
   const [paginationLoading, setPaginationLoading] = useState(false);
   const [sortingLoading, setSortingLoading] = useState(false);
   const [sortOrder, setSortOrder] = useState("createdAt:desc");
-  const limit = 5;
+  const limit = 1;
 
   const {
     data: users,
@@ -47,7 +47,7 @@ useEffect(() => {
   if ((error as any)?.status === 404 && (users?.pagination?.currentPage ?? 0) > 1) {
     setPage((users?.pagination?.currentPage ?? 1) - 1);
   }
-}, [users, isError, isLoading, page]);
+}, [users, isError]);
 
 
   const noUsersFound =

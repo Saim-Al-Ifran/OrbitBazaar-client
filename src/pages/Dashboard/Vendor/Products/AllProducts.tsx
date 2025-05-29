@@ -21,7 +21,7 @@ const AllProducts = () => {
   const [paginationLoading, setPaginationLoading] = useState(false);
   const [sortingLoading, setSortingLoading] = useState(false);
   const [sortOrder, setSortOrder] = useState("createdAt:desc");
-  const limit = 2;
+  const limit = 10;
 
   const { data: products, isLoading, isError:isProductError, error } = useGetVendorProductsQuery({
     page,
