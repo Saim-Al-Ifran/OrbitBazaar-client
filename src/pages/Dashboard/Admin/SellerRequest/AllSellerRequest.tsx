@@ -76,6 +76,9 @@ const AllSellerRequest = () => {
     return <div className="text-red-500 text-center mt-10">Error fetching users</div>;
   }
 
+  const isPrevDisabled = (page === 1) || paginationLoading || sortingLoading;
+  const isNextDisabled = (page === sellers?.pagination?.totalPages) || paginationLoading || sortingLoading;
+
   return (
     <Card className="h-full w-full" {...(undefined as any)}>
       <CardHeader floated={false} shadow={false} className="rounded-none" {...(undefined as any)}>
@@ -172,14 +175,20 @@ const AllSellerRequest = () => {
             Page {page} of {sellers?.pagination?.totalPages || 1}
           </Typography>
           <div className="flex gap-2">
-            <Button variant="outlined" size="sm" onClick={handlePrevious} disabled={page === 1} {...(undefined as any)}>
+            <Button
+              variant="outlined"
+              size="sm"
+              onClick={handlePrevious}
+              disabled={isPrevDisabled}
+              {...(undefined as any)}
+            >
               Previous
             </Button>
             <Button
               variant="outlined"
               size="sm"
               onClick={handleNext}
-              disabled={page === sellers?.pagination?.totalPages}
+              disabled={isNextDisabled}
               {...(undefined as any)}
             >
               Next
