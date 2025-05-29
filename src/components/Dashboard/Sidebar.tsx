@@ -19,8 +19,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isActive }) => {
   const { isAdmin, isVendor, isUser, isLoading,isSuperAdmin} = useUserRoles();
   const [logout, { isLoading: logoutLoading, isSuccess: logoutSuccess }] = useLogoutMutation();
   const navigate = useNavigate();
-  console.log("Admin: ",isAdmin);
-  console.log("Super-Admin: ",isSuperAdmin);
+ 
   
   const handleLogout = async () => {
     try {

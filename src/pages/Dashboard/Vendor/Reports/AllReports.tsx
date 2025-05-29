@@ -24,7 +24,7 @@ const AllReports = () => {
       isError,
       error,
     } = useGetVendorReportsDataQuery({ page, limit, sort: sortOrder });
-  console.log("reports", reports);
+
    useEffect(() => {
         setPaginationLoading(false);  
         setSortingLoading(false);

@@ -65,3 +65,4 @@ export interface ProductUpdateRequest {
     productData: FormData;
 }
 export interface ArcheivedProductResponse extends AddProductResponse{};
+export interface ProductInfo extends Product {}

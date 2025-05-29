@@ -14,7 +14,7 @@ import {
 
 const productsApi = apiSlice.injectEndpoints({
     endpoints: (builder: EndpointBuilder<BaseQueryFn, string, string>) => ({
-        getProducts: builder.query<VendorProductsResponse,VendorProductsParams>({
+        getVendorProducts: builder.query<VendorProductsResponse,VendorProductsParams>({
             query: ({page,limit,sort,search} = {}) => {
                 let base = `/vendor/products`;
                 const params = new URLSearchParams();
@@ -64,7 +64,7 @@ const productsApi = apiSlice.injectEndpoints({
 });
 
 export const {
-    useGetProductsQuery,
+    useGetVendorProductsQuery,
     useGetSingleProductQuery,
     useAddProductMutation,
     useUpdateProductMutation,
