@@ -22,7 +22,7 @@ const AllUsers = () => {
   const [paginationLoading, setPaginationLoading] = useState(false);
   const [sortingLoading, setSortingLoading] = useState(false);
   const [sortOrder, setSortOrder] = useState("createdAt:desc");
-  const limit = 1;
+  const limit = 10;
 
   const {
     data: users,
