@@ -7,11 +7,51 @@ import {
 } from "@material-tailwind/react";
 import { NavLink } from "react-router-dom";
 import { ProductInfo } from "../../../types/api-types/products/products.type";
+import Swal from "sweetalert2";
+import { useEffect, useState } from "react";
+import { useDeleteProductMutation } from "../../../features/products/productsApi";
+import { ClipLoader } from "react-spinners";
 
 const TABLE_HEAD = ["Product", "Category", "Price", "Stock", "Action"];
 
 const ProductTable = ({ products }: { products: ProductInfo[] }) => {
-console.log(products);
+  const [deletingProductId, setDeletingProductId] = useState<string | null>(null);
+  const [deleteProduct, { isLoading: isDeleteLoading, isSuccess: isDeleteSuccess, isError: isDeleteError }] = useDeleteProductMutation();
+
+  useEffect(() => {
+      if (isDeleteSuccess) {
+            Swal.fire({
+              title: '<span>Deleted!</span>',
+              html: '<span>The product has been successfully deleted!</span>',
+              icon: 'success',
+              confirmButtonColor:'#21324A'
+            });
+  
+      }
+      if(isDeleteError){
+              Swal.fire(
+                'Error!',
+                'Failed to delete the product.',
+                'error'
+              );
+      }
+    }, [isDeleteSuccess,isDeleteError]);
+
+  const handleDeleteProduct = async(id: string) => {
+         const result = await Swal.fire({
+           title: 'Are you sure?',
+           text: "The product will be permanently deleted and can't be undone!",
+           icon: 'warning',
+           showCancelButton: true,
+           confirmButtonColor: '#21324A',
+           cancelButtonColor: '#F44336',
+           confirmButtonText: 'Yes, delete it!'
+         });
+         if(result.isConfirmed){  
+           setDeletingProductId(id);
+           await deleteProduct({productId: id}).unwrap();
+         }
+   };
   
   return (
     <>
@@ -74,18 +114,34 @@ console.log(products);
                 </td>
                 <td className={classes}>
                   <div className="flex items-center gap-4">
-                    <NavLink to="edit/1">
+                  {/* Conditionally disable the edit button and prevent navigation while the current product is being deleted */}
+                  {isDeleteLoading && deletingProductId === product._id ? (
+                    <Tooltip content="Edit Product">
+                      <IconButton variant="filled" disabled {...(undefined as any)}>
+                        <PencilIcon className="h-4 w-4" />
+                      </IconButton>
+                    </Tooltip>
+                  ) : (
+                    <NavLink to={`edit/${product._id}`}>
                       <Tooltip content="Edit Product">
                         <IconButton variant="filled" {...(undefined as any)}>
                           <PencilIcon className="h-4 w-4" />
                         </IconButton>
                       </Tooltip>
                     </NavLink>
+                  )}
 
                     <Tooltip content="Archive Product">
                       <IconButton
                        variant="filled"
                        className="bg-gray-500 hover:bg-gray-600 text-white p-2 rounded-md"
+                       disabled={isDeleteLoading && deletingProductId === product._id}
+                        onClick={() => Swal.fire({
+                          title: 'Feature Coming Soon!',
+                          text: 'This feature is under development.',
+                          icon: 'info',
+                          confirmButtonColor: '#21324A'
+                        })}
                        {...(undefined as any)}
                        >
                         <ArchiveBoxIcon className="h-4 w-4" />
@@ -94,10 +150,17 @@ console.log(products);
 
                     <Tooltip content="Delete Product">
                       <IconButton
-                       variant="filled"
-                       className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-md"
-                       {...(undefined as any)}>
-                        <TrashIcon className="h-4 w-4" />
+                        variant="filled"
+                        className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-md"
+                        {...(undefined as any)}
+                        onClick={() => handleDeleteProduct(product._id)}
+                        disabled={isDeleteLoading && deletingProductId === product._id}
+                       >
+                       {isDeleteLoading && deletingProductId === product._id ? (
+                            <span><ClipLoader color="white" size={15} /></span>
+                        ):(
+                            <TrashIcon className="h-4 w-4" />
+                        )}
                       </IconButton>
                     </Tooltip>
                   </div>
