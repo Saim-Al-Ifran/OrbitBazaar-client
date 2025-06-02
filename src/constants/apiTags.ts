@@ -12,6 +12,7 @@ const dashboardTags = ["Dashboard"] as const;
 const orderTags = ["Orders"] as const;
 const reviewTags = ["Review"] as const;
 const categoryTags = ['Categories', 'Category'] as const;
+const productTags = ['Products', 'Product'] as const;
  
 
 // Export a flat list
@@ -23,4 +24,5 @@ export const apiTagTypes = [
   ...orderTags,
   ...reviewTags,
   ...categoryTags,
+  ...productTags,
 ] as const;

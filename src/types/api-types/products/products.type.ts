@@ -5,6 +5,7 @@ export interface VendorProductsParams {
     limit?: number;
     sort?: string;
     search?: string;
+    filter?:string;
 }
 
 export interface Product {
@@ -45,7 +46,7 @@ export interface VendorProductsResponse {
 export interface GetSingleProductResponse {
     success: boolean;
     message: string;
-    data: Product;
+    product: Product;
 }
 export interface DeleteProductResponse {
     success: boolean;

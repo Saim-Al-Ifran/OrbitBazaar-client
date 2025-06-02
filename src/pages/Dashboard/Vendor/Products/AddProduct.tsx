@@ -42,7 +42,7 @@ const AddProduct = () => {
   },[isSuccess,isError]);
 
   // Handle input changes
-const handleChange = (
+  const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
  ) => {
       const { name, value, type } = e.target;
@@ -242,7 +242,7 @@ const handleChange = (
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full text-[15px] bg-[#21324A] hover:bg-[#102e50e8] text-white font-semibold py-3 px-2 rounded-lg transition duration-300 flex items-center justify-center gap-2 ${
+            className={`w-full text-[15px] bg-[#425E85] hover:bg-[#102e50e8] text-white font-semibold py-3 px-2 rounded-lg transition duration-300 flex items-center justify-center gap-2 ${
               isLoading ? "opacity-60 cursor-not-allowed" : ""
             }`}
           >
