@@ -20,7 +20,9 @@ const AllProducts = () => {
   const [searchLoading, setSearchLoading] = useState(false);
   const [paginationLoading, setPaginationLoading] = useState(false);
   const [sortingLoading, setSortingLoading] = useState(false);
+  const [filteringLoading, setFilteringLoading] = useState(false);
   const [sortOrder, setSortOrder] = useState("createdAt:desc");
+  const [filterStatus, setFilterStatus] = useState("all");
   const limit = 10;
 
   const { data: products, isLoading, isError:isProductError, error } = useGetVendorProductsQuery({
@@ -28,13 +30,15 @@ const AllProducts = () => {
     limit,
     search: searchQuery,
     sort: sortOrder,
+    filter: filterStatus,
   });
 
- 
+ console.log(products)
   useEffect(() => {
     setPaginationLoading(false);
     setSortingLoading(false);
     setSearchLoading(false);
+    setFilteringLoading(false);
     if(isProductError) {
       setSearchLoading(false);
       setPaginationLoading(false);
@@ -125,9 +129,48 @@ const searchNotFound =
             }}
             className="block w-full appearance-none rounded-md border border-gray-300 bg-white px-3 py-2 pr-10 text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           >
-            <option value="createdAt:asc">Ascending</option>
-            <option value="createdAt:desc">Descending</option>
+              <option value="createdAt:desc">Newest First</option>
+              <option value="createdAt:asc">Oldest First</option>
+              <option value="price:asc">Price: Low to High</option>
+              <option value="price:desc">Price: High to Low</option>
           </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+            <svg
+              className="h-5 w-5 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
+      </div>
+      {/* Filtering */}
+      <div className="w-full md:w-72">
+         <i className="fa-solid fa-filter mr-2"></i>
+        <label htmlFor="sortOrder" className="text-sm font-medium text-gray-700">
+          Filter by
+        </label>
+        <div className="relative">
+        <select
+          id="filterStatus"
+          name="filterStatus"
+          value={filterStatus}
+          onChange={(e) => {
+            setFilterStatus(e.target.value);
+            setFilteringLoading(true);  
+            setPage(1);
+          }}
+          className="block w-full appearance-none rounded-md border border-gray-300 bg-white px-3 py-2 pr-10 text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        >
+          <option value="all">All Products</option>
+          <option value="featured">Featured Products</option>
+          <option value="archived">Archived Products</option>
+        </select>
+
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
             <svg
               className="h-5 w-5 text-gray-400"
@@ -176,7 +219,7 @@ const searchNotFound =
               </Typography>
             )}
 
-            {paginationLoading || sortingLoading || searchLoading ? (
+            {paginationLoading || sortingLoading || searchLoading || filteringLoading ? (
               <div className="flex justify-center">
                 <ScaleLoader />
               </div>

@@ -14,10 +14,10 @@ const EditProduct = () => {
 
   // Separate states
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState<string>("");
   const [category, setCategory] = useState("");
   const [stock, setStock] = useState<number | string>('');
-  const [price, setPrice] = useState("");
+  const [price, setPrice] = useState<number | string>("");
   const [isFeatured, setIsFeatured] = useState(false);
 
   const [existingImages, setExistingImages] = useState<string[]>([]);
@@ -73,7 +73,8 @@ const EditProduct = () => {
     formData.append("name", name);
     formData.append("description", description);
     formData.append("category", category);
-    formData.append("price", price);
+    formData.append("price", price.toString());
+    formData.append("stock", stock.toString());
     formData.append("isFeatured", isFeatured.toString());
 
     existingImages.forEach((url) => formData.append("existingImages", url));
