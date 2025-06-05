@@ -48,6 +48,7 @@ import VendorRoute from './VendorRoute';
 import PrivateRoute from './PrivateRoute';
 import AddUser from '../pages/Dashboard/Admin/User/AddUser';
 import AdminDashboard from '../pages/Dashboard/Admin/AdminDashboard/AdminDashboard';
+import VendorDashboard from '../pages/Dashboard/Vendor/VendorDashboard/VendorDashboard';
 
 const AppRouter = () => {
   return (
@@ -155,7 +156,7 @@ const AppRouter = () => {
             path="vendor"
             element={
               <VendorRoute>
-                <h1>Welcome Vendor</h1>
+                <VendorDashboard />
               </VendorRoute>
             }
           />

@@ -25,3 +25,18 @@ export interface DashboardResponse {
   message: string;
   data: DashboardStats;
 }
+
+export interface VendorDashboardResponse {
+  success: boolean;
+  totalProducts: number;
+  featuredProducts: number;
+  totalViews: number;
+  totalClicks: number;
+  totalSales: number;
+  totalRevenue: number;
+  pendingReports: number;
+  chartData: {
+    month: string; // e.g., "January"
+    revenue: number;
+  }[];
+}

@@ -9,7 +9,7 @@ import { PacmanLoader } from 'react-spinners';
 const AdminDashboard: React.FC = () => {
   const { data, isLoading, isError } = useGetAdminDashboardDataQuery();
 
-    if (isLoading) {
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <PacmanLoader />
