@@ -249,10 +249,10 @@ const AddProduct = () => {
             {isLoading ? (
               <>
                 <ClipLoader size={20} color="#e8e7e7" />
-                <span>Creating...</span>
+                <span>Adding..</span>
               </>
             ) : (
-              "Create User"
+              "Add Product"
             )}
           </button>
       </form>

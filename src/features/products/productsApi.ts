@@ -40,7 +40,7 @@ const productsApi = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: productData,
             }),
-            invalidatesTags: [{ type: "Products" }],
+            invalidatesTags: ["Products"],
         }),
 
         updateProduct: builder.mutation<UpdateProductResponse, ProductUpdateRequest>({
@@ -60,15 +60,23 @@ const productsApi = apiSlice.injectEndpoints({
                 url: `products/${id}/archive`,
                 method: 'PATCH',
             }),
-            invalidatesTags: [{ type: "Products" }],
+            invalidatesTags: ["Products"],
         }),
-
+        markProductAsArchived: builder.mutation<ArcheivedProductResponse, {id:string,isArchived:boolean}>({
+            query: ({id,isArchived}) => ({
+                url: `products/${id}/archive`,
+                body:{isArchived},
+                method: 'PATCH'
+            }),
+            invalidatesTags: [ "Products"],
+        }),
+ 
         deleteProduct: builder.mutation<DeleteProductResponse, { productId: string }>({
             query: ({ productId }) => ({
                 url: `products/${productId}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: [{ type: "Products" }],
+            invalidatesTags: ["Products"],
         }),
     }),
 });
@@ -80,4 +88,5 @@ export const {
     useUpdateProductMutation,
     useArcheiveProductMutation,
     useDeleteProductMutation,
+    useMarkProductAsArchivedMutation
 } = productsApi;

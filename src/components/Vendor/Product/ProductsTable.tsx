@@ -1,4 +1,4 @@
-import { PencilIcon, TrashIcon, ArchiveBoxIcon } from "@heroicons/react/24/solid";
+import { PencilIcon, TrashIcon, ArchiveBoxIcon, ArrowUpOnSquareIcon } from "@heroicons/react/24/solid";
 import {
   Typography,
   Avatar,
@@ -9,15 +9,19 @@ import { NavLink } from "react-router-dom";
 import { ProductInfo } from "../../../types/api-types/products/products.type";
 import Swal from "sweetalert2";
 import { useEffect, useState } from "react";
-import { useDeleteProductMutation } from "../../../features/products/productsApi";
+import { useDeleteProductMutation, useMarkProductAsArchivedMutation } from "../../../features/products/productsApi";
 import { ClipLoader } from "react-spinners";
 
 const TABLE_HEAD = ["Product", "Category", "Price", "Stock", "Action"];
 
 const ProductTable = ({ products }: { products: ProductInfo[] }) => {
   const [deletingProductId, setDeletingProductId] = useState<string | null>(null);
-  const [deleteProduct, { isLoading: isDeleteLoading, isSuccess: isDeleteSuccess, isError: isDeleteError }] = useDeleteProductMutation();
+  const [archivingProductId, setArchivingProductId] = useState<string | null>(null);
+  const [wasArchivedBefore, setWasArchivedBefore] = useState<boolean | null>(null);
 
+  const [deleteProduct, { isLoading: isDeleteLoading, isSuccess: isDeleteSuccess, isError: isDeleteError }] = useDeleteProductMutation();
+  const [markArchived, { isLoading: isArchiving,isSuccess:isArchiveSuccess,error }] = useMarkProductAsArchivedMutation();
+  console.log(error)
   useEffect(() => {
       if (isDeleteSuccess) {
             Swal.fire({
@@ -35,7 +39,21 @@ const ProductTable = ({ products }: { products: ProductInfo[] }) => {
                 'error'
               );
       }
-    }, [isDeleteSuccess,isDeleteError]);
+      if (isArchiveSuccess) {
+        Swal.fire({
+          title: wasArchivedBefore
+            ? '<span>Unarchived!</span>'
+            : '<span>Archived!</span>',
+          html: wasArchivedBefore
+            ? '<span>The product has been successfully unarchived!</span>'
+            : '<span>The product has been successfully archived!</span>',
+          icon: 'success',
+          confirmButtonColor: '#21324A',
+        });
+        setWasArchivedBefore(null);  
+      }
+
+    }, [isDeleteSuccess,isDeleteError,isArchiveSuccess]);
 
   const handleDeleteProduct = async(id: string) => {
          const result = await Swal.fire({
@@ -52,7 +70,31 @@ const ProductTable = ({ products }: { products: ProductInfo[] }) => {
            await deleteProduct({productId: id}).unwrap();
          }
    };
-  
+
+ const handleArchive = async (product:ProductInfo) => {
+  const {_id:id,isArchived} = product;
+  try {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: `The product will be ${product.isArchived ? "unarchived" : "archived" } and won't be visible in the active products list.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#21324A',
+      cancelButtonColor: '#F44336',
+      confirmButtonText: `Yes, ${product.isArchived ? "unarchived" : "archived" } it!`
+    });
+    if(result.isConfirmed){
+        setWasArchivedBefore(product.isArchived); 
+        setArchivingProductId(id);
+        await markArchived({id,isArchived:!isArchived}).unwrap();
+       
+    }
+    
+  } catch (err) {
+    console.error("Failed to archive product:", err);
+  }
+};
+
   return (
     <>
       <table className="mt-4 w-full min-w-max table-auto text-left">
@@ -81,7 +123,8 @@ const ProductTable = ({ products }: { products: ProductInfo[] }) => {
             const {name: categoryName} = category;
             const isLast = index === products.length - 1;
             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
-
+            const isDeleteProcessing = isDeleteLoading && deletingProductId === product._id;
+            const isArchiveProcessing = isArchiving && archivingProductId === product._id;
             return (
               <tr key={name}>
                 <td className={classes}>
@@ -115,7 +158,7 @@ const ProductTable = ({ products }: { products: ProductInfo[] }) => {
                 <td className={classes}>
                   <div className="flex items-center gap-4">
                   {/* Conditionally disable the edit button and prevent navigation while the current product is being deleted */}
-                  {isDeleteLoading && deletingProductId === product._id ? (
+                  {isDeleteProcessing|| isArchiveProcessing ? (
                     <Tooltip content="Edit Product">
                       <IconButton variant="filled" disabled {...(undefined as any)}>
                         <PencilIcon className="h-4 w-4" />
@@ -131,20 +174,25 @@ const ProductTable = ({ products }: { products: ProductInfo[] }) => {
                     </NavLink>
                   )}
 
-                    <Tooltip content="Archive Product">
+                    <Tooltip content={`${product.isArchived ? "Unarchive Product" : "Archive Product"}`}>
                       <IconButton
                        variant="filled"
-                       className="bg-gray-500 hover:bg-gray-600 text-white p-2 rounded-md"
-                       disabled={isDeleteLoading && deletingProductId === product._id}
-                        onClick={() => Swal.fire({
-                          title: 'Feature Coming Soon!',
-                          text: 'This feature is under development.',
-                          icon: 'info',
-                          confirmButtonColor: '#21324A'
-                        })}
+                       className="bg-[#666666] hover:bg-gray-600 text-white p-2 rounded-md"
+                       disabled={isDeleteProcessing|| isArchiveProcessing}
+                        onClick={() => handleArchive(product)}
                        {...(undefined as any)}
                        >
-                        <ArchiveBoxIcon className="h-4 w-4" />
+                        {isArchiveProcessing ? (
+                          <span><ClipLoader color="white" size={15} /></span>
+                        ):(
+                             
+                            product.isArchived ? (
+                              <ArrowUpOnSquareIcon className="h-4 w-4" />
+                            ) : (
+                              <ArchiveBoxIcon className="h-4 w-4" />
+                            )
+                            
+                        )}
                       </IconButton>
                     </Tooltip>
 
@@ -154,9 +202,9 @@ const ProductTable = ({ products }: { products: ProductInfo[] }) => {
                         className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-md"
                         {...(undefined as any)}
                         onClick={() => handleDeleteProduct(product._id)}
-                        disabled={isDeleteLoading && deletingProductId === product._id}
+                        disabled={isDeleteProcessing|| isArchiveProcessing}
                        >
-                       {isDeleteLoading && deletingProductId === product._id ? (
+                       {isDeleteProcessing ? (
                             <span><ClipLoader color="white" size={15} /></span>
                         ):(
                             <TrashIcon className="h-4 w-4" />

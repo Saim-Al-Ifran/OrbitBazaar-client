@@ -24,7 +24,6 @@ const AllProducts = () => {
   const [sortOrder, setSortOrder] = useState("createdAt:desc");
   const [filterStatus, setFilterStatus] = useState("all");
   const limit = 10;
-
   const { data: products, isLoading, isError:isProductError, error } = useGetVendorProductsQuery({
     page,
     limit,
