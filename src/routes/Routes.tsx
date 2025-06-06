@@ -49,6 +49,7 @@ import PrivateRoute from './PrivateRoute';
 import AddUser from '../pages/Dashboard/Admin/User/AddUser';
 import AdminDashboard from '../pages/Dashboard/Admin/AdminDashboard/AdminDashboard';
 import VendorDashboard from '../pages/Dashboard/Vendor/VendorDashboard/VendorDashboard';
+import FeaturedProducts from '../pages/Featured/Featured';
 
 const AppRouter = () => {
   return (
@@ -66,6 +67,7 @@ const AppRouter = () => {
           <Route path="cart" element={<CartDetails />} />
           <Route path="wishlist" element={<Wishlist />} />
           <Route path="search" element={<SearchPage />} />
+          <Route path="/products/featured" element={<FeaturedProducts/>} />
         </Route>
 
         {/* Auth Routes */}
