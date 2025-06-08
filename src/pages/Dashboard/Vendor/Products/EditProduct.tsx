@@ -5,6 +5,7 @@ import { useGetSingleProductQuery, useUpdateProductMutation } from "../../../../
 import { useGetCategoriesQuery } from "../../../../features/categories/categoriesApi";
 import { ClipLoader, ScaleLoader } from "react-spinners";
 import toast from "react-hot-toast";
+import { Helmet } from "react-helmet";
  
 
 const EditProduct = () => {
@@ -88,7 +89,11 @@ const EditProduct = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
+    <>
+    <Helmet>
+      <title>Edit Product - {productData?.product?.name|| "Loading..."}</title>
+    </Helmet>
+     <div className="max-w-2xl mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-semibold mb-4">Edit Product</h2>
       {productLoading ? (
         <div className="flex justify-center mb-4">
@@ -235,6 +240,8 @@ const EditProduct = () => {
         </form>
       )}
     </div>
+    </>
+
   );
 };
 

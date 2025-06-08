@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import SellerTable from "../../../../components/Admin/Sellers/SellerTable";
 import { useGetSellersQuery } from "../../../../features/user/userApi";
 import { PacmanLoader, ScaleLoader } from "react-spinners";
+import { Helmet } from "react-helmet";
 
 const AllSellers = () => {
   const [page, setPage] = useState(1);
@@ -79,7 +80,11 @@ const AllSellers = () => {
   const isNextDisabled = (page === sellers?.pagination?.totalPages) || paginationLoading || sortingLoading;
 
   return (
-    <Card className="h-full w-full" {...(undefined as any)}>
+    <>
+      <Helmet>
+        <title>Seller List - Admin</title>
+      </Helmet>
+          <Card className="h-full w-full" {...(undefined as any)}>
       <CardHeader floated={false} shadow={false} className="rounded-none" {...(undefined as any)}>
         <div className="mb-8 flex items-center justify-between gap-8">
           <div>
@@ -195,6 +200,8 @@ const AllSellers = () => {
         </CardFooter>
       )}
     </Card>
+    </>
+
   );
 };
 

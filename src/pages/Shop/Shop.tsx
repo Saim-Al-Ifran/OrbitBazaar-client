@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 
 const Shop = () => {
@@ -86,6 +87,9 @@ const Shop = () => {
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
    return (
     <>
+    <Helmet>
+      <title>OrbitBazaar- Shop</title>
+    </Helmet>
     {/* Breadcrumbs */}
       <div className="bg-gray-100 py-3 rounded-md pl-[20px] overflow-x-hidden lg:pl-[60px] mt-4 mb-4">
       <div className="flex items-center space-x-2 text-sm text-gray-600 m-auto">

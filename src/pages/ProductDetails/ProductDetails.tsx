@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import ReviewSection from "./Sections/Review";
+import { Helmet } from "react-helmet";
 
 const productData = {
   id: 1,
@@ -29,6 +30,9 @@ const ProductDetails = () => {
 
   return (
     <>
+    <Helmet>
+      <title>{productData.name} - Product Details</title>
+    </Helmet>
       {/* Breadcrumbs */}
       <div className="pl-5 lg:pl-16 mt-4 mb-4 bg-gray-100 py-3 rounded-md">
         <div className="flex items-center space-x-2 text-sm text-gray-600">

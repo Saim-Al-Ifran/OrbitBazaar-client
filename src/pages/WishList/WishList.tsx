@@ -1,3 +1,5 @@
+import { Helmet } from "react-helmet";
+
  
 const wishlistData  = [
     {
@@ -38,10 +40,12 @@ const wishlistData  = [
   ];
 const WishlistPage = () => {
  
- 
-
   return (
-    <div className="p-6 mb-[4rem] mt-[1rem]">
+    <>
+    <Helmet>
+      <title>OrbitBazaar - Wishlist</title>
+    </Helmet>
+        <div className="p-6 mb-[4rem] mt-[1rem]">
       <h2 className="text-2xl font-bold mb-4 text-center">My Wishlist</h2>
       <div className="divider"></div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -74,6 +78,8 @@ const WishlistPage = () => {
         ))}
       </div>
     </div>
+    </>
+
   );
 };
 

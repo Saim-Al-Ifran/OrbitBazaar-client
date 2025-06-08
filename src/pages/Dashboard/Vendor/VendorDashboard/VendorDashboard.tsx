@@ -2,6 +2,7 @@ import { ClockLoader  } from 'react-spinners';
 import RevenueChart from '../../../../components/Vendor/Dashboard/RevenueChart';
 import VendorStats from '../../../../components/Vendor/Dashboard/VendorStats';
 import { useGetVendorDashboardDataQuery } from '../../../../features/dashboard/dashboardApi';
+import { Helmet } from 'react-helmet';
 
 
 export default function VendorDashboard() {
@@ -20,17 +21,23 @@ export default function VendorDashboard() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-4">
-      <VendorStats
-        totalProducts={data.totalProducts}
-        featuredProducts={data.featuredProducts}
-        totalViews={data.totalViews}
-        totalClicks={data.totalClicks}
-        totalSales={data.totalSales}
-        totalRevenue={data.totalRevenue}
-        pendingReports={data.pendingReports}
-      />
-      <RevenueChart data={data.chartData} />
-    </div>
+    <>
+      <Helmet>
+        <title>Dashboard-Vendor</title>
+      </Helmet>
+      <div className="max-w-6xl mx-auto p-4">
+        <VendorStats
+          totalProducts={data.totalProducts}
+          featuredProducts={data.featuredProducts}
+          totalViews={data.totalViews}
+          totalClicks={data.totalClicks}
+          totalSales={data.totalSales}
+          totalRevenue={data.totalRevenue}
+          pendingReports={data.pendingReports}
+        />
+        <RevenueChart data={data.chartData} />
+      </div>
+    </>
+
   );
 }

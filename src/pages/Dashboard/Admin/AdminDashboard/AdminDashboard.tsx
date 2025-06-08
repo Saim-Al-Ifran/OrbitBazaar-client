@@ -4,6 +4,7 @@ import DashboardStats from '../../../../components/Admin/Dashboard/DashboardStat
 import MonthlyRevenueChart from '../../../../components/Admin/Dashboard/MonthlyRevenueChart';
 import MonthlySignupsChart from '../../../../components/Admin/Dashboard/MonthlySignupsChart';
 import { PacmanLoader } from 'react-spinners';
+import { Helmet } from 'react-helmet';
  
 
 const AdminDashboard: React.FC = () => {
@@ -21,7 +22,12 @@ const AdminDashboard: React.FC = () => {
   const stats = data.data;
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <>
+    <Helmet>
+       <title>Dashboard - Admin</title>
+    </Helmet>
+
+     <div className="p-6 bg-gray-100 min-h-screen">
       <h1 className="text-3xl font-bold mb-6 text-gray-800">Admin Dashboard</h1>
 
       <DashboardStats stats={stats} />
@@ -29,6 +35,8 @@ const AdminDashboard: React.FC = () => {
       <MonthlyRevenueChart data={stats.monthlyRevenue} />
       <MonthlySignupsChart data={stats.monthlySignups} />
     </div>
+    </>
+
   );
 };
 

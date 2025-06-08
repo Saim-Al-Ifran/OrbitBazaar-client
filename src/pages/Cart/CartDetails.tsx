@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 
 const cartItems = [
@@ -30,6 +31,9 @@ const cartItems = [
   
     return (
       <>
+      <Helmet>
+        <title>OrbitBazaar - Cart Details</title>
+      </Helmet>
         <div className="px-6 mt-[3rem]">
             <h2 className="text-2xl font-bold mb-4 text-center">Shopping Cart</h2>
             <div className="divider"></div>

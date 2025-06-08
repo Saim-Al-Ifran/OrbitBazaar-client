@@ -4,6 +4,7 @@ import { useCreateCategoryMutation } from "../../../../features/categories/categ
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { ClipLoader } from "react-spinners";
+import { Helmet } from "react-helmet";
 
 const AddCategory = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -74,7 +75,11 @@ const AddCategory = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
+    <>
+      <Helmet>
+        <title>Add New Category</title>
+      </Helmet>
+      <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-semibold text-gray-700 mb-4">Create New Category</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -159,7 +164,9 @@ const AddCategory = () => {
           )}
         </button>
       </form>
-    </div>
+      </div>
+    </>
+
   );
 };
 

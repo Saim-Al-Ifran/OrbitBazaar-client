@@ -5,6 +5,7 @@ import { useGetCategoriesQuery } from "../../../../features/categories/categorie
 import { ClipLoader } from "react-spinners";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const AddProduct = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -118,7 +119,11 @@ const AddProduct = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
+    <>
+        <Helmet>
+          <title>Add New Product</title>
+        </Helmet>
+        <div className="max-w-2xl mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-semibold text-gray-700 mb-4">Add New Product</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Name */}
@@ -256,7 +261,9 @@ const AddProduct = () => {
             )}
           </button>
       </form>
-    </div>
+        </div>
+    </>
+
   );
 };
 

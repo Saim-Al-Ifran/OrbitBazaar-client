@@ -19,6 +19,7 @@ import { useDeleteCategoryMutation, useGetAdminCategoriesQuery } from "../../../
 import Swal from 'sweetalert2';
 import {   ClipLoader, PacmanLoader, ScaleLoader } from "react-spinners";
 import { Category } from "../../../../types/api-types/category/category.types";
+import { Helmet } from "react-helmet";
  
 const TABLE_HEAD = ["Category-image", "Category-name", "Actions"];
 
@@ -109,6 +110,9 @@ const handleDeleteCategory = async (id:string)=>{
 
 return (
   <>
+  <Helmet>
+    <title>All Categories</title>
+  </Helmet>
  
   {( (error as any)?.status   === 404 && !searchQuery) ? (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100">
