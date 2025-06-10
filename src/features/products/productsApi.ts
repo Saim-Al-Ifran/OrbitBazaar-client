@@ -5,6 +5,8 @@ import {
     AddProductResponse,
     ArcheivedProductResponse,
     DeleteProductResponse,
+    FeaturedProductsParams,
+    FeaturedProductsResponse,
     GetSingleProductResponse,
     ProductUpdateRequest,
     UpdateProductResponse,
@@ -33,7 +35,18 @@ const productsApi = apiSlice.injectEndpoints({
             query: (productId) => `products/${productId}`,
             providesTags: (_result, _error, productId) => [{ type: "Product", id: productId }],
         }),
-
+        getFeauturedProducts: builder.query<FeaturedProductsResponse, FeaturedProductsParams>({
+            query: ({ page, limit, sort } = {}) => {
+                let base = `/products/featured`;
+                const params = new URLSearchParams();
+                if (page) params.append('page', page.toString());
+                if (limit) params.append('limit', limit.toString());
+                if (sort) params.append('sort', sort.toString());
+                const queryString = params.toString();
+                return queryString ? `${base}?${queryString}` : base;
+            },
+            providesTags: ["FeaturedProducts"],
+        }),
         addProduct: builder.mutation<AddProductResponse, FormData>({
             query: (productData) => ({
                 url: '/products',
@@ -88,5 +101,6 @@ export const {
     useUpdateProductMutation,
     useArcheiveProductMutation,
     useDeleteProductMutation,
-    useMarkProductAsArchivedMutation
+    useMarkProductAsArchivedMutation,
+    useGetFeauturedProductsQuery,
 } = productsApi;

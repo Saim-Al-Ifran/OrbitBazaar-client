@@ -24,7 +24,10 @@ export interface Product {
     images: string[];
     price: number;
     stock: number;
-    ratings: number;
+    ratings: {
+        average: number;
+        count: number;
+    };
     isFeatured: boolean;
     isArchived: boolean;
     salesCount: number;
@@ -67,3 +70,15 @@ export interface ProductUpdateRequest {
 }
 export interface ArcheivedProductResponse extends AddProductResponse{};
 export interface ProductInfo extends Product {}
+
+export interface FeaturedProductsParams {
+    page?: number;
+    limit?: number;
+    sort?: string;
+}
+
+export type FeaturedProductsResponse = {
+  message: string;
+  data: Product[];
+  pagination: PaginationMeta;
+};
