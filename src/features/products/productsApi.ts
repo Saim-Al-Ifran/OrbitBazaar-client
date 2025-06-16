@@ -8,6 +8,8 @@ import {
     FeaturedProductsParams,
     FeaturedProductsResponse,
     GetSingleProductResponse,
+    ProductsParams,
+    ProductsResponse,
     ProductUpdateRequest,
     UpdateProductResponse,
     VendorProductsParams,
@@ -16,6 +18,21 @@ import {
 
 const productsApi = apiSlice.injectEndpoints({
     endpoints: (builder: EndpointBuilder<BaseQueryFn, string, string>) => ({
+        getAllProducts: builder.query<ProductsResponse, ProductsParams>({
+            query: ({ page, limit , minPrice, maxPrice, category, sort } = {}) => {
+                    const params = new URLSearchParams();
+
+                    if (page) params.append('page', page.toString());
+                    if (limit) params.append('limit', limit.toString());
+                    if (minPrice) params.append('minPrice', minPrice.toString());
+                    if (maxPrice) params.append('maxPrice', maxPrice.toString());
+                    if (category) params.append('category', category);
+                    if (sort) params.append('sort', sort);
+
+                    return `products?${params.toString()}`;
+            },
+            providesTags: ["Products"],
+        }),
         getVendorProducts: builder.query<VendorProductsResponse, VendorProductsParams>({
             query: ({ page, limit, sort, search, filter } = {}) => {
                 let base = `/vendor/products`;
@@ -103,4 +120,5 @@ export const {
     useDeleteProductMutation,
     useMarkProductAsArchivedMutation,
     useGetFeauturedProductsQuery,
+    useGetAllProductsQuery,
 } = productsApi;

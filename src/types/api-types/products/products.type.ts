@@ -82,3 +82,15 @@ export type FeaturedProductsResponse = {
   data: Product[];
   pagination: PaginationMeta;
 };
+
+export interface ProductsResponse  extends FeaturedProductsResponse {}
+export interface ProductsParams {
+    page?: number;
+    limit?: number;
+    minPrice?: number;
+    maxPrice?: number;
+    category?: string;
+        sort?: string;
+}
+
+ 

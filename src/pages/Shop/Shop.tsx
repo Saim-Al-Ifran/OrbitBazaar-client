@@ -1,235 +1,310 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useGetAllProductsQuery } from "../../features/products/productsApi";
+import { useGetCategoriesQuery } from "../../features/categories/categoriesApi";
+import Pagination from "../../components/Pagination/Pagination";
+import SkeletonCard from "../../components/SkeletonLoader/SkeletonCard";
+ 
+
+interface CategoryChangeHandler {
+  (category: string): void;
+}
 
 const Shop = () => {
-  const [products, setProducts] = useState<{ id: number; name: string; category: string; price: number; image: string; description: string; }[]>([]);
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [view, setView] = useState("grid");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3;
+  const [filterCategoryLoading, setFilterCategoryLoading] = useState(false);
+  const [sortOrder, setSortOrder] = useState("createdAt:asc");
+  const [sortingLoading, setSortingLoading] = useState(false);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(10000);
+  const [page, setPage] = useState(1);
+  const [priceFilterLoading, setPriceFilterLoading] = useState(false);
+  const [paginationLoading, setPaginationLoading] = useState(false);
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 10000 });
+  const limit = 6;
 
+  const { data: productsData, isLoading: isProductLoading, isError: isProductError } = useGetAllProductsQuery({
+    page,
+    limit,
+    category: selectedCategory === "All" ? undefined : selectedCategory,
+    sort: sortOrder,
+    minPrice,
+    maxPrice,
+  });
+  const { data: categories } = useGetCategoriesQuery();
+
+  // ✅ Read URL params on initial load
   useEffect(() => {
-    setProducts([
-      {
-        id: 1,
-        name: "iPhone X",
-        category: "Mobile",
-        price: 60000,
-        image:
-          "https://i5.walmartimages.com/seo/Pre-Owned-Apple-iPhone-X-64GB-Factory-Unlocked-Smartphone-Refurbished-Good_9b5ec8b2-9665-463b-adc5-64829ba72da6.1b496e5a8fcee76fdad69bae12b54745.jpeg",
-        description: "A high-end mobile phone with excellent performance.",
-      },
-      {
-        id: 2,
-        name: "Samsung S20",
-        category: "Mobile",
-        price: 50000,
-        image: "https://mobilebuzzbd.com/wp-content/uploads/2023/07/Galaxy-S20-FE.jpg",
-        description: "Powerful smartphone with a stunning display.",
-      },
-      {
-        id: 3,
-        name: "Dell Series",
-        category: "Laptop",
-        price: 6000,
-        image: "https://mcsolution.com.bd/wp-content/uploads/2021/10/dell-inspiron-15-3000-price-in-bangladesh-1200x900.webp",
-        description: "Reliable laptop for work and entertainment.",
-      },
-      {
-        id: 4,
-        name: "Nokia 420",
-        category: "Mobile",
-        price: 125.99,
-        image: "https://i.gadgets360cdn.com/products/large/1551025118_635_Nokia_4.2_db.jpg",
-        description: "Classic Nokia phone with long battery life.",
-      },
-      {
-        id: 5,
-        name: "Mac PC",
-        category: "Computer",
-        price: 40000,
-        image: "https://i.blogs.es/022fbb/new_2017_imac_two_side/1366_2000.jpg",
-        description: "A powerful desktop for professionals.",
-      },
-      {
-        id: 6,
-        name: "MacBook Pro",
-        category: "Laptop",
-        price: 429.99,
-        image: "https://techcrunch.com/wp-content/uploads/2024/11/CMC_8144.jpg?w=1024",
-        description: "Premium laptop with high performance.",
-      },
-      {
-        id: 6,
-        name: "MacBook Pro",
-        category: "Laptop",
-        price: 429.99,
-        image: "https://techcrunch.com/wp-content/uploads/2024/11/CMC_8144.jpg?w=1024",
-        description: "Premium laptop with high performance.",
-      },
-    ]);
+    const params = new URLSearchParams(location.search);
+    const pageParam = Number(params.get("page")) || 1;
+    const categoryParam = params.get("category") || "All";
+    const minParam = Number(params.get("minPrice")) || 0;
+    const maxParam = Number(params.get("maxPrice")) || 10000;
+    const sortParam = params.get("sort") || "createdAt:asc";
+
+    setPage(pageParam);
+    setSelectedCategory(categoryParam);
+    setPriceRange({ min: minParam, max: maxParam });
+    setSortOrder(sortParam);
   }, []);
 
-  const categories = ["All", "Mobile", "Laptop", "Computer", "Accessories", "Watch"];
+  // ✅ Sync filter values to URL
+  useEffect(() => {
+    const params = new URLSearchParams();
 
-  interface CategoryChangeHandler {
-    (category: string): void;
-  }
+    params.set("page", String(page));
+    if (selectedCategory !== "All") params.set("category", selectedCategory);
+    if (minPrice !== 0) params.set("minPrice", String(minPrice));
+    if (maxPrice !== 10000) params.set("maxPrice", String(maxPrice));
+    if (sortOrder !== "createdAt:asc") params.set("sort", sortOrder);
+
+    navigate(`?${params.toString()}`, { replace: true });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page, selectedCategory, minPrice, maxPrice, sortOrder]);
+ 
+  // ✅ Debounced price filtering
+    useEffect(() => {
+      const timeout = setTimeout(() => {
+        if (priceRange.min !== minPrice || priceRange.max !== maxPrice) {
+          setMinPrice(priceRange.min);
+          setMaxPrice(priceRange.max);
+          setPriceFilterLoading(true);
+        }
+      }, 500);
+
+      return () => clearTimeout(timeout);
+    }, [priceRange]);
+
+
+  // ✅ Reset all loading states when data loads or fails
+  useEffect(() => {
+    setPaginationLoading(false);
+    setSortingLoading(false);
+    setFilterCategoryLoading(false);
+    setPriceFilterLoading(false);
+  }, [productsData, isProductError]);
 
   const handleCategoryChange: CategoryChangeHandler = (category) => {
     setSelectedCategory(category);
-    setCurrentPage(1);
+    setFilterCategoryLoading(true);
+    setPage(1);
   };
 
-  const filteredProducts = selectedCategory === "All" ? products : products.filter(product => product.category === selectedCategory);
+  const isShopDataLoading =
+    filterCategoryLoading || isProductLoading || paginationLoading || sortingLoading || priceFilterLoading; 
 
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-   return (
+  const handleClearFilters = () => {
+    setPriceFilterLoading(false);
+    setSelectedCategory("All");
+    setPriceRange({ min: 0, max: 10000 });
+    setSortOrder("createdAt:asc");
+    setPage(1);
+ 
+  };
+
+  return (
     <>
-    <Helmet>
-      <title>OrbitBazaar- Shop</title>
-    </Helmet>
-    {/* Breadcrumbs */}
-      <div className="bg-gray-100 py-3 rounded-md pl-[20px] overflow-x-hidden lg:pl-[60px] mt-4 mb-4">
-      <div className="flex items-center space-x-2 text-sm text-gray-600 m-auto">
-        <Link to="/" className="flex items-center gap-1 text-[16px] hover:text-blue-600 transition-colors ">
-          <i className="fas fa-home"></i>
-          <span>Home</span>
-        </Link>
-    
-        <span className="text-gray-400 ">/</span>
-        <span className="flex items-center gap-1 text-[#47698F] font-medium text-[16px]">
-         <i className="fa-solid fa-bag-shopping"></i>
-          <span>Shop</span>
-        </span>
-      </div>
-      </div>
+      <Helmet>
+        <title>OrbitBazaar - Shop</title>
+      </Helmet>
 
+
+      {/* Breadcrumbs */}
+      <div className="bg-gray-100 py-3 rounded-md pl-[20px] lg:pl-[60px] mt-4 mb-4">
+        <div className="flex items-center space-x-2 text-sm text-gray-600">
+          <Link to="/" className="flex items-center gap-1 text-[16px] hover:text-blue-600">
+            <i className="fas fa-home" />
+            <span>Home</span>
+          </Link>
+          <span className="text-gray-400">/</span>
+          <span className="flex items-center gap-1 text-[#47698F] font-medium text-[16px]">
+            <i className="fa-solid fa-bag-shopping" />
+            <span>Shop</span>
+          </span>
+        </div>
+      </div>
 
       <div className="max-w-7xl mx-auto p-4 flex flex-col md:flex-row gap-6">
-      {/* Sidebar Filters */}
-      <div className="w-full md:w-1/4 bg-base-100 p-4 shadow-lg rounded-lg">
-        <div className="mb-4">
-          <h3 className="font-semibold mb-2">Category</h3>
-          <ul className="space-y-1 text-gray-600">
-            {categories.map((category) => (
-              <li key={category} className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={selectedCategory === category}
-                  onChange={() => handleCategoryChange(category)}
-                  className="checkbox checkbox-neutral"
-                />
-                <label>{category}</label>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="mb-4">
-          <h3 className="font-semibold mb-2">Price</h3>
-          <input type="range" className="range" min="0" max="60000" />
-          <p>₹60,000.00</p>
-        </div>
-
-        <button className="btn btn-error w-full" onClick={() => setSelectedCategory("All")}>
-          Clear Filters
-        </button>
-      </div>
-
-      {/* Main Content */}
-      <div className="w-full md:w-3/4">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-2">
-          <p className="text-gray-600">{filteredProducts.length} total products.</p>
-
-          <div className="flex items-center gap-2">
-            <button onClick={() => setView("grid")} className={`btn btn-square ${view === "grid" ? "btn-neutral" : "btn-ghost"}`}>
-              <i className="fas fa-th"></i>
-            </button>
-            <button onClick={() => setView("list")} className={`btn btn-square ${view === "list" ? "btn-neutral" : "btn-ghost"}`}>
-              <i className="fas fa-list"></i>
-            </button>
-            <select className="select select-bordered">
-              <option>Price (Lowest)</option>
-              <option>Price (Highest)</option>
-              <option>Name (A-Z)</option>
-              <option>Name (Z-A)</option>
-            </select>
+        {/* Sidebar */}
+        <div className="w-full md:w-1/4 bg-base-100 p-4 shadow-lg rounded-lg">
+          {/* Category Filter */}
+          <div className="mb-4">
+            <h3 className="font-semibold mb-2">Category</h3>
+            {categories?.data ? (
+              <ul className="space-y-1 text-gray-600">
+                <li className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedCategory === "All"}
+                    onChange={() => handleCategoryChange("All")}
+                    className="checkbox checkbox-neutral"
+                    disabled={isShopDataLoading}
+                  />
+                  <label>All</label>
+                </li>
+                {categories.data.map((category) => (
+                  <li key={category._id} className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={selectedCategory === category.name}
+                      onChange={() => handleCategoryChange(category.name)}
+                      className="checkbox checkbox-neutral"
+                      disabled={isShopDataLoading}
+                    />
+                    <label>{category.name}</label>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              //  Skeleton Loader
+              <ul className="space-y-2">
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <li key={index} className="flex items-center gap-2 animate-pulse">
+                    <div className="w-4 h-4 bg-gray-300 rounded" />
+                    <div className="h-3 w-24 bg-gray-300 rounded" />
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
+
+
+          {/* Price Filter */}
+          <div className="mb-4">
+            <h3 className="font-semibold mb-2">Price Range</h3>
+            <label className="text-sm font-medium text-gray-600">Min: ${priceRange.min}</label>
+            <input
+              type="range"
+              min={0}
+              max={priceRange.max}
+              value={priceRange.min}
+              onChange={(e) => setPriceRange((prev) => ({ ...prev, min: Number(e.target.value) }))}
+              className="range range-sm"
+              disabled={isShopDataLoading}
+            />
+            <label className="text-sm font-medium text-gray-600 mt-2">Max: ${priceRange.max}</label>
+            <input
+              type="range"
+              min={priceRange.min}
+              max={5000}
+              value={priceRange.max}
+              onChange={(e) => setPriceRange((prev) => ({ ...prev, max: Number(e.target.value) }))}
+              className="range range-sm"
+              disabled={isShopDataLoading}
+            />
+            <p className="text-sm text-gray-500 mt-1">Showing products from ${minPrice} to ${maxPrice}</p>
+          </div>
+
+          {/* Clear Filters */}
+          <button
+            className="btn btn-error w-full"
+            onClick={handleClearFilters}
+            //disabled={isShopDataLoading }
+          >
+            Clear Filters
+          </button>
         </div>
 
-        {/* Product Grid / List */}
-        <div className={`grid ${view === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"} gap-4`}>
-          {filteredProducts.map((product) => (
-            <div key={product.id} className={`card bg-base-100 shadow-md ${view === "list" ? "flex flex-row items-center p-4" : ""}`}>
-              <figure className={`${view === "list" ? "w-1/3" : ""}`}>
-                <img src={product.image} alt={product.name} className={`${view === "list" ? "w-full h-32 object-cover" : "h-40 object-cover w-full"}`} />
-              </figure>
-              <div className={`${view === "list" ? "w-2/3 pl-4" : "card-body"}`}>
-                <h3 className="card-title">{product.name}</h3>
-                <p className="text-gray-600">{product.category}</p>
-                <p className="text-gray-800 font-semibold">₹{product.price.toFixed(2)}</p>
-                <p className="text-gray-500 text-sm">{product.description}</p>
-                <div className="card-actions mt-2">
-                  <div className="w-50">
-                  <button className="btn bg-black text-white   border-black flex-1">
-                    <i className="fas fa-cart-plus mr-1"></i> Add to Cart
-                  </button>
-                  </div>
-                  <div className="w-20">
-                  <Link to={`/shop/${product.id}`}>
-                  <button className="btn bg-[#47698F] text-white border-[#35567b] flex-1">
-                    <i className="fas fa-eye mr-1"></i> View Product
-                  </button>
-                  </Link>
-
-                  </div>
-
-
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-        {/* Pagination */}
-        <div className="flex justify-between items-center mt-6 border-t pt-4">
-          <div className="flex items-center gap-2">
-            <button
-              className="btn btn-sm btn-outline"
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage((prev) => prev - 1)}
-            >
-              Prev
-            </button>
-            {[...Array(totalPages)].map((_, index) => (
+        {/* Product Listing */}
+        <div className="w-full md:w-3/4">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-2">
+            <p className="text-gray-600">{productsData?.data?.length} total products.</p>
+            <div className="flex items-center gap-2">
               <button
-                key={index}
-                className={`btn btn-sm ${currentPage === index + 1 ? "btn-neutral" : "btn-outline"}`}
-                onClick={() => setCurrentPage(index + 1)}
+                onClick={() => setView("grid")}
+                className={`btn btn-square ${view === "grid" ? "btn-neutral" : "btn-ghost"}`}
               >
-                {index + 1}
+                <i className="fas fa-th" />
               </button>
-            ))}
-            <button
-              className="btn btn-sm btn-outline"
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage((prev) => prev + 1)}
-            >
-              Next
-            </button>
+              <button
+                onClick={() => setView("list")}
+                className={`btn btn-square ${view === "list" ? "btn-neutral" : "btn-ghost"}`}
+              >
+                <i className="fas fa-list" />
+              </button>
+              <select
+                value={sortOrder}
+                disabled={isShopDataLoading || productsData?.data?.length === 0}
+                onChange={(e) => {
+                  setSortOrder(e.target.value);
+                  setSortingLoading(true);
+                  setPage(1);
+                }}
+                className="select select-bordered"
+              >
+                <option value="createdAt:desc">Newest First</option>
+                <option value="createdAt:asc">Oldest First</option>
+                <option value="price:asc">Price (Lowest)</option>
+                <option value="price:desc">Price (Highest)</option>
+              </select>
+            </div>
           </div>
-          <p className="text-sm text-gray-500 hidden md:block">
-            Page {currentPage} of {totalPages} ({filteredProducts.length} products)
-          </p>
+
+          {/* Products */}
+          <div className={`grid ${view === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"} gap-4`}>
+            {isShopDataLoading ? (
+              Array.from({ length: 3 }).map((_, index) => <SkeletonCard key={index} />)
+            ) : productsData?.data?.length === 0 ? (
+              <div className="col-span-full text-center text-gray-500 text-lg font-medium py-10">
+                No products found matching your criteria.
+              </div>
+            ) : (
+              productsData?.data?.map((product) => (
+                <div
+                  key={product._id}
+                  className={`card bg-base-100 shadow-md ${view === "list" ? "flex flex-row items-center p-4" : ""}`}
+                >
+                  <figure className={`${view === "list" ? "w-1/3" : ""}`}>
+                    <img
+                      src={product.images[0]}
+                      alt={product.name}
+                      className={`${view === "list" ? "w-full h-32 object-cover" : "h-40 object-cover w-full"}`}
+                    />
+                  </figure>
+                  <div className={`${view === "list" ? "w-2/3 pl-4" : "card-body"}`}>
+                    <h3 className="card-title">{product.name}</h3>
+                    <p className="text-gray-600">{product?.category?.name}</p>
+                    <p className="text-gray-800 font-semibold">${product.price.toFixed(2)}</p>
+                    <p className="text-gray-500 text-sm">{product.description}</p>
+                    <div className="card-actions mt-2">
+                      <div className="w-50">
+                        <button className="btn bg-black text-white border-black flex-1">
+                          <i className="fas fa-cart-plus mr-1" /> Add to Cart
+                        </button>
+                      </div>
+                      <div className="w-20">
+                        <Link to={`/shop/${product._id}`}>
+                          <button className="btn bg-[#47698F] text-white border-[#35567b] flex-1">
+                            <i className="fas fa-eye mr-1" /> View Product
+                          </button>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Pagination */}
+          {!isProductLoading && (productsData?.data?.length ?? 0) > 0 && (
+            <Pagination
+              pagination={productsData?.pagination}
+              isLoading={isProductLoading}
+              paginationLoading={paginationLoading}
+              setPage={setPage}
+              setPaginationLoading={setPaginationLoading}
+              label="Products"
+            />
+          )}
         </div>
       </div>
-    </div>
     </>
-
-
-    
   );
 };
 

@@ -49,9 +49,7 @@ const Pagination: React.FC<PaginationProps> = ({
   label = "Items", // default label
 }) => {
   if (isLoading || !pagination) return null;
-  console.log(isLoading);
-  
-
+ 
   const { currentPage, totalPages, totalRecords, prevPage, nextPage } =
     pagination;
 
@@ -83,7 +81,7 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           className="btn btn-sm btn-outline"
           onClick={handlePrevClick}
-          disabled={nextPage === null || paginationLoading || isLoading}
+          disabled={prevPage === null || paginationLoading }
         >
           Prev
         </button>
@@ -101,7 +99,7 @@ const Pagination: React.FC<PaginationProps> = ({
               className={`btn btn-sm ${
                 currentPage === pg ? "btn-neutral" : "btn-outline"
               }`}
-              disabled={ paginationLoading || isLoading}
+              disabled={ paginationLoading  }
             >
               {pg}
             </button>
@@ -112,7 +110,7 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           className="btn btn-sm btn-outline"
           onClick={handleNextClick}
-          disabled={nextPage === null || paginationLoading || isLoading}
+          disabled={nextPage === null || paginationLoading }
         >
           Next
         </button>

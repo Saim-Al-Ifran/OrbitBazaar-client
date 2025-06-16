@@ -68,7 +68,7 @@ const FeaturedProducts = () => {
   const [page, setPage] = useState(1);
   const [paginationLoading, setPaginationLoading] = useState(false);
   const [sortingLoading, setSortingLoading] = useState(false);
-  const limit = 1;
+  const limit = 8;
   const {data: featuredProducts,isLoading:isFeaturedLoading,isError:isFeaturedError} = useGetFeauturedProductsQuery({
     sort: sortOrder,
     page,
