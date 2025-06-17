@@ -7,6 +7,7 @@ import {
   Button,
   CardBody,
   CardFooter,
+  Tooltip,
 } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import ProductTable from "../../../../components/Vendor/Product/ProductsTable";
@@ -14,6 +15,7 @@ import { NavLink } from "react-router-dom";
 import { useGetVendorProductsQuery } from "../../../../features/products/productsApi";
 import { ClockLoader, ScaleLoader } from "react-spinners";
 import { Helmet } from "react-helmet";
+import { useGetUserProfileQuery } from "../../../../features/user/userApi";
 
 const AllProducts = () => {
   const [page, setPage] = useState(1);
@@ -32,8 +34,10 @@ const AllProducts = () => {
     sort: sortOrder,
     filter: filterStatus,
   });
+  const {data:vendorData} = useGetUserProfileQuery();
+  console.log("Vendor Data:", vendorData);
+  
 
- console.log(products)
   useEffect(() => {
     setPaginationLoading(false);
     setSortingLoading(false);
@@ -104,12 +108,38 @@ const searchNotFound =
                 </Typography>
               </div>
               <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-                <NavLink to="/dashboard/vendor/product/add">
-                  <Button className="flex items-center gap-3" size="sm" {...(undefined as any)}>
-                    <i className="fa-solid fa-bag-shopping"></i> Add product
-                  </Button>
-                </NavLink>
+                {vendorData?.data?.status === "active" && vendorData?.data?.vendorRequestStatus === "approved" ? (
+                  <NavLink to="/dashboard/vendor/product/add">
+                    <Button className="flex items-center gap-3" size="sm" {...(undefined as any)}>
+                      <i className="fa-solid fa-bag-shopping"></i> Add product
+                    </Button>
+                  </NavLink>
+                ) : (
+                <Tooltip 
+                  content={
+                    vendorData?.data?.status === "blocked"
+                      ? "Your vendor account is blocked."
+                      : vendorData?.data?.vendorRequestStatus === "declined"
+                      ? "Your vendor request has been declined."
+                      : "Wait for admin approval to add products."
+                  }
+                 >
+                  <span className="inline-block cursor-not-allowed">
+                    <Button
+                      className="flex items-center gap-3 pointer-events-none"
+                      size="sm"
+                      disabled
+                      {...(undefined as any)}
+                    >
+                      <i className="fa-solid fa-bag-shopping"></i> Add product
+                    </Button>
+                  </span>
+                </Tooltip>
+
+ 
+                )}
               </div>
+
             </div>
 
             {/* Only show search and sort if products exist */}

@@ -9,6 +9,8 @@ export interface ProfileResponse {
     image: string;
     firebaseUID: string;
     role: string;
+    status:string;
+    vendorRequestStatus:string
   };
 }
 

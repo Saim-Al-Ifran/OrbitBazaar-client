@@ -1,5 +1,6 @@
 
 import React, { useState  } from "react";
+import { NavLink } from "react-router-dom";
   const dummyProducts = [
  
     {
@@ -66,10 +67,12 @@ import React, { useState  } from "react";
                 <h2 className="antialiased tracking-normal font-sans leading-[1.3] text-inherit text-3xl font-bold flex items-center">
                 <span className="inline-block w-1 h-8 mr-2 bg-[#495161]"></span>
                 NEW ARRIVALS</h2>
-
+                <NavLink to="/shop">
                   <button className="btn btn-outline  px-3 text-[12px] lg:px-6 lg:text-[12px] rounded-full border border-[#141414] text-[#020202]   hover:bg-black hover:text-white transition duration-300">
-                    VIEW ALL PRODUCTS
+                      VIEW ALL PRODUCTS
                   </button>
+                </NavLink>
+
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {products.length === 0 ? (

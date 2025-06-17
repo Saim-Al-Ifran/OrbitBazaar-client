@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import img1 from  "../../../../assets/Banner_image/banner1.avif";
 import img2 from  "../../../../assets/Banner_image/banner2.avif";
 import img3 from  "../../../../assets/Banner_image/banner3.avif";
+import { NavLink } from "react-router-dom";
 const banners = [
   {
     id: 1,
@@ -56,7 +57,10 @@ const BannerCarousel: React.FC = () => {
             <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-center items-center text-white text-center px-4">
               <h2 className="text-4xl md:text-5xl font-bold">{banner.title}</h2>
               <p className="text-lg md:text-2xl mt-2">{banner.description}</p>
-              <button className="btn btn-primary btn-sm lg:btn-lg bg-black border-black text-white hover:bg-gray-800 mt-4">Shop Now</button>
+              <NavLink to="/shop">
+                <button className="btn btn-primary btn-sm lg:btn-lg bg-black border-black text-white hover:bg-gray-800 mt-4">Shop Now</button>
+              </NavLink>
+
             </div>
           </div>
         ))}
