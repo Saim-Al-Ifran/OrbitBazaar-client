@@ -40,10 +40,9 @@ const AllReports = () => {
     },[reports, isError]);
 
   const noReportsFound =
-    isError &&
-    (error as any)?.status === 404 &&
-    (error as any)?.data?.message === "No orders found!";
-
+      reports?.data?.length === 0;
+  console.log(reports);
+  
   const handlePrevious = () => {
     setPaginationLoading(true);
     if (page > 1) setPage(page - 1);
@@ -84,8 +83,8 @@ const AllReports = () => {
             </div>
   
           </div>
-
-          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+           {!noReportsFound && (
+                    <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             {/* Sorting Option  */}
             <div className="w-full md:w-72">
             <i className="fa-solid fa-sort mr-2"></i>
@@ -130,6 +129,8 @@ const AllReports = () => {
             </div>
   
           </div>
+           )}
+  
         </CardHeader>
   
         <CardBody className="overflow-scroll px-0" {...(undefined as any)}>
@@ -139,9 +140,9 @@ const AllReports = () => {
             </div>
           ) : noReportsFound ? (
             <div className="flex justify-center items-center h-full">
-              <Typography variant="h6" color="gray" className="font-normal" {...(undefined as any)}>
-                No reports found!
-              </Typography>
+                   <Typography color="red" className="text-center py-8 font-semibold" {...(undefined as any)}>
+                      No reports found !
+                    </Typography>
             </div>
           ) : (
             <ReportTable
@@ -178,6 +179,7 @@ const AllReports = () => {
             </div>
           </CardFooter>
         )}
+ 
       </Card>
     </>
 

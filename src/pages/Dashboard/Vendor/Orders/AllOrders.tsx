@@ -16,7 +16,6 @@ const AllOrders = () => {
       data: orders,
       isLoading,
       isError,
-      error,
     } = useGetVendorOrdersQuery({ page, limit, sort: sortOrder })
 
  
@@ -29,9 +28,7 @@ const AllOrders = () => {
     }
 },[orders, isError]);
   const noOrdersFound =
-    isError &&
-    (error as any)?.status === 404 &&
-    (error as any)?.data?.message === "No orders found!";
+      orders?.data?.length === 0;
 
   const handlePrevious = () => {
     setPaginationLoading(true);
@@ -73,8 +70,8 @@ const isNextDisabled = (page === orders?.pagination?.totalPages) || paginationLo
               </Typography>
             </div>
           </div>
-
-          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+           {!noOrdersFound && (
+                      <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             {/* Sorting Option */}
             <div className="w-full md:w-72">
             <i className="fa-solid fa-sort mr-2"></i>
@@ -118,6 +115,8 @@ const isNextDisabled = (page === orders?.pagination?.totalPages) || paginationLo
               </div>
             </div>
           </div>
+           )}
+
         </CardHeader>
 
         <CardBody className="overflow-scroll px-0" {...(undefined as any)}>
@@ -128,8 +127,8 @@ const isNextDisabled = (page === orders?.pagination?.totalPages) || paginationLo
                             </div>
                         ) : noOrdersFound ? (
                             <div className="text-center p-4">
-                              <Typography variant="h6" color="red" className="font-normal" {...(undefined as any)}> 
-                                No Order found! 
+                            <Typography color="red" className="text-center py-8 font-semibold" {...(undefined as any)}>
+                                No orders found!
                               </Typography>
                             </div>
                         ) : (

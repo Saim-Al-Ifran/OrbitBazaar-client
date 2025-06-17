@@ -64,6 +64,15 @@ const searchNotFound =
    products?.data?.length === 0 &&
    products?.message === "No products matched your search!";
 
+const archivedProducts =
+   products?.data?.length === 0 &&
+   products?.message === "No archived products found!";
+const featuredProducts =
+   products?.data?.length === 0 &&
+   products?.message === "No featured products found!";
+
+
+
 
   const handlePrevious = () => {
     if (page > 1) {
@@ -90,7 +99,8 @@ const searchNotFound =
 
  const isPrevDisabled = (page === 1) || paginationLoading || sortingLoading;
  const isNextDisabled = (page === products?.pagination?.totalPages) || paginationLoading || sortingLoading;
-
+ const isInteractionDisabled = paginationLoading || sortingLoading || filteringLoading;
+ 
   return (
     <>
       <Helmet>
@@ -161,6 +171,7 @@ const searchNotFound =
                         setSortingLoading(true);
                         setPage(1);
                       }}
+                      disabled={isInteractionDisabled || searchLoading || archivedProducts || featuredProducts || searchNotFound}
                       className="block w-full appearance-none rounded-md border border-gray-300 bg-white px-3 py-2 pr-10 text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     >
                         <option value="createdAt:desc">Newest First</option>
@@ -198,6 +209,7 @@ const searchNotFound =
                       setFilteringLoading(true);  
                       setPage(1);
                     }}
+                    disabled={isInteractionDisabled || searchNotFound || searchLoading}
                     className="block w-full appearance-none rounded-md border border-gray-300 bg-white px-3 py-2 pr-10 text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   >
                     <option value="all">All Products</option>
@@ -236,6 +248,7 @@ const searchNotFound =
                       setSearchLoading(true);
                       setPage(1);
                     }}
+                    disabled={isInteractionDisabled || archivedProducts || featuredProducts }
                     {...(undefined as any)}
                   />
                 </div>
@@ -252,45 +265,59 @@ const searchNotFound =
                           No matching products found for "{searchQuery}".
                         </Typography>
                       )}
+                      {archivedProducts && (
+                        <Typography color="red" className="text-center py-8 font-semibold" {...(undefined as any)}>
+                          No archived products found.
+                        </Typography>
+                      )}
+                      {featuredProducts && (
+                        <Typography color="red" className="text-center py-8 font-semibold" {...(undefined as any)}>
+                          No featured products found.
+                        </Typography>
+                      )}
 
-                      {paginationLoading || sortingLoading || searchLoading || filteringLoading ? (
-                        <div className="flex justify-center">
-                          <ScaleLoader />
-                        </div>
-                      ) : !searchNotFound ? (
-                        <ProductTable key={page} products={products?.data || []} />
-                      ) : null}
+                  {paginationLoading || sortingLoading || searchLoading || filteringLoading ? (
+                    <div className="flex justify-center">
+                      <ScaleLoader />
+                    </div>
+                  ) : (
+                    !searchNotFound && !archivedProducts && !featuredProducts && (
+                      <ProductTable key={page} products={products?.data || []} />
+                    )
+                  )}
+
                     </CardBody>
-                {!searchNotFound && (
-                            <CardFooter
-                      className="flex items-center justify-between border-t border-blue-gray-50 p-4"
-                      {...(undefined as any)}
-                    >
-                      <Typography variant="small" color="blue-gray" className="font-normal" {...(undefined as any)}>
-                        Page {page} of {products?.pagination?.totalPages || 1}
-                      </Typography>
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outlined"
-                          size="sm"
-                          onClick={handlePrevious}
-                          disabled={isPrevDisabled}
-                          {...(undefined as any)}
-                        >
-                          Previous
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          size="sm"
-                          {...(undefined as any)}
-                          onClick={handleNext}
-                          disabled={isNextDisabled}
-                        >
-                          Next
-                        </Button>
-                      </div>
-                    </CardFooter>
-                )}
+                    {!searchNotFound && !archivedProducts && !featuredProducts && (
+                      <CardFooter
+                        className="flex items-center justify-between border-t border-blue-gray-50 p-4"
+                        {...(undefined as any)}
+                      >
+                        <Typography variant="small" color="blue-gray" className="font-normal" {...(undefined as any)}>
+                          Page {page} of {products?.pagination?.totalPages || 1}
+                        </Typography>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outlined"
+                            size="sm"
+                            onClick={handlePrevious}
+                            disabled={isPrevDisabled}
+                            {...(undefined as any)}
+                          >
+                            Previous
+                          </Button>
+                          <Button
+                            variant="outlined"
+                            size="sm"
+                            onClick={handleNext}
+                            disabled={isNextDisabled}
+                            {...(undefined as any)}
+                          >
+                            Next
+                          </Button>
+                        </div>
+                      </CardFooter>
+                    )} 
+
 
                   </>
           )}
