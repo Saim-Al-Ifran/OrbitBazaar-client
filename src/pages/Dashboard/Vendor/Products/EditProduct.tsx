@@ -179,7 +179,7 @@ const EditProduct = () => {
               accept="image/*"
               ref={fileInputRef}
               onChange={handleImageChange}
-              className="file-input file-input-bordered w-full"
+              className="file-input file-input-bordered file-input-neutral w-full"
             />
 
             {/* Previews */}
