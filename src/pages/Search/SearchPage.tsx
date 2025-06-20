@@ -1,118 +1,70 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-
-const products = [
-  {
-    id: 1,
-    name: "iPhone X",
-    category: "Mobile",
-    price: 60000,
-    image:
-      "https://i5.walmartimages.com/seo/Pre-Owned-Apple-iPhone-X-64GB-Factory-Unlocked-Smartphone-Refurbished-Good_9b5ec8b2-9665-463b-adc5-64829ba72da6.1b496e5a8fcee76fdad69bae12b54745.jpeg",
-    ratings: { average: 4.8, count: 85 },
-    description: "A high-end mobile phone with excellent performance.",
-  },
-  {
-    id: 2,
-    name: "Samsung S20",
-    category: "Mobile",
-    price: 50000,
-    image: "https://mobilebuzzbd.com/wp-content/uploads/2023/07/Galaxy-S20-FE.jpg",
-    ratings: { average: 4.3, count: 60 },
-    description: "Powerful smartphone with a stunning display.",
-  },
-  {
-    id: 3,
-    name: "Dell Series",
-    category: "Laptop",
-    price: 6000,
-    image: "https://mcsolution.com.bd/wp-content/uploads/2021/10/dell-inspiron-15-3000-price-in-bangladesh-1200x900.webp",
-    ratings: { average: 4.6, count: 45 },
-    description: "Reliable laptop for work and entertainment.",
-  },
-  {
-    id: 4,
-    name: "Nokia 420",
-    category: "Mobile",
-    price: 125.99,
-    image: "https://i.gadgets360cdn.com/products/large/1551025118_635_Nokia_4.2_db.jpg",
-    ratings: { average: 4.7, count: 90 },
-    description: "Classic Nokia phone with long battery life.",
-  },
-  {
-    id: 5,
-    name: "Mac PC",
-    category: "Computer",
-    price: 40000,
-    image: "https://i.blogs.es/022fbb/new_2017_imac_two_side/1366_2000.jpg",
-    description: "A powerful desktop for professionals.",
-  },
-  {
-    id: 6,
-    name: "MacBook Pro",
-    category: "Laptop",
-    price: 429.99,
-    image: "https://techcrunch.com/wp-content/uploads/2024/11/CMC_8144.jpg?w=1024",
-    description: "Premium laptop with high performance.",
-    ratings: { average: 4.5, count: 40 },
-  },
-];
-
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+ 
+import { useGetSearchProductsQuery } from "../../features/products/productsApi";
+import SkeletonCard from "../../components/SkeletonLoader/SkeletonCard";
+import Pagination from "../../components/Pagination/Pagination";
+ 
+ 
+ 
 const SearchPage = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [sortOption, setSortOption] = useState("");
-  const itemsPerPage = 6;
+   const navigate = useNavigate();
+ 
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const keyword = searchParams.get("query") || "";
+  const [sortOption, setSortOption] = useState("createdAt:desc");
+  const [page, setPage] = useState(1);
+  const limit = 6;
+  const [sortingLoading, setSortingLoading] = useState(false);
+  const [paginationLoading, setPaginationLoading] = useState(false);
 
-  const sortedProducts = [...products].sort((a, b) => {
-    switch (sortOption) {
-      case "low-to-high":
-        return a.price - b.price;
-      case "high-to-low":
-        return b.price - a.price;
-      case "rating-high-to-low":
-        return (b.ratings?.average || 0) - (a.ratings?.average || 0);
-      case "rating-low-to-high":
-        return (a.ratings?.average || 0) - (b.ratings?.average || 0);
-      default:
-        return 0;
-    }
+  const { data, isFetching} = useGetSearchProductsQuery({
+    keyword,
+    page: page,
+    limit,
+    sort: sortOption,
   });
+  const products = data?.data || [];
 
-  const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
-  const currentItems = sortedProducts.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  useEffect(() => {
+    const params = new URLSearchParams();
+    params.set("page", String(page));  
+    navigate(`?${params.toString()}`, { replace: true });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page,sortOption]);
+
+  useEffect(() => {
+    setPaginationLoading(false);
+    setSortingLoading(false);
+  }, [products]);
+
+  // Reset to page 1 if keyword changes
+  useEffect(() => {
+    setPage(1);
+  }, [keyword]);
 
   return (
     <>
-      <div className="bg-gray-100 py-3 rounded-md pl-[20px] overflow-x-hidden lg:pl-[60px] mt-4 mb-4">
-        <div className="flex items-center space-x-2 text-sm text-gray-600 m-auto">
-          <Link
-            to="/"
-            className="flex items-center gap-1 text-[16px] hover:text-blue-600 transition-colors "
-          >
-            <i className="fas fa-home"></i>
-            <span>Home</span>
+      <div className="bg-gray-100 py-3 rounded-md pl-5 lg:pl-[60px] mt-4 mb-4">
+        <div className="flex items-center space-x-2 text-sm text-gray-600">
+          <Link to="/" className="flex items-center gap-1 text-[16px] hover:text-blue-600">
+            <i className="fas fa-home"></i> <span>Home</span>
           </Link>
           <span className="text-gray-400">/</span>
-          <span className="flex items-center gap-1 font-medium text-[16px]">
-            <i className="fa-solid fa-magnifying-glass"></i>
-            <span>Search</span>
-          </span>
-          <span className="text-gray-400">/</span>
-          <span className="flex items-center gap-1 text-[#47698F] font-medium text-[16px]">
-            <span>Mobiles</span>
+          <span className="font-medium text-[16px] flex items-center gap-1">
+            <i className="fa-solid fa-magnifying-glass"></i> <span>Search</span>
           </span>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
-          <h1 className="text-2xl font-bold">Search Results "Mobiles"</h1>
+          <h1 className="text-2xl font-bold">
+            {keyword ? `Search Results for "${keyword}"` : "All Products"}
+          </h1>
 
-           {/* Sorting Dropdown */}
+          {/* Sort dropdown only */}
           <div className="flex items-center gap-2">
             <label htmlFor="sort" className="text-sm font-medium text-gray-700 flex items-center gap-1">
               <i className="fa-solid fa-arrow-down-wide-short text-gray-600" />
@@ -120,89 +72,81 @@ const SearchPage = () => {
             </label>
             <select
               id="sort"
+              disabled={sortingLoading || isFetching}
               value={sortOption}
-              onChange={(e) => setSortOption(e.target.value)}
+              onChange={(e) => {
+                setSortOption(e.target.value);
+                setSortingLoading(true);
+                setPage(1);
+              }}
               className="select select-bordered"
             >
-              <option value="">Default</option>
-              <option value="low-to-high">Price: Low to High</option>
-              <option value="high-to-low">Price: High to Low</option>
-              <option value="rating-high-to-low">Rating: High to Low</option>
-              <option value="rating-low-to-high">Rating: Low to High</option>
+                <option value="createdAt:desc">Newest First</option>
+                <option value="createdAt:asc">Oldest First</option>
+                <option value="price:asc">Price (Lowest)</option>
+                <option value="price:desc">Price (Highest)</option>
             </select>
-        </div>
-
+          </div>
         </div>
 
         {/* Results */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
-          {currentItems.map((item) => (
-            <div
-              key={item.id}
-              className="border rounded-lg p-4 hover:shadow transition"
-            >
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-full h-40 object-cover mb-3 rounded"
-              />
-              <h3 className="text-lg font-semibold">{item.name}</h3>
-              <p className="text-sm text-gray-500 mb-1">{item.category}</p>
-              <p className="text-gray-700 mb-2">{item.description}</p>
-              <div className="flex items-center mb-2">
-                <span className="text-[#FE9428] text-lg">
-                  <i className="fa-solid fa-star"></i> {item.ratings?.average ?? "N/A"}
-                </span>
-                <span className="text-gray-500 text-sm ml-2">
-                  ({item.ratings?.count ?? 0} reviews)
-                </span>
-              </div>
-              <p className="text-black font-bold text-lg mb-3">₹{item.price}</p>
-
-              <Link to={`/shop/${item.id}`}>
-                <button className="w-full bg-black text-white py-2 rounded hover:bg-gray-900 transition">
-                  View Product
-                </button>
-              </Link>
-            </div>
-          ))}
-        </div>
-
-        {/* Pagination */}
-        <div className="flex justify-between items-center mt-6 border-t pt-4">
-          <div className="flex items-center gap-2">
-            <button
-              className="btn btn-sm btn-outline"
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage((prev) => prev - 1)}
-            >
-              Prev
-            </button>
-            {[...Array(totalPages)].map((_, index) => (
-              <button
-                key={index}
-                className={`btn btn-sm ${currentPage === index + 1 ? "btn-neutral" : "btn-outline"}`}
-                onClick={() => setCurrentPage(index + 1)}
-              >
-                {index + 1}
-              </button>
-            ))}
-            <button
-              className="btn btn-sm btn-outline"
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage((prev) => prev + 1)}
-            >
-              Next
-            </button>
+        {isFetching ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {[...Array(6)].map((_, index) => (
+                  <SkeletonCard key={index} />
+                ))}
           </div>
-          <p className="text-sm text-gray-500 hidden md:block">
-            Page {currentPage} of {totalPages} ({products.length} products)
+        )  : products.length === 0 ? (
+          <p className="text-center text-gray-500 py-4">
+            No products found for "{keyword}"
           </p>
-        </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
+            {products.map((item) => (
+              <div key={item._id} className="border rounded-lg p-4 hover:shadow transition">
+                <img
+                  src={item.images[0]}
+                  alt={item.name}
+                  className="w-full h-40 object-cover mb-3 rounded"
+                />
+                <h3 className="text-lg font-semibold">{item.name}</h3>
+                <p className="text-sm text-gray-500 mb-1">{item.category?.name}</p>
+                <p className="text-gray-700 mb-2">{item.description}</p>
+                <div className="flex items-center mb-2">
+                  <span className="text-[#FE9428] text-lg">
+                    <i className="fa-solid fa-star"></i>{" "}
+                    {item.ratings?.average ?? "N/A"}
+                  </span>
+                  <span className="text-gray-500 text-sm ml-2">
+                    ({item.ratings?.count ?? 0} reviews)
+                  </span>
+                </div>
+                <p className="text-black font-bold text-lg mb-3">${item.price}</p>
+                <Link to={`/shop/${item._id}`}>
+                  <button className="w-full bg-black text-white py-2 rounded hover:bg-gray-900 transition">
+                    View Product
+                  </button>
+                </Link>
+              </div>
+            ))}
+          </div>
+        )}
+
+  
+          {/* Pagination */}
+          {!isFetching && (products?.length ?? 0) > 0 && (
+            <Pagination
+              pagination={data?.pagination}
+              isLoading={isFetching}
+              paginationLoading={paginationLoading}
+              setPage={setPage}
+              setPaginationLoading={setPaginationLoading}
+              label="Products"
+            />
+          )}
       </div>
     </>
   );
 };
 
 export default SearchPage;
-

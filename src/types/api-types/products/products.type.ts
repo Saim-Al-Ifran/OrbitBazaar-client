@@ -92,5 +92,10 @@ export interface ProductsParams {
     category?: string;
         sort?: string;
 }
-
+export interface ProductsSearchParams {
+    keyword: string;
+    page?: number;
+    limit?: number;
+    sort?: string;
+}
  

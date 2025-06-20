@@ -10,6 +10,7 @@ import {
     GetSingleProductResponse,
     ProductsParams,
     ProductsResponse,
+    ProductsSearchParams,
     ProductUpdateRequest,
     UpdateProductResponse,
     VendorProductsParams,
@@ -46,6 +47,17 @@ const productsApi = apiSlice.injectEndpoints({
                 return queryString ? `${base}?${queryString}` : base;
             },
             providesTags: ["Products"],
+        }),
+        getSearchProducts: builder.query<ProductsResponse, ProductsSearchParams>({
+        query: ({ keyword, page, limit,sort }) => {
+            const params = new URLSearchParams();
+            if (keyword) params.append("keyword", keyword); // or "keyword"
+            if (page) params.append("page", page.toString());
+            if (limit) params.append("limit", limit.toString());
+            if (sort) params.append("sort", sort.toString());
+            return `products/search?${params.toString()}`;
+        },
+        providesTags: ["Products"],
         }),
 
         getSingleProduct: builder.query<GetSingleProductResponse, string>({
@@ -114,6 +126,7 @@ const productsApi = apiSlice.injectEndpoints({
 export const {
     useGetVendorProductsQuery,
     useGetSingleProductQuery,
+    useGetSearchProductsQuery,
     useAddProductMutation,
     useUpdateProductMutation,
     useArcheiveProductMutation,
