@@ -5,6 +5,7 @@ import { useGetAllProductsQuery } from "../../features/products/productsApi";
 import { useGetCategoriesQuery } from "../../features/categories/categoriesApi";
 import Pagination from "../../components/Pagination/Pagination";
 import SkeletonCard from "../../components/SkeletonLoader/SkeletonCard";
+import BreadcrumbSkeleton from "../../components/SkeletonLoader/BreadcrumbSkeleton";
  
 
 interface CategoryChangeHandler {
@@ -113,21 +114,26 @@ const Shop = () => {
         <title>OrbitBazaar - Shop</title>
       </Helmet>
 
-
+       
       {/* Breadcrumbs */}
-      <div className="bg-gray-100 py-3 rounded-md pl-[20px] lg:pl-[60px] mt-4 mb-4">
-        <div className="flex items-center space-x-2 text-sm text-gray-600">
-          <Link to="/" className="flex items-center gap-1 text-[16px] hover:text-blue-600">
-            <i className="fas fa-home" />
-            <span>Home</span>
-          </Link>
-          <span className="text-gray-400">/</span>
-          <span className="flex items-center gap-1 text-[#47698F] font-medium text-[16px]">
-            <i className="fa-solid fa-bag-shopping" />
-            <span>Shop</span>
-          </span>
-        </div>
-      </div>
+      {isProductLoading ? (
+          <BreadcrumbSkeleton />
+      ):(
+          <div className="bg-gray-100 py-3 rounded-md pl-[20px] lg:pl-[60px] mt-4 mb-4">
+            <div className="flex items-center space-x-2 text-sm text-gray-600">
+              <Link to="/" className="flex items-center gap-1 text-[16px] hover:text-blue-600">
+                <i className="fas fa-home" />
+                <span>Home</span>
+              </Link>
+              <span className="text-gray-400">/</span>
+              <span className="flex items-center gap-1 text-[#47698F] font-medium text-[16px]">
+                <i className="fa-solid fa-bag-shopping" />
+                <span>Shop</span>
+              </span>
+            </div>
+          </div>
+      )}
+
 
       <div className="max-w-7xl mx-auto p-4 flex flex-col md:flex-row gap-6">
         {/* Sidebar */}
