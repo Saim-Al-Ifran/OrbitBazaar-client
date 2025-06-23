@@ -6,6 +6,8 @@ import { useGetCategoriesQuery } from "../../features/categories/categoriesApi";
 import Pagination from "../../components/Pagination/Pagination";
 import SkeletonCard from "../../components/SkeletonLoader/SkeletonCard";
 import BreadcrumbSkeleton from "../../components/SkeletonLoader/BreadcrumbSkeleton";
+import useCheckRoles from "../../hooks/auth/useCheckRoles";
+import { Tooltip } from "@material-tailwind/react";
  
 
 interface CategoryChangeHandler {
@@ -38,7 +40,7 @@ const Shop = () => {
     maxPrice,
   });
   const { data: categories } = useGetCategoriesQuery();
-
+  const {isAdmin,isVendor,isSuperAdmin} = useCheckRoles();
   // ✅ Read URL params on initial load
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -279,9 +281,27 @@ const Shop = () => {
                     <p className="text-gray-500 text-sm">{product.description}</p>
                     <div className="card-actions mt-2">
                       <div className="w-50">
-                        <button className="btn bg-black text-white border-black flex-1">
-                          <i className="fas fa-cart-plus mr-1" /> Add to Cart
-                        </button>
+                  <Tooltip
+                    content={
+                      isAdmin || isVendor || isSuperAdmin
+                        ? "Only customers can add products to the cart"
+                        : "Add to Cart"
+                    }
+                    placement="top"
+                  >
+                    <span>
+                      <button
+                        className={`btn w-full mb-2 ${
+                          isAdmin || isVendor || isSuperAdmin
+                            ? "bg-gray-300 cursor-not-allowed text-gray-600"
+                            : "bg-gray-900 hover:bg-gray-700 text-white"
+                        }`}
+                        disabled={isAdmin || isVendor || isSuperAdmin}
+                      >
+                        <i className="fa-solid fa-cart-plus"></i> Add to Cart
+                      </button>
+                    </span>
+                  </Tooltip>
                       </div>
                       <div className="w-20">
                         <Link to={`/shop/${product._id}`}>

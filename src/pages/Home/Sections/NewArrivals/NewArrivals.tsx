@@ -3,10 +3,13 @@ import React  from "react";
 import { NavLink } from "react-router-dom";
 import { useGetAllProductsQuery } from "../../../../features/products/productsApi";
 import SkeletonCard from "../../../../components/SkeletonLoader/SkeletonCard";
+import useCheckRoles from "../../../../hooks/auth/useCheckRoles";
+import { Tooltip } from "@material-tailwind/react";
  
   const NewArrivals: React.FC = () => {
     //const [products] = useState(dummyProducts);
     const { data: products, isLoading } = useGetAllProductsQuery({});
+    const {isAdmin,isVendor,isSuperAdmin} = useCheckRoles();
     const productsToShow = products?.data?.slice(0, 4) || [];
   
     return (
@@ -39,6 +42,7 @@ import SkeletonCard from "../../../../components/SkeletonLoader/SkeletonCard";
                       src={product.images[0]}
                       alt={product.name}
                       className="w-full h-full object-cover rounded-t-xl"
+                      referrerPolicy="no-referrer"
                     />
                   </div>
 
@@ -64,12 +68,32 @@ import SkeletonCard from "../../../../components/SkeletonLoader/SkeletonCard";
                     <p className="text-gray-500 text-sm mt-1">Sold: {product.salesCount}+</p>
 
                     <div className="mt-4">
-                      <button className="btn bg-gray-900 hover:bg-gray-700 text-white w-full mb-2">
+                  <Tooltip
+                    content={
+                      isAdmin || isVendor || isSuperAdmin
+                        ? "Only customers can add products to the cart"
+                        : "Add to Cart"
+                    }
+                    placement="top"
+                  >
+                    <span>
+                      <button
+                        className={`btn w-full mb-2 ${
+                          isAdmin || isVendor || isSuperAdmin
+                            ? "bg-gray-300 cursor-not-allowed text-gray-600"
+                            : "bg-gray-900 hover:bg-gray-700 text-white"
+                        }`}
+                        disabled={isAdmin || isVendor || isSuperAdmin}
+                      >
                         <i className="fa-solid fa-cart-plus"></i> Add to Cart
                       </button>
+                    </span>
+                  </Tooltip>
+                    <NavLink to={`/shop/${product._id}`}>
                       <button className="btn btn-outline w-full">
                         <i className="fa-solid fa-eye"></i> Quick View
                       </button>
+                    </NavLink>
                     </div>
                   </div>
                 </div>

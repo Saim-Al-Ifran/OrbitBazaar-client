@@ -3,7 +3,9 @@ import { Helmet } from "react-helmet";
 import { useGetFeauturedProductsQuery } from "../../features/products/productsApi";
 import SkeletonCard from "../../components/SkeletonLoader/SkeletonCard";
 import Pagination from "../../components/Pagination/Pagination";
-import { useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Tooltip } from "@material-tailwind/react";
+import useCheckRoles from "../../hooks/auth/useCheckRoles";
 
   // const dummyProducts = [
  
@@ -74,7 +76,7 @@ const FeaturedProducts = () => {
     page,
     limit,
   });
-  console.log("Featured Products:", featuredProducts);
+   const {isAdmin,isVendor,isSuperAdmin} = useCheckRoles();
    useEffect(() => {
     const params = new URLSearchParams(location.search);
     params.set("page", String(page));
@@ -144,7 +146,12 @@ const FeaturedProducts = () => {
             <div key={product._id} className="relative bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl">
               {/* Product Image */}
               <div className="relative w-full h-56">
-                <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover rounded-t-xl" />
+                <img
+                  src={product.images[0]}
+                  alt={product.name}
+                  className="w-full h-full object-cover rounded-t-xl"
+                  referrerPolicy="no-referrer"
+                />
               </div>
 
               {/* Product Details */}
@@ -166,12 +173,32 @@ const FeaturedProducts = () => {
                 </div>
                 <p className="text-gray-500 text-sm mt-1">Sold: {product.salesCount}+</p>
                 <div className="mt-4">
-                  <button className="btn bg-gray-900 hover:bg-gray-700 text-white w-full mb-2">
-                    <i className="fa-solid fa-cart-plus"></i> Add to Cart
-                  </button>
-                  <button className="btn btn-outline w-full">
-                    <i className="fa-solid fa-eye"></i> Quick View
-                  </button>
+                  <Tooltip
+                    content={
+                      isAdmin || isVendor || isSuperAdmin
+                        ? "Only customers can add products to the cart"
+                        : "Add to Cart"
+                    }
+                    placement="top"
+                  >
+                    <span>
+                      <button
+                        className={`btn w-full mb-2 ${
+                          isAdmin || isVendor || isSuperAdmin
+                            ? "bg-gray-300 cursor-not-allowed text-gray-600"
+                            : "bg-gray-900 hover:bg-gray-700 text-white"
+                        }`}
+                        disabled={isAdmin || isVendor || isSuperAdmin}
+                      >
+                        <i className="fa-solid fa-cart-plus"></i> Add to Cart
+                      </button>
+                    </span>
+                  </Tooltip>
+                  <NavLink to={`/shop/${product._id}`}>
+                      <button className="btn btn-outline w-full">
+                        <i className="fa-solid fa-eye"></i> Quick View
+                      </button>
+                   </NavLink>
                 </div>
               </div>
             </div>

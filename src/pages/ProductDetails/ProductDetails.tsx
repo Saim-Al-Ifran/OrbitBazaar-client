@@ -6,13 +6,15 @@ import ProductDetailsSkeleton from "../../components/SkeletonLoader/ProductDetai
 import BreadcrumbSkeleton from "../../components/SkeletonLoader/BreadcrumbSkeleton";
 import ReviewSection from "./Sections/Review";
 import ReviewsSkeleton from "../../components/SkeletonLoader/ReviewsSkeleton";
+import { Tooltip } from "@material-tailwind/react";
+import useCheckRoles from "../../hooks/auth/useCheckRoles";
 
  // Add this to your public folder or adjust accordingly
 
 const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
   const { data: productData, isLoading } = useGetSingleProductQuery(id ?? "");
-
+const {isAdmin,isVendor,isSuperAdmin} = useCheckRoles();
   const [selectedImage, setSelectedImage] = useState("");
   const [quantity, setQuantity] = useState(1);
 
@@ -133,10 +135,27 @@ const ProductDetails = () => {
                   <i className="fa-solid fa-shield-heart mr-2"></i>
                   Add to Wishlist
                 </button>
-                <button className="bg-black hover:bg-gray-800 text-white font-medium px-6 py-2 rounded-md transition">
-                  <i className="fa-solid fa-cart-shopping mr-2"></i>
-                  Add to Cart
-                </button>
+                  <Tooltip
+                    content={
+                      isAdmin || isVendor || isSuperAdmin
+                        ? "Only customers can add products to the cart"
+                        : "Add to Cart"
+                    }
+                    placement="top"
+                  >
+                    <span>
+                      <button
+                        className={`bg-black hover:bg-gray-800 text-white font-medium px-6 py-2 rounded-md transition ${
+                          isAdmin || isVendor || isSuperAdmin
+                            ? "bg-gray-300 cursor-not-allowed text-gray-600"
+                            : "bg-gray-900 hover:bg-gray-700 text-white"
+                        }`}
+                        disabled={isAdmin || isVendor || isSuperAdmin}
+                      >
+                        <i className="fa-solid fa-cart-plus"></i> Add to Cart
+                      </button>
+                    </span>
+                  </Tooltip>
               </div>
             </div>
           </div>
