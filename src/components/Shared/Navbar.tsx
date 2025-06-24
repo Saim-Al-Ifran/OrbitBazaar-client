@@ -5,6 +5,7 @@ import { useGetUserProfileQuery } from "../../features/user/userApi";
 import { useGetSearchProductsQuery } from "../../features/products/productsApi"; // Adjust path if needed
 import UserProfile from "../Profile/UserProfile";
 import { BarLoader } from "react-spinners";
+import useCheckRoles from "../../hooks/auth/useCheckRoles";
 
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,6 +34,7 @@ const Navbar = () => {
       setShowDropdown(false);
     }
   }, [searchQuery, searchData]);
+  const {isAdmin,isVendor,isSuperAdmin} = useCheckRoles();
 
   const isActive = (path: string) => {
     return location.pathname === path
@@ -149,21 +151,29 @@ const Navbar = () => {
             </NavLink>
           </div>
 
-          {/* Cart Icon */}
-          <NavLink to="/cart" className="relative ml-2 md:ml-0">
-            <ShoppingCartIcon className="h-6 w-6 text-black hover:text-gray-700 transition-all duration-300" />
-            <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full px-2">
-              3
-            </span>
-          </NavLink>
+{/* Cart Icon */}
+{!(isAdmin || isVendor || isSuperAdmin) && (
+  <NavLink to="/cart" className="relative ml-2 md:ml-0">
+    <ShoppingCartIcon className="h-6 w-6 text-black hover:text-gray-700 transition-all duration-300" />
+    <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full px-2">
+      3
+    </span>
+  </NavLink>
+)}
 
-          {/* Wishlist Icon */}
-          <NavLink to="/wishlist" className="relative">
-            <HeartIcon className="h-6 w-6 text-black hover:text-gray-700 transition-all duration-300" />
-            <span className="absolute -top-1 -right-2 bg-pink-500 text-white text-xs font-bold rounded-full px-2">
-              5
-            </span>
-          </NavLink>
+{/* Wishlist Icon */}
+{!(isAdmin || isVendor || isSuperAdmin) && (
+  <NavLink to="/wishlist" className="relative">
+    <HeartIcon className="h-6 w-6 text-black hover:text-gray-700 transition-all duration-300" />
+    <span className="absolute -top-1 -right-2 bg-pink-500 text-white text-xs font-bold rounded-full px-2">
+      5
+    </span>
+  </NavLink>
+)}
+
+
+
+
 
           {/* Profile or Login */}
           {userData ? (
