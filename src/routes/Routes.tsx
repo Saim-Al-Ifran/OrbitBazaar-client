@@ -64,8 +64,16 @@ const AppRouter = () => {
           <Route path="contact" element={<Contact />} />
           <Route path="about" element={<AboutUs />} />
           <Route path="checkout" element={<Checkout />} />
-          <Route path="cart" element={<CartDetails />} />
-          <Route path="wishlist" element={<Wishlist />} />
+          <Route path="cart" element={
+              <PrivateRoute>
+                <CartDetails /> 
+              </PrivateRoute> 
+          } />
+          <Route path="wishlist" element={
+             <PrivateRoute>
+                <Wishlist />
+             </PrivateRoute>      
+            } />
           <Route path="search" element={<SearchPage />} />
           <Route path="/products/featured" element={<FeaturedProducts/>} />
         </Route>
