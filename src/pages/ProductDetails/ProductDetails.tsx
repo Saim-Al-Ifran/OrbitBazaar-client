@@ -14,7 +14,7 @@ import useCheckRoles from "../../hooks/auth/useCheckRoles";
 const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
   const { data: productData, isLoading } = useGetSingleProductQuery(id ?? "");
-const {isAdmin,isVendor,isSuperAdmin} = useCheckRoles();
+  const {isAdmin,isVendor,isSuperAdmin} = useCheckRoles();
   const [selectedImage, setSelectedImage] = useState("");
   const [quantity, setQuantity] = useState(1);
 
@@ -131,10 +131,29 @@ const {isAdmin,isVendor,isSuperAdmin} = useCheckRoles();
               </div>
 
               <div className="flex gap-4 mt-6">
-                <button className="bg-white hover:bg-[#E2E2E2] hover:border-[#E2E2E2] border border-black text-black font-medium px-6 py-2 rounded-md transition">
-                  <i className="fa-solid fa-shield-heart mr-2"></i>
-                  Add to Wishlist
-                </button>
+                <Tooltip
+                  content={
+                    isAdmin || isVendor || isSuperAdmin
+                      ? "Only customers can add products to the wishlist"
+                      : "Add to Wishlist"
+                  }
+                  placement="top"
+                >
+                  <span>
+                    <button
+                      className={`bg-white hover:bg-[#E2E2E2] hover:border-[#E2E2E2] border border-black text-black font-medium px-6 py-2 rounded-md transition ${
+                        isAdmin || isVendor || isSuperAdmin
+                          ? "bg-gray-300 cursor-not-allowed text-gray-600"
+                          : ""
+                      }`}
+                      disabled={isAdmin || isVendor || isSuperAdmin}
+                    >
+                      <i className="fa-solid fa-heart"></i> Add to Wishlist
+                    </button>
+                  </span>
+                </Tooltip>
+
+ 
                   <Tooltip
                     content={
                       isAdmin || isVendor || isSuperAdmin

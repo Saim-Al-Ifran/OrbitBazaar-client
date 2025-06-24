@@ -272,6 +272,7 @@ const Shop = () => {
                       src={product.images[0]}
                       alt={product.name}
                       className={`${view === "list" ? "w-full h-32 object-cover" : "h-40 object-cover w-full"}`}
+                      referrerPolicy="no-referrer"
                     />
                   </figure>
                   <div className={`${view === "list" ? "w-2/3 pl-4" : "card-body"}`}>
