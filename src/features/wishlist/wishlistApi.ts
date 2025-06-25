@@ -12,9 +12,10 @@ const wishListApi = apiSlice.injectEndpoints({
       providesTags: ["Wishlist"],
     }),
     addToWishlist: builder.mutation({
-      query: (productId) => ({
-        url: `/wishlist/${productId}`,
+      query: (data) => ({
+        url: `/wishlist`,
         method: "POST",
+        body:data
       }),
       invalidatesTags: ["Wishlist"],
     }),

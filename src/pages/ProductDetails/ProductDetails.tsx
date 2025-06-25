@@ -8,25 +8,66 @@ import ReviewSection from "./Sections/Review";
 import ReviewsSkeleton from "../../components/SkeletonLoader/ReviewsSkeleton";
 import { Tooltip } from "@material-tailwind/react";
 import useCheckRoles from "../../hooks/auth/useCheckRoles";
-
- // Add this to your public folder or adjust accordingly
+import { useAddToWishlistMutation } from "../../features/wishlist/wishlistApi";
+import toast from "react-hot-toast";
 
 const ProductDetails = () => {
-  const { id } = useParams<{ id: string }>();
-  const { data: productData, isLoading } = useGetSingleProductQuery(id ?? "");
-  const {isAdmin,isVendor,isSuperAdmin} = useCheckRoles();
+  const { id = "" } = useParams();
+  const { data: productData, isLoading } = useGetSingleProductQuery(id);
+  const { isAdmin, isVendor, isSuperAdmin } = useCheckRoles();
   const [selectedImage, setSelectedImage] = useState("");
   const [quantity, setQuantity] = useState(1);
 
+  const [
+    addToWishlist,
+    {
+      isSuccess: isAddingWishListSuccess,
+      isLoading: isAddingToWishlist,
+      error: wishListError,
+    },
+  ] = useAddToWishlistMutation();
+
+  const isPrivilegedUser = isAdmin || isVendor || isSuperAdmin;
+ 
   useEffect(() => {
     if (productData?.product?.images?.length) {
       setSelectedImage(productData.product.images[0]);
     }
   }, [productData]);
 
+useEffect(() => {
+  if (isAddingWishListSuccess) {
+    toast.success("Product added to wishlist successfully!");
+  }
+
+  if (
+    (wishListError as any)?.data?.message === "Product already in wishlist"
+  ) {
+    toast('Product already exists in the wishlist!', {
+      icon: '⚠️',
+      style: {
+        borderRadius: '10px',
+        background: '#fef3c7',
+        color: '#92400e',
+        border: '1px solid #facc15',
+      },
+    });
+  }
+}, [isAddingWishListSuccess, wishListError]);
+
+
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
     setQuantity(isNaN(value) || value < 1 ? 1 : value);
+  };
+  
+
+  const handleAddToWishlist = async () => {
+    try {
+      await addToWishlist({ productId: id }).unwrap();
+    } catch (error) {
+      console.error("Failed to add to wishlist:", error);
+    }
   };
 
   return (
@@ -48,12 +89,17 @@ const ProductDetails = () => {
               <span>Home</span>
             </Link>
             <span className="text-gray-400">/</span>
-            <Link to="/shop" className="flex items-center gap-1 hover:text-blue-600 font-medium text-[16px]">
+            <Link
+              to="/shop"
+              className="flex items-center gap-1 hover:text-blue-600 font-medium text-[16px]"
+            >
               <i className="fa-solid fa-bag-shopping"></i>
               <span>Shop</span>
             </Link>
             <span className="text-gray-400">/</span>
-            <span className="text-[#47698F] font-medium text-[16px]">{productData?.product?.name}</span>
+            <span className="text-[#47698F] font-medium text-[16px]">
+              {productData?.product?.name}
+            </span>
           </div>
         </div>
       )}
@@ -68,7 +114,7 @@ const ProductDetails = () => {
             <div className="w-full md:w-1/2">
               <div className="border rounded-lg overflow-hidden shadow-sm mb-4">
                 <img
-                  src={selectedImage }
+                  src={selectedImage}
                   alt="Selected"
                   className="w-full h-[400px] object-contain"
                 />
@@ -79,10 +125,7 @@ const ProductDetails = () => {
                     key={index}
                     src={img}
                     alt={`Thumbnail ${index}`}
-                    onClick={() => {
-                      setSelectedImage(img);
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    }}
+                    onClick={() => setSelectedImage(img)}
                     className={`h-20 w-20 object-cover rounded-md cursor-pointer border-2 ${
                       selectedImage === img ? "border-blue-500" : "border-gray-300"
                     }`}
@@ -131,9 +174,10 @@ const ProductDetails = () => {
               </div>
 
               <div className="flex gap-4 mt-6">
+                {/* Add to Wishlist */}
                 <Tooltip
                   content={
-                    isAdmin || isVendor || isSuperAdmin
+                    isPrivilegedUser
                       ? "Only customers can add products to the wishlist"
                       : "Add to Wishlist"
                   }
@@ -141,40 +185,48 @@ const ProductDetails = () => {
                 >
                   <span>
                     <button
-                      className={`bg-white hover:bg-[#E2E2E2] hover:border-[#E2E2E2] border border-black text-black font-medium px-6 py-2 rounded-md transition ${
-                        isAdmin || isVendor || isSuperAdmin
-                          ? "bg-gray-300 cursor-not-allowed text-gray-600"
-                          : ""
+                      onClick={handleAddToWishlist}
+                      disabled={isPrivilegedUser || isAddingToWishlist  }
+                      className={`bg-white border border-black text-black font-medium px-6 py-2 rounded-md transition ${
+                        isPrivilegedUser || isAddingToWishlist 
+                          ? "bg-gray-300 cursor-not-allowed text-gray-600 border-[#747474] "
+                          : "hover:bg-[#E2E2E2] hover:border-[#E2E2E2]"
                       }`}
-                      disabled={isAdmin || isVendor || isSuperAdmin}
                     >
-                      <i className="fa-solid fa-heart"></i> Add to Wishlist
+                      {isAddingToWishlist   ? (
+                        <i className="fas fa-spinner fa-spin mr-2"></i>
+                      ) : (
+                        <i className="fa-solid fa-heart mr-2"></i>
+                      )}
+                      {isAddingToWishlist   ? "Adding..." : "Add to Wishlist"}
                     </button>
+
                   </span>
                 </Tooltip>
 
- 
-                  <Tooltip
-                    content={
-                      isAdmin || isVendor || isSuperAdmin
-                        ? "Only customers can add products to the cart"
-                        : "Add to Cart"
-                    }
-                    placement="top"
-                  >
-                    <span>
-                      <button
-                        className={`bg-black hover:bg-gray-800 text-white font-medium px-6 py-2 rounded-md transition ${
-                          isAdmin || isVendor || isSuperAdmin
-                            ? "bg-gray-300 cursor-not-allowed text-gray-600"
-                            : "bg-gray-900 hover:bg-gray-700 text-white"
-                        }`}
-                        disabled={isAdmin || isVendor || isSuperAdmin}
-                      >
-                        <i className="fa-solid fa-cart-plus"></i> Add to Cart
-                      </button>
-                    </span>
-                  </Tooltip>
+                {/* Add to Cart */}
+                <Tooltip
+                  content={
+                    isPrivilegedUser
+                      ? "Only customers can add products to the cart"
+                      : "Add to Cart"
+                  }
+                  placement="top"
+                >
+                  <span>
+                    <button
+                      onClick={() => toast("Add to cart functionality not implemented yet")}
+                      className={`bg-black hover:bg-gray-800 text-white font-medium px-6 py-2 rounded-md transition ${
+                        isPrivilegedUser
+                          ? "bg-gray-300 cursor-not-allowed text-gray-600"
+                          : "bg-gray-900 hover:bg-gray-700 text-white"
+                      }`}
+                      disabled={isPrivilegedUser}
+                    >
+                      <i className="fa-solid fa-cart-plus"></i> Add to Cart
+                    </button>
+                  </span>
+                </Tooltip>
               </div>
             </div>
           </div>
@@ -190,7 +242,7 @@ const ProductDetails = () => {
           <p className="text-gray-500">Be the first to review this product!</p>
         </div>
       ) : (
-        <ReviewSection productId={id ?? ""}/>
+        <ReviewSection productId={id} />
       )}
     </>
   );
