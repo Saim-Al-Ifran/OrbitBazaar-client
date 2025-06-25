@@ -19,3 +19,21 @@ export interface WishlistResponse {
   updatedAt: string;
   __v: number;
 }
+
+ 
+export interface Wishlist {
+  _id: string;
+  userEmail: string;
+  items: WishlistItem[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface AddToWishlistResponse {
+  message: string;
+  wishlist: Wishlist;
+}
+export interface AddToWishlistRequest {
+  productId: string;
+}

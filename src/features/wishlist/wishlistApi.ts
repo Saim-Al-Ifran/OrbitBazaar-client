@@ -1,6 +1,6 @@
 import { BaseQueryFn, EndpointBuilder } from "@reduxjs/toolkit/query";
 import { apiSlice } from "../api/apiSlice";
-import { WishlistResponse } from "../../types/api-types/wishlist/wishlist.types";
+import { AddToWishlistRequest, AddToWishlistResponse, WishlistResponse } from "../../types/api-types/wishlist/wishlist.types";
 
 const wishListApi = apiSlice.injectEndpoints({
   endpoints: (builder: EndpointBuilder<BaseQueryFn, string, string>) => ({
@@ -11,7 +11,7 @@ const wishListApi = apiSlice.injectEndpoints({
       }),
       providesTags: ["Wishlist"],
     }),
-    addToWishlist: builder.mutation({
+    addToWishlist: builder.mutation<AddToWishlistResponse,AddToWishlistRequest>({
       query: (data) => ({
         url: `/wishlist`,
         method: "POST",
@@ -26,6 +26,13 @@ const wishListApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Wishlist"],
     }),
+    removeAllFromWishlist: builder.mutation({
+      query: () => ({
+        url: `/wishlist`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Wishlist"],
+    })
   }),
 });
 
@@ -33,4 +40,5 @@ export const {
   useGetWishlistQuery,
   useAddToWishlistMutation,
   useRemoveFromWishlistMutation,
+  useRemoveAllFromWishlistMutation,
 } = wishListApi;

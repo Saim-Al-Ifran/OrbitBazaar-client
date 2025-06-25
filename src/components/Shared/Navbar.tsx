@@ -6,6 +6,7 @@ import { useGetSearchProductsQuery } from "../../features/products/productsApi";
 import UserProfile from "../Profile/UserProfile";
 import { BarLoader } from "react-spinners";
 import useCheckRoles from "../../hooks/auth/useCheckRoles";
+import { useGetWishlistQuery } from "../../features/wishlist/wishlistApi";
 
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -35,7 +36,8 @@ const Navbar = () => {
     }
   }, [searchQuery, searchData]);
   const {isAdmin,isVendor,isSuperAdmin} = useCheckRoles();
-
+  const {data:wishlistData, isLoading: isWishlistLoading} = useGetWishlistQuery();
+  console.log("Wishlist Data:", wishlistData?.items.length); 
   const isActive = (path: string) => {
     return location.pathname === path
       ? "after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[1px] after:bg-black after:rounded-full"
@@ -66,60 +68,60 @@ const Navbar = () => {
         </div>
 
         {/* Search Dropdown */}
-{showDropdown && (
-  <div className="absolute top-[7rem] lg:top-[4rem] lg:w-[32rem] lg:left-[10rem] bg-white shadow-lg border border-gray-200 rounded-lg mt-2 z-50">
-    {isFetching ? (
-      <div className="p-4 text-center text-gray-500">
-  <BarLoader className="mx-auto mb-2" />
-  <p>Searching products...</p>
-</div>
-
-    ) :  searchData?.data.length === 0 ? (
-      <p className="p-4 font-semibold text-center text-red-500">
-           No products found for "{searchQuery}"
-      </p>
-    ) : (
-      <>
-        {searchData?.data?.map((product) => (
-          <NavLink
-            key={product._id}
-            to={`/shop/${product._id}`}
-            className="flex items-center gap-3 p-2 hover:bg-gray-100 transition-all duration-300"
-            onClick={() => setShowDropdown(false)}
-          >
-            <img
-              src={product.images?.[0]}
-              alt={product.name}
-              className="w-10 h-10 object-cover"
-            />
-            <div>
-              <p className="text-sm font-semibold text-gray-800">
-                {product.name}
-              </p>
-              <p
-                className={`text-xs ${
-                  product.stock > 0 ? "text-green-600" : "text-red-500"
-                }`}
-              >
-                {product.price}৳
-              </p>
-            </div>
-          </NavLink>
-        ))}
-
-        <div className="border-t border-gray-200">
-          <NavLink
-            to={`/search?query=${searchQuery}`}
-            className="block text-center py-2 text-white bg-gray-800 rounded-b-lg hover:bg-gray-700 transition-all duration-300 font-semibold"
-            onClick={() => setShowDropdown(false)}
-          >
-            See All Results
-          </NavLink>
+        {showDropdown && (
+          <div className="absolute top-[7rem] lg:top-[4rem] lg:w-[32rem] lg:left-[10rem] bg-white shadow-lg border border-gray-200 rounded-lg mt-2 z-50">
+            {isFetching ? (
+              <div className="p-4 text-center text-gray-500">
+          <BarLoader className="mx-auto mb-2" />
+          <p>Searching products...</p>
         </div>
-      </>
-    )}
-  </div>
-)}
+
+            ) :  searchData?.data.length === 0 ? (
+              <p className="p-4 font-semibold text-center text-red-500">
+                  No products found for "{searchQuery}"
+              </p>
+            ) : (
+              <>
+                {searchData?.data?.map((product) => (
+                  <NavLink
+                    key={product._id}
+                    to={`/shop/${product._id}`}
+                    className="flex items-center gap-3 p-2 hover:bg-gray-100 transition-all duration-300"
+                    onClick={() => setShowDropdown(false)}
+                  >
+                    <img
+                      src={product.images?.[0]}
+                      alt={product.name}
+                      className="w-10 h-10 object-cover"
+                    />
+                    <div>
+                      <p className="text-sm font-semibold text-gray-800">
+                        {product.name}
+                      </p>
+                      <p
+                        className={`text-xs ${
+                          product.stock > 0 ? "text-green-600" : "text-red-500"
+                        }`}
+                      >
+                        {product.price}৳
+                      </p>
+                    </div>
+                  </NavLink>
+                ))}
+
+                <div className="border-t border-gray-200">
+                  <NavLink
+                    to={`/search?query=${searchQuery}`}
+                    className="block text-center py-2 text-white bg-gray-800 rounded-b-lg hover:bg-gray-700 transition-all duration-300 font-semibold"
+                    onClick={() => setShowDropdown(false)}
+                  >
+                    See All Results
+                  </NavLink>
+                </div>
+              </>
+            )}
+          </div>
+        )}
 
 
         {/* Navigation Links */}
@@ -151,29 +153,29 @@ const Navbar = () => {
             </NavLink>
           </div>
 
-{/* Cart Icon */}
-{!(isAdmin || isVendor || isSuperAdmin) && (
-  <NavLink to="/cart" className="relative ml-2 md:ml-0">
-    <ShoppingCartIcon className="h-6 w-6 text-black hover:text-gray-700 transition-all duration-300" />
-    <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full px-2">
-      3
-    </span>
-  </NavLink>
-)}
+    {/* Cart Icon */}
+    {!(isAdmin || isVendor || isSuperAdmin) && (
+      <NavLink to="/cart" className="relative ml-2 md:ml-0">
+        <ShoppingCartIcon className="h-6 w-6 text-black hover:text-gray-700 transition-all duration-300" />
+        {/* <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full px-2">
+          3
+        </span> */}
+      </NavLink>
+    )}
 
-{/* Wishlist Icon */}
-{!(isAdmin || isVendor || isSuperAdmin) && (
-  <NavLink to="/wishlist" className="relative">
-    <HeartIcon className="h-6 w-6 text-black hover:text-gray-700 transition-all duration-300" />
-    <span className="absolute -top-1 -right-2 bg-pink-500 text-white text-xs font-bold rounded-full px-2">
-      5
-    </span>
-  </NavLink>
-)}
+      {/* Wishlist Icon */}
+      {!(isAdmin || isVendor || isSuperAdmin) && (
+        <NavLink to="/wishlist" className="relative">
+          <HeartIcon className="h-6 w-6 text-black hover:text-gray-700 transition-all duration-300" />
+          {!isWishlistLoading && (wishlistData?.items?.length ?? 0) > 0 && (
+            <span className="absolute -top-1 -right-2 bg-pink-500 text-white text-xs font-bold rounded-full px-2">
+              {(wishlistData?.items?.length ?? 0)}
+            </span>
+          )}
 
-
-
-
+        </NavLink>
+      )}
+ 
 
           {/* Profile or Login */}
           {userData ? (
