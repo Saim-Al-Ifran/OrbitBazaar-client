@@ -1,0 +1,42 @@
+import { BaseQueryFn, EndpointBuilder } from "@reduxjs/toolkit/query";
+import { AddToCartRequest, AddToCartResponse, CartResponse } from "../../types/api-types/cart/cart.types";
+import { apiSlice } from "../api/apiSlice";
+
+const cartApi = apiSlice.injectEndpoints({
+  endpoints: (builder:EndpointBuilder<BaseQueryFn, string, string>) => ({
+    getCart: builder.query<CartResponse,void>({
+      query: () => "/cart",
+      providesTags: ["Cart"],
+    }),
+    addToCart: builder.mutation<AddToCartResponse,AddToCartRequest>({
+      query: (item) => ({
+        url: "/cart",
+        method: "POST",
+        body: item,
+      }),
+      invalidatesTags: ["Cart"],
+    }),
+    updateCartItem: builder.mutation({
+      query: ({ id, ...item }) => ({
+        url: `/cart/${id}`,
+        method: "PUT",
+        body: item,
+      }),
+      invalidatesTags: ["Cart"],
+    }),
+    removeFromCart: builder.mutation({
+      query: (id) => ({
+        url: `/cart/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Cart"],
+    }),
+  }),
+});
+
+export const {
+  useGetCartQuery,
+  useAddToCartMutation,
+  useUpdateCartItemMutation,
+  useRemoveFromCartMutation,
+} = cartApi;
