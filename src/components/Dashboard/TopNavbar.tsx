@@ -3,6 +3,7 @@ import React from "react";
 import { useGetUserProfileQuery } from "../../features/user/userApi";
 import useUserRoles from "../../hooks/auth/useCheckRoles";
 import avatar from "../../assets/userAvatar.png";
+import { NavLink } from "react-router-dom";
 
 interface NavbarProps {
   toggleSidebar: () => void;
@@ -23,7 +24,11 @@ const TopNavbar: React.FC<NavbarProps> = ({ toggleSidebar, isSidebarOpen }) => {
 
   return (
     <nav className={`${roleBgColor} p-4 shadow-md flex justify-between items-center fixed top-0 w-full z-50`}>
-      <div className="text-white text-lg font-bold">OrbitBazaar</div>
+      <div className="text-white text-lg font-bold">
+        <NavLink to="/">
+            OrbitBazaar
+        </NavLink> 
+      </div>
       <div className="space-x-4 flex items-center gap-2">
         {!isLoading && user && (
           <div className="flex items-center gap-2 text-white">

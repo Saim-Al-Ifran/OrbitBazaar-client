@@ -6,62 +6,10 @@ import Pagination from "../../components/Pagination/Pagination";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Tooltip } from "@material-tailwind/react";
 import useCheckRoles from "../../hooks/auth/useCheckRoles";
+import { useAddToCartMutation } from "../../features/cart/cartApi";
+import toast from "react-hot-toast";
 
-  // const dummyProducts = [
  
-  //   {
-  //     _id: "2",
-  //     name: "Smart Watch Series 7",
-  //     description: "Latest smartwatch with heart rate and fitness tracking.",
-  //     category: "Wearables",
-  //     vendorEmail: "vendor2@example.com",
-  //     price: 199.99,
-  //     stock: 8,
-  //     image: "https://smartdeal.com.bd/public/uploads/all/6RJZarv2Y9iNyTR0dO55r3ZpL0PXda62IRRx2Mka.jpg",
-  //     ratings: { average: 4.8, count: 85 },
-  //     salesCount: 300,
-  //     isFeatured: true,
-  //   },
-  //   {
-  //     _id: "3",
-  //     name: "Gaming Mouse RGB",
-  //     description: "Ergonomic gaming mouse with adjustable DPI and RGB lighting.",
-  //     category: "Accessories",
-  //     vendorEmail: "vendor3@example.com",
-  //     price: 49.99,
-  //     stock: 15,
-  //     image: "https://m.media-amazon.com/images/I/61wQNtMZHgL._AC_SL1500_.jpg",
-  //     ratings: { average: 4.3, count: 60 },
-  //     salesCount: 180,
-  //     isFeatured: true,
-  //   },
-  //   {
-  //     _id: "4",
-  //     name: "4K Ultra HD Monitor",
-  //     description: "27-inch UHD monitor with a 144Hz refresh rate.",
-  //     category: "Monitors",
-  //     vendorEmail: "vendor4@example.com",
-  //     price: 299.99,
-  //     stock: 5,
-  //     image: "https://www.ryans.com/storage/products/small/dahua-dhi-lm27-u401a-27-inch-4k-uhd-display-hdmi-11711535834.webp",
-  //     ratings: { average: 4.6, count: 45 },
-  //     salesCount: 75,
-  //     isFeatured: true,
-  //   },
-  //   {
-  //     _id: "5",
-  //     name: "Mechanical Gaming Keyboard",
-  //     description: "RGB backlit mechanical keyboard with brown switches.",
-  //     category: "Keyboards",
-  //     vendorEmail: "vendor5@example.com",
-  //     price: 79.99,
-  //     stock: 20,
-  //     image: "https://m.media-amazon.com/images/I/71umGn6O2lL._AC_SL1500_.jpg",
-  //     ratings: { average: 4.7, count: 90 },
-  //     salesCount: 150,
-  //     isFeatured: true,
-  //   },
-  // ];
 const FeaturedProducts = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -76,7 +24,11 @@ const FeaturedProducts = () => {
     page,
     limit,
   });
-   const {isAdmin,isVendor,isSuperAdmin} = useCheckRoles();
+  const [loadingProductId, setLoadingProductId] =  useState<string | null>(null);
+  const [addToCart] = useAddToCartMutation();
+  const {isAdmin,isVendor,isSuperAdmin} = useCheckRoles();
+
+   const isPrivilegedUser = isAdmin || isVendor || isSuperAdmin;
    useEffect(() => {
     const params = new URLSearchParams(location.search);
     params.set("page", String(page));
@@ -94,6 +46,26 @@ const FeaturedProducts = () => {
     
   }, [ featuredProducts, isFeaturedError]);
 
+
+    const handleAddToCart = async (productId: string, price: number) => {
+      try {
+        setLoadingProductId(productId);
+  
+        const res = await addToCart({ productId, price, quantity: 1 }).unwrap();
+  
+        if (res.message === "Added to cart") {
+          toast.success("Product added to cart!");
+        } else if (res.message === "Quantity updated") {
+          toast.success("Quantity updated");
+        } else {
+          toast.success("Cart updated");
+        }
+      } catch (error: any) {
+        toast.error(error?.data?.message || "Failed to add product to cart");
+      } finally {
+        setLoadingProductId(null);
+      }
+    };
 
   return (
     <>
@@ -173,27 +145,42 @@ const FeaturedProducts = () => {
                 </div>
                 <p className="text-gray-500 text-sm mt-1">Sold: {product.salesCount}+</p>
                 <div className="mt-4">
-                  <Tooltip
-                    content={
-                      isAdmin || isVendor || isSuperAdmin
-                        ? "Only customers can add products to the cart"
-                        : "Add to Cart"
-                    }
-                    placement="top"
-                  >
-                    <span>
-                      <button
-                        className={`btn w-full mb-2 ${
-                          isAdmin || isVendor || isSuperAdmin
-                            ? "bg-gray-300 cursor-not-allowed text-gray-600"
-                            : "bg-gray-900 hover:bg-gray-700 text-white"
-                        }`}
-                        disabled={isAdmin || isVendor || isSuperAdmin}
-                      >
-                        <i className="fa-solid fa-cart-plus"></i> Add to Cart
-                      </button>
-                    </span>
-                  </Tooltip>
+                    <Tooltip
+                      content={
+                        isPrivilegedUser
+                          ? "Only customers can add products to the cart"
+                          : product.stock === 0
+                          ? "Out of Stock"
+                          : "Add to Cart"
+                      }
+                      placement="top"
+                    >
+                      <span>
+                        <button
+                          className={`btn w-full mb-2 ${
+                            isPrivilegedUser || loadingProductId === product._id || product.stock === 0
+                              ? "bg-gray-300 cursor-not-allowed text-gray-600"
+                              : "bg-gray-900 hover:bg-gray-700 text-white"
+                          }`}
+                          disabled={
+                            isPrivilegedUser ||
+                            loadingProductId === product._id ||
+                            product.stock === 0
+                          }
+                          onClick={() => handleAddToCart(product._id, product.price)}
+                        >
+                          {loadingProductId === product._id ? (
+                            <>
+                              <i className="fa-solid fa-spinner fa-spin mr-2"></i> Adding...
+                            </>
+                          ) : (
+                            <>
+                              <i className="fa-solid fa-cart-plus mr-2"></i> Add to Cart
+                            </>
+                          )}
+                        </button>
+                      </span>
+                    </Tooltip>
                   <NavLink to={`/shop/${product._id}`}>
                       <button className="btn btn-outline w-full">
                         <i className="fa-solid fa-eye"></i> Quick View

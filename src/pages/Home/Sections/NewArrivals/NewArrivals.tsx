@@ -5,13 +5,38 @@ import { useGetAllProductsQuery } from "../../../../features/products/productsAp
 import SkeletonCard from "../../../../components/SkeletonLoader/SkeletonCard";
 import useCheckRoles from "../../../../hooks/auth/useCheckRoles";
 import { Tooltip } from "@material-tailwind/react";
+import { useAddToCartMutation } from "../../../../features/cart/cartApi";
+import toast from "react-hot-toast";
  
   const NewArrivals: React.FC = () => {
     //const [products] = useState(dummyProducts);
     const { data: products, isLoading } = useGetAllProductsQuery({});
+    const [addToCart] = useAddToCartMutation();
+  
+    const [loadingProductId, setLoadingProductId] = React.useState<string | null>(null);
     const {isAdmin,isVendor,isSuperAdmin} = useCheckRoles();
     const productsToShow = products?.data?.slice(0, 4) || [];
-  
+    const isPrivilegedUser = isAdmin || isVendor || isSuperAdmin;
+    const handleAddToCart = async (productId: string, price: number) => {
+      try {
+        setLoadingProductId(productId);
+
+        const res = await addToCart({ productId, price, quantity: 1 }).unwrap();
+
+        if (res.message === "Added to cart") {
+          toast.success("Product added to cart!");
+        } else if (res.message === "Quantity updated") {
+          toast.success("Quantity updated");
+        } else {
+          toast.success("Cart updated");
+        }
+      } catch (error: any) {
+        toast.error(error?.data?.message || "Failed to add product to cart");
+      } finally {
+        setLoadingProductId(null);
+      }
+    };
+
     return (
       <section className="py-16 bg-base-100">
         <div className="container mx-auto px-6">
@@ -68,32 +93,47 @@ import { Tooltip } from "@material-tailwind/react";
                     <p className="text-gray-500 text-sm mt-1">Sold: {product.salesCount}+</p>
 
                     <div className="mt-4">
-                  <Tooltip
-                    content={
-                      isAdmin || isVendor || isSuperAdmin
-                        ? "Only customers can add products to the cart"
-                        : "Add to Cart"
-                    }
-                    placement="top"
-                  >
-                    <span>
-                      <button
-                        className={`btn w-full mb-2 ${
-                          isAdmin || isVendor || isSuperAdmin
-                            ? "bg-gray-300 cursor-not-allowed text-gray-600"
-                            : "bg-gray-900 hover:bg-gray-700 text-white"
-                        }`}
-                        disabled={isAdmin || isVendor || isSuperAdmin}
+                      <Tooltip
+                        content={
+                          isPrivilegedUser
+                            ? "Only customers can add products to the cart"
+                            : product.stock === 0
+                            ? "Out of Stock"
+                            : "Add to Cart"
+                        }
+                        placement="top"
                       >
-                        <i className="fa-solid fa-cart-plus"></i> Add to Cart
-                      </button>
-                    </span>
-                  </Tooltip>
-                    <NavLink to={`/shop/${product._id}`}>
-                      <button className="btn btn-outline w-full">
-                        <i className="fa-solid fa-eye"></i> Quick View
-                      </button>
-                    </NavLink>
+                        <span>
+                          <button
+                            className={`btn w-full mb-2 ${
+                              isPrivilegedUser || loadingProductId === product._id || product.stock === 0
+                                ? "bg-gray-300 cursor-not-allowed text-gray-600"
+                                : "bg-gray-900 hover:bg-gray-700 text-white"
+                            }`}
+                            disabled={
+                              isPrivilegedUser ||
+                              loadingProductId === product._id ||
+                              product.stock === 0
+                            }
+                            onClick={() => handleAddToCart(product._id, product.price)}
+                          >
+                            {loadingProductId === product._id ? (
+                              <>
+                                <i className="fa-solid fa-spinner fa-spin mr-2"></i> Adding...
+                              </>
+                            ) : (
+                              <>
+                                <i className="fa-solid fa-cart-plus mr-2"></i> Add to Cart
+                              </>
+                            )}
+                          </button>
+                        </span>
+                      </Tooltip>
+                      <NavLink to={`/shop/${product._id}`}>
+                        <button className="btn btn-outline w-full">
+                          <i className="fa-solid fa-eye"></i> Quick View
+                        </button>
+                      </NavLink>
                     </div>
                   </div>
                 </div>

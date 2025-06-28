@@ -7,6 +7,7 @@ import UserProfile from "../Profile/UserProfile";
 import { BarLoader } from "react-spinners";
 import useCheckRoles from "../../hooks/auth/useCheckRoles";
 import { useGetWishlistQuery } from "../../features/wishlist/wishlistApi";
+import { useGetCartQuery } from "../../features/cart/cartApi";
 
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -37,6 +38,7 @@ const Navbar = () => {
   }, [searchQuery, searchData]);
   const {isAdmin,isVendor,isSuperAdmin} = useCheckRoles();
   const {data:wishlistData, isLoading: isWishlistLoading} = useGetWishlistQuery();
+  const {data: cartData, isLoading: isCartLoading } = useGetCartQuery();
   console.log("Wishlist Data:", wishlistData?.items.length); 
   const isActive = (path: string) => {
     return location.pathname === path
@@ -160,6 +162,11 @@ const Navbar = () => {
         {/* <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full px-2">
           3
         </span> */}
+         {!isCartLoading && (cartData?.items?.length ?? 0) > 0 && (
+            <span className="absolute -top-1 -right-2 bg-pink-500 text-white text-xs font-bold rounded-full px-2">
+              {(cartData?.items?.length ?? 0)}
+            </span>
+          )}
       </NavLink>
     )}
 

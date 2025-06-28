@@ -27,7 +27,7 @@ const CartDetails = () => {
       </div>
 
 
-        {!cartData?.items?.length ? (
+        {cartData?.items?.length === 0 ? (
           <div className="text-center mt-20 mb-20 text-gray-600">
             <div className="text-6xl mb-4">
               <i className="fa-solid fa-cart-shopping"></i>

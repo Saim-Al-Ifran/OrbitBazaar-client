@@ -10,6 +10,7 @@ import { Tooltip } from "@material-tailwind/react";
 import useCheckRoles from "../../hooks/auth/useCheckRoles";
 import { useAddToWishlistMutation } from "../../features/wishlist/wishlistApi";
 import toast from "react-hot-toast";
+import { useAddToCartMutation } from "../../features/cart/cartApi";
 
 const ProductDetails = () => {
   const { id = "" } = useParams();
@@ -17,7 +18,7 @@ const ProductDetails = () => {
   const { isAdmin, isVendor, isSuperAdmin } = useCheckRoles();
   const [selectedImage, setSelectedImage] = useState("");
   const [quantity, setQuantity] = useState(1);
-
+  const [loadingProductId, setLoadingProductId] = useState<string | null>(null);
   const [
     addToWishlist,
     {
@@ -26,6 +27,7 @@ const ProductDetails = () => {
       error: wishListError,
     },
   ] = useAddToWishlistMutation();
+  const [addToCart] = useAddToCartMutation();
 
   const isPrivilegedUser = isAdmin || isVendor || isSuperAdmin;
  
@@ -69,6 +71,27 @@ useEffect(() => {
       console.error("Failed to add to wishlist:", error);
     }
   };
+
+
+    const handleAddToCart = async (productId: string, price: number) => {
+      try {
+        setLoadingProductId(productId);
+  
+        const res = await addToCart({ productId, price, quantity: 1 }).unwrap();
+  
+        if (res.message === "Added to cart") {
+          toast.success("Product added to cart!");
+        } else if (res.message === "Quantity updated") {
+          toast.success("Quantity updated");
+        } else {
+          toast.success("Cart updated");
+        }
+      } catch (error: any) {
+        toast.error(error?.data?.message || "Failed to add product to cart");
+      } finally {
+        setLoadingProductId(null);
+      }
+    };
 
   return (
     <>
@@ -205,28 +228,47 @@ useEffect(() => {
                 </Tooltip>
 
                 {/* Add to Cart */}
-                <Tooltip
-                  content={
-                    isPrivilegedUser
-                      ? "Only customers can add products to the cart"
-                      : "Add to Cart"
-                  }
-                  placement="top"
-                >
-                  <span>
-                    <button
-                      onClick={() => toast("Add to cart functionality not implemented yet")}
-                      className={`bg-black hover:bg-gray-800 text-white font-medium px-6 py-2 rounded-md transition ${
-                        isPrivilegedUser
-                          ? "bg-gray-300 cursor-not-allowed text-gray-600"
-                          : "bg-gray-900 hover:bg-gray-700 text-white"
-                      }`}
-                      disabled={isPrivilegedUser}
-                    >
-                      <i className="fa-solid fa-cart-plus"></i> Add to Cart
-                    </button>
-                  </span>
-                </Tooltip>
+<Tooltip
+  content={
+    isPrivilegedUser
+      ? "Only customers can add products to the cart"
+      : (productData?.product?.stock ?? 0) === 0
+      ? "Out of Stock"
+      : "Add to Cart"
+  }
+  placement="top"
+>
+  <span>
+    <button
+      onClick={() => {
+        if (productData?.product?._id && productData?.product?.price !== undefined) {
+          handleAddToCart(productData.product._id, productData.product.price);
+        }
+      }}
+      className={`font-medium px-6 py-2 rounded-md transition w-full md:w-auto ${
+        isPrivilegedUser || loadingProductId === productData?.product?._id || (productData?.product?.stock ?? 0) === 0
+          ? "bg-gray-300 cursor-not-allowed text-gray-600"
+          : "bg-gray-900 hover:bg-gray-700 text-white"
+      }`}
+      disabled={
+        isPrivilegedUser ||
+        loadingProductId === productData?.product?._id ||
+        (productData?.product?.stock ?? 0) === 0
+      }
+    >
+      {loadingProductId === productData?.product?._id ? (
+        <>
+          <i className="fa-solid fa-spinner fa-spin mr-2"></i> Adding...
+        </>
+      ) : (
+        <>
+          <i className="fa-solid fa-cart-plus mr-2"></i> Add to Cart
+        </>
+      )}
+    </button>
+  </span>
+</Tooltip>
+
               </div>
             </div>
           </div>
