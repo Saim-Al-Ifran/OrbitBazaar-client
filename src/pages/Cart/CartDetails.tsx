@@ -10,8 +10,7 @@ const CartDetails = () => {
     isLoading
   } = useGetCartQuery();
 
-  // Handle loading
-  if (isLoading) return <CartSkeleton />;
+ 
  
   const items = cartData?.items || [];
   const totalPrice = cartData?.totalPrice || 0;
@@ -27,7 +26,9 @@ const CartDetails = () => {
       </div>
 
 
-        {cartData?.items?.length === 0 ? (
+        {isLoading ? (
+                  <CartSkeleton />
+        ): cartData?.items?.length === 0 ? (
           <div className="text-center mt-20 mb-20 text-gray-600">
             <div className="text-6xl mb-4">
               <i className="fa-solid fa-cart-shopping"></i>
