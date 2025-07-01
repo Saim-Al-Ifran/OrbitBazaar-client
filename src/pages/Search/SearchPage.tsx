@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
 import { useGetSearchProductsQuery } from "../../features/products/productsApi";
 import SkeletonCard from "../../components/SkeletonLoader/SkeletonCard";
 import Pagination from "../../components/Pagination/Pagination";
@@ -19,7 +18,7 @@ const SearchPage = () => {
 
   const { data, isFetching } = useGetSearchProductsQuery({
     keyword,
-    page: page,
+    page,
     limit,
     sort: sortOption,
   });
@@ -28,6 +27,7 @@ const SearchPage = () => {
 
   useEffect(() => {
     const params = new URLSearchParams();
+    params.set("query", keyword);
     params.set("page", String(page));
     navigate(`?${params.toString()}`, { replace: true });
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -105,7 +105,7 @@ const SearchPage = () => {
                 className="border rounded-lg p-4 hover:shadow transition flex flex-col h-full"
               >
                 <img
-                  src={item.images[0]}
+                  src={item.images?.[0] ?? "/fallback.jpg"}
                   alt={item.name}
                   className="w-full h-40 object-cover mb-3 rounded"
                 />
