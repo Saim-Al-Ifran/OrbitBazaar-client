@@ -1,5 +1,5 @@
 import { BaseQueryFn, EndpointBuilder } from "@reduxjs/toolkit/query";
-import { AddToCartRequest, AddToCartResponse, CartResponse } from "../../types/api-types/cart/cart.types";
+import { AddToCartRequest, AddToCartResponse, CartResponse, RemoveCartRequest, RemoveCartResponse, UpdateCartRequest, UpdateCartResponse } from "../../types/api-types/cart/cart.types";
 import { apiSlice } from "../api/apiSlice";
 
 const cartApi = apiSlice.injectEndpoints({
@@ -16,7 +16,7 @@ const cartApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Cart"],
     }),
-    updateCartQuantity: builder.mutation({
+    updateCartQuantity: builder.mutation<UpdateCartResponse,UpdateCartRequest>({
       query: ({ productId, quantity }) => ({
         url: `/cart/item/${productId}`,
         method: "PUT",
@@ -24,13 +24,14 @@ const cartApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Cart"],
     }),
-    removeFromCart: builder.mutation({
+    removeFromCart: builder.mutation<RemoveCartRequest,RemoveCartResponse>({
       query: (id) => ({
         url: `/cart/item/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Cart"],
     }),
+
   }),
 });
 

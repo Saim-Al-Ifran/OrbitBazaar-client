@@ -26,3 +26,18 @@ export interface AddToCartResponse {
     message: string;
     cart: CartResponse;
 }
+
+export interface UpdateCartRequest{
+    productId:string;
+    quantity:number;
+}
+
+export interface UpdateCartResponse extends AddToCartResponse{};
+
+export interface RemoveCartRequest {
+    id:string;
+}
+
+export interface RemoveCartResponse {
+    message:string;
+}
