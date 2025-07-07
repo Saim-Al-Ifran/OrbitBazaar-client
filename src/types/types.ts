@@ -60,3 +60,18 @@ export interface ReportsInfo extends Report{}
 export interface ReportsTableProps {
   reports: ReportsInfo[];
 }
+
+export interface CustomModalProps {
+  openModal: boolean;  
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>; 
+  handlePaymentSubmit: () => void;  
+  formData: {
+    fullName: string;
+    email: string;
+    phoneNumber:string;
+    city: string;
+    postalCode: string;
+    countryCode: string;
+    address: string;
+  };
+}

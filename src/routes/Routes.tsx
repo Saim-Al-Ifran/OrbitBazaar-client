@@ -50,6 +50,7 @@ import AddUser from '../pages/Dashboard/Admin/User/AddUser';
 import AdminDashboard from '../pages/Dashboard/Admin/AdminDashboard/AdminDashboard';
 import VendorDashboard from '../pages/Dashboard/Vendor/VendorDashboard/VendorDashboard';
 import FeaturedProducts from '../pages/Featured/Featured';
+import Greetings from '../pages/Greetings/Greetings';
 
 const AppRouter = () => {
   return (
@@ -76,6 +77,13 @@ const AppRouter = () => {
             } />
           <Route path="search" element={<SearchPage />} />
           <Route path="/products/featured" element={<FeaturedProducts/>} />
+          <Route path="/greetings" element={
+            <PrivateRoute>
+              <Greetings/>
+            </PrivateRoute>
+            
+           } />
+          
         </Route>
 
         {/* Auth Routes */}
@@ -233,6 +241,14 @@ const AppRouter = () => {
             element={
               <PrivateRoute>
                   <ChangePassword/>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="user/orders"
+            element={
+              <PrivateRoute>
+                  <h1>My Orders</h1>
               </PrivateRoute>
             }
           />

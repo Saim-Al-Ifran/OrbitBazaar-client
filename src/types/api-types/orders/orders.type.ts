@@ -5,6 +5,7 @@ import { PaginationMeta } from "../common/pagination.types";
 export interface ShippingAddress {
   fullName: string;
   address: string;
+  phoneNumber: string;
   city: string;
   postalCode: string;
   countryCode: string;
@@ -63,3 +64,24 @@ export interface GetVendorOrdersResponse {
   data: Order[];
   pagination:PaginationMeta;
 }
+ 
+export interface PlaceOrderItem {
+  productID: string;  
+  quantity: number;
+  price: number;
+  total: number;
+}
+
+export interface PlaceOrderRequest {
+  items: PlaceOrderItem[]; 
+  shippingAddress: ShippingAddress;
+  totalQuantity: number;
+  totalPrice: number;
+}
+
+export interface PlaceOrderResponse{
+  message:string;
+  orderId:string;
+}
+
+

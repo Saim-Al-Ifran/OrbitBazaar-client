@@ -1,5 +1,5 @@
 import { BaseQueryFn, EndpointBuilder } from "@reduxjs/toolkit/query";
-import { GetVendorOrdersResponse } from "../../types/api-types/orders/orders.type";
+import { GetVendorOrdersResponse, PlaceOrderRequest, PlaceOrderResponse } from "../../types/api-types/orders/orders.type";
 import { apiSlice } from "../api/apiSlice";
 
 const ordersApi = apiSlice.injectEndpoints({
@@ -24,10 +24,18 @@ const ordersApi = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['Orders'],
         }),
+        placeOrder:builder.mutation<PlaceOrderResponse,PlaceOrderRequest>({
+            query:(data)=>({
+                url:'/orders',
+                method:'POST',
+                body:data
+            })
+        })
     }),
 });
 
 export const {
     useGetVendorOrdersQuery,
-    useEditOrderStatusMutation
+    useEditOrderStatusMutation,
+    usePlaceOrderMutation
 } = ordersApi;
