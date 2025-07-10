@@ -83,5 +83,10 @@ export interface PlaceOrderResponse{
   message:string;
   orderId:string;
 }
-
+export interface GetAllUserOrdersResponse extends GetVendorOrdersResponse {};
+export interface GetAllUserOrdersParams {
+  page?: number;
+  limit?: number;
+  sort?: string;
+}
 

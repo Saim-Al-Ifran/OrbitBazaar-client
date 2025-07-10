@@ -36,7 +36,7 @@ const Dashboard: React.FC = () => {
       {/* Sidebar */}
       <Sidebar isActive={sidebarActive} />
 
-      <div className="flex-1 min-h-screen bg-gray-100">
+      <div className="flex-1 min-h-screen bg-gray-100 w-full ">
         {/* Top Navbar */}
         <TopNavbar
           toggleSidebar={() => setSidebarActive(!sidebarActive)}

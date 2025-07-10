@@ -1,5 +1,5 @@
 import { BaseQueryFn, EndpointBuilder } from "@reduxjs/toolkit/query";
-import { GetVendorOrdersResponse, PlaceOrderRequest, PlaceOrderResponse } from "../../types/api-types/orders/orders.type";
+import { GetAllUserOrdersParams, GetAllUserOrdersResponse, GetVendorOrdersResponse, PlaceOrderRequest, PlaceOrderResponse } from "../../types/api-types/orders/orders.type";
 import { apiSlice } from "../api/apiSlice";
 
 const ordersApi = apiSlice.injectEndpoints({
@@ -30,12 +30,31 @@ const ordersApi = apiSlice.injectEndpoints({
                 method:'POST',
                 body:data
             })
+        }),
+        getAllUserOrders: builder.query<GetAllUserOrdersResponse,GetAllUserOrdersParams>({
+            query: ({ page, limit, sort } = {}) => {
+                let base = `/orders/user`;
+                const params = new URLSearchParams();
+                if (page) params.append('page', page.toString());
+                if (limit) params.append('limit', limit.toString());
+                if (sort) params.append('sort', sort.toString());
+                const queryString = params.toString();
+                return queryString ? `${base}?${queryString}` : base;
+            },
+            providesTags: ['Orders'],
+        }),
+        getSingleUserOrder: builder.query<any, string>({
+            query: (orderId) => `/orders/user/${orderId}`,
+            providesTags: (_result, _error, orderId) => [{ type: 'Order', id: orderId }],
         })
+                
     }),
 });
 
 export const {
     useGetVendorOrdersQuery,
     useEditOrderStatusMutation,
-    usePlaceOrderMutation
+    usePlaceOrderMutation,
+    useGetAllUserOrdersQuery,
+    useGetSingleUserOrderQuery
 } = ordersApi;

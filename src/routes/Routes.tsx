@@ -51,6 +51,8 @@ import AdminDashboard from '../pages/Dashboard/Admin/AdminDashboard/AdminDashboa
 import VendorDashboard from '../pages/Dashboard/Vendor/VendorDashboard/VendorDashboard';
 import FeaturedProducts from '../pages/Featured/Featured';
 import Greetings from '../pages/Greetings/Greetings';
+import UserOrders from '../pages/Dashboard/User/Orders/UserOrders';
+import OrderDetails from '../pages/Dashboard/User/Orders/OrderDetails';
 
 const AppRouter = () => {
   return (
@@ -81,9 +83,8 @@ const AppRouter = () => {
             <PrivateRoute>
               <Greetings/>
             </PrivateRoute>
-            
            } />
-          
+         
         </Route>
 
         {/* Auth Routes */}
@@ -248,7 +249,15 @@ const AppRouter = () => {
             path="user/orders"
             element={
               <PrivateRoute>
-                  <h1>My Orders</h1>
+                   <UserOrders/>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="user/orders/:id"
+            element={
+              <PrivateRoute>
+                  <OrderDetails />
               </PrivateRoute>
             }
           />

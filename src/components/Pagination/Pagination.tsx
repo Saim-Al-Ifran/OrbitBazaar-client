@@ -14,6 +14,7 @@ type PaginationProps = {
   pagination: PaginationInfo | undefined;
   isLoading: boolean;
   paginationLoading: boolean;
+  sortingLoading?: boolean;
   setPage: (page: number) => void;
   setPaginationLoading: (loading: boolean) => void;
   label?: string; // Optional label like "Featured Products", "Reviews", etc.
@@ -44,6 +45,7 @@ const Pagination: React.FC<PaginationProps> = ({
   pagination,
   isLoading,
   paginationLoading,
+  sortingLoading,
   setPage,
   setPaginationLoading,
   label = "Items", // default label
@@ -81,7 +83,7 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           className="btn btn-sm btn-outline"
           onClick={handlePrevClick}
-          disabled={prevPage === null || paginationLoading }
+          disabled={prevPage === null || paginationLoading || sortingLoading}
         >
           Prev
         </button>
@@ -99,7 +101,7 @@ const Pagination: React.FC<PaginationProps> = ({
               className={`btn btn-sm ${
                 currentPage === pg ? "btn-neutral" : "btn-outline"
               }`}
-              disabled={ paginationLoading  }
+              disabled={ paginationLoading || sortingLoading }
             >
               {pg}
             </button>
@@ -110,7 +112,7 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           className="btn btn-sm btn-outline"
           onClick={handleNextClick}
-          disabled={nextPage === null || paginationLoading }
+          disabled={nextPage === null || paginationLoading || sortingLoading}
         >
           Next
         </button>
