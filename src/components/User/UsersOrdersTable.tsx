@@ -1,11 +1,14 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
- import {
+import {
   EyeIcon,
   ChatBubbleLeftRightIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 import { FadeLoader } from "react-spinners";
-
+import ReportModal from "../Report/ReportModal";
+import SubmitReviewModal from "../Reviews/SubmitReviewModal";
+ 
 type Order = {
   _id: string;
   status: string;
@@ -35,25 +38,45 @@ const getStatusClass = (status: string): string => {
 
 const UsersOrdersTable = ({ orders, isLoading }: UsersOrdersTableProps) => {
   const navigate = useNavigate();
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
 
   const handleView = (id: string) => {
-    navigate(`/dashboard/user/orders/${id}`);  
+    navigate(`/dashboard/user/orders/${id}`);
   };
-  const handleReport = (orderId: string) => {
  
-  navigate(`/dashboard/user/orders/${orderId}/report`);
+
+  const handleReview = (orderId: string) => {
+  setSelectedOrderId(orderId);
+  setShowReviewModal(true);
 };
 
-const handleReview = (orderId: string) => {
-  
-  navigate(`/dashboard/user/orders/${orderId}/review`);
-};
 
+  const handleReport = (productId: string) => {
+    setSelectedProductId(productId);
+    setShowReportModal(true);
+  };
+
+  const handleReportSubmit = (payload: {
+    productId: string;
+    reason: string;
+    comments: string;
+  }) => {
+    console.log("Submitted report:", payload);
+    // TODO: integrate with API here
+  };
+
+  const handleReviewSubmit = (payload: { orderId: string; rating: number; comment: string }) => {
+  console.log("Review submitted:", payload);
+  // TODO: Call API to submit the review
+};
 
   if (isLoading)
     return (
-      <div className="w-full flex justify-center py-10">
-           <FadeLoader />
+      <div className="w-full h-[60vh] flex justify-center items-center">
+        <FadeLoader />
       </div>
     );
 
@@ -84,9 +107,7 @@ const handleReview = (orderId: string) => {
                   {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                 </span>
               </td>
-              <td className="px-6 py-4 font-semibold">
-                ${order.totalPrice.toFixed(2)}
-              </td>
+              <td className="px-6 py-4 font-semibold">${order.totalPrice.toFixed(2)}</td>
               <td className="px-6 py-4 text-gray-600">
                 {new Date(order.createdAt).toLocaleDateString(undefined, {
                   year: "numeric",
@@ -95,8 +116,7 @@ const handleReview = (orderId: string) => {
                 })}
               </td>
               <td className="px-6 py-4">
-                <div className="flex gap-2  ">
-                  {/* View */}
+                <div className="flex gap-2">
                   <button
                     onClick={() => handleView(order._id)}
                     className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm"
@@ -105,8 +125,7 @@ const handleReview = (orderId: string) => {
                     View
                   </button>
 
-                  {/* Review */}
-                  {order.status === "delivered" && (
+                  {/* {order.status === "delivered" && ( */}
                     <button
                       onClick={() => handleReview(order._id)}
                       className="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded text-sm"
@@ -114,9 +133,8 @@ const handleReview = (orderId: string) => {
                       <ChatBubbleLeftRightIcon className="w-4 h-4" />
                       Review
                     </button>
-                  )}
+                  {/* )} */}
 
-                  {/* Report */}
                   <button
                     onClick={() => handleReport(order._id)}
                     className="flex items-center gap-1 bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded text-sm"
@@ -126,11 +144,30 @@ const handleReview = (orderId: string) => {
                   </button>
                 </div>
               </td>
-
             </tr>
           ))}
         </tbody>
       </table>
+
+      {/* Report Modal */}
+      {showReportModal && selectedProductId && (
+        <ReportModal
+          isOpen={showReportModal}
+          onClose={() => setShowReportModal(false)}
+          productId={selectedProductId}
+          onSubmit={handleReportSubmit}
+        />
+      )}
+      {/* Review Modal */}
+    {showReviewModal && selectedOrderId && (
+      <SubmitReviewModal
+        isOpen={showReviewModal}
+        onClose={() => setShowReviewModal(false)}
+        orderId={selectedOrderId}
+        onSubmit={handleReviewSubmit}
+      />
+    )}
+
     </div>
   );
 };

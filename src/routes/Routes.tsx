@@ -53,6 +53,9 @@ import FeaturedProducts from '../pages/Featured/Featured';
 import Greetings from '../pages/Greetings/Greetings';
 import UserOrders from '../pages/Dashboard/User/Orders/UserOrders';
 import OrderDetails from '../pages/Dashboard/User/Orders/OrderDetails';
+import UserReports from '../pages/Dashboard/User/Reports/UserReports';
+import ReportDetailsPage from '../pages/Dashboard/User/Reports/ReportDetails';
+import UserReviews from '../pages/Dashboard/User/Reviews/UserReviews';
 
 const AppRouter = () => {
   return (
@@ -258,6 +261,30 @@ const AppRouter = () => {
             element={
               <PrivateRoute>
                   <OrderDetails />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="user/reports"
+            element={
+              <PrivateRoute>
+                   <UserReports />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="user/reports/:id"
+            element={
+              <PrivateRoute>
+                   <ReportDetailsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="user/reviews"
+            element={
+              <PrivateRoute>
+                    <UserReviews/>
               </PrivateRoute>
             }
           />
