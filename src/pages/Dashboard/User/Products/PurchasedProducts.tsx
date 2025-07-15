@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
- 
+import { ShoppingCartIcon } from "@heroicons/react/24/outline";
+
 import { useGetPurchasedProductsQuery } from "../../../../features/products/productsApi";
 import PurchasedProductsTable from "../../../../components/User/PurchasedProductTable";
 import { ClipLoader, FadeLoader } from "react-spinners";
 import Pagination from "../../../../components/Pagination/Pagination";
 import { useGetUserReviewsIDsQuery  } from "../../../../features/reviews/reviewsApi";
 import { useGetUserReportIDsQuery  } from "../../../../features/reports/reportsApi";
+import { NavLink } from "react-router-dom";
  
 
 const PurchasedProducts: React.FC = () => {
@@ -49,7 +51,9 @@ const PurchasedProducts: React.FC = () => {
   const products = data?.data || [];
 
   return (
-    <div className="overflow-x-auto p-4">
+  <div className="overflow-x-auto p-4">
+    {/* Show heading and sorting only if products exist */}
+    {products.length > 0 && (
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl font-semibold">Purchased Products</h2>
         <div className="flex items-center gap-2">
@@ -62,34 +66,47 @@ const PurchasedProducts: React.FC = () => {
             className="select bg-[#F5F5F5] select-neutral"
             value={sort}
             onChange={handleSortChange}
-            disabled={isPurchasedProductLoading|| paginationLoading || sortingLoading}
+            disabled={isPurchasedProductLoading || paginationLoading || sortingLoading}
           >
-          <option value="createdAt:desc">Newest First</option>
-          <option value="createdAt:asc">Oldest First</option>
-          <option value="price:asc">Price: Low to High</option>
-          <option value="price:desc">Price: High to Low</option>
+            <option value="createdAt:desc">Newest First</option>
+            <option value="createdAt:asc">Oldest First</option>
+            <option value="price:asc">Price: Low to High</option>
+            <option value="price:desc">Price: High to Low</option>
           </select>
         </div>
       </div>
-      {isPurchasedProductLoading|| paginationLoading || sortingLoading ? (
-        <div className="w-full flex justify-center py-10">
-            <ClipLoader size={50}/>
+    )}
+
+    {isPurchasedProductLoading || paginationLoading || sortingLoading ? (
+      <div className="w-full flex justify-center py-10">
+        <ClipLoader size={50} />
+      </div>
+    ) : products.length === 0 ? (
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center text-gray-600 flex flex-col items-center">
+            <ShoppingCartIcon className="w-16 h-16 text-gray-400 mb-4" />
+            <p className="text-lg font-semibold mb-2">You haven’t purchased anything yet.</p>
+            <p className="text-sm mb-4">Explore our products and find something you'll love.</p>
+            <NavLink
+              to="/shop"
+              className="inline-flex items-center gap-2 bg-gradient-to-r bg-[#123458] hover:bg-[#1a4e85] text-white font-medium px-6 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out"
+            >
+              Go to Shop
+            </NavLink>
+          </div>
         </div>
-      ):(
-         products.length === 0 ? (
-            <div className="text-center text-gray-500">
-              <p className="text-lg">No orders found.</p>
-            </div>
-         ):(
-              <PurchasedProductsTable 
-                 products={products}
-                 reviewedProductIDs={reviewedProductIDs?.data ?? []}
-                 reportedProductIDs={reportedProductIDs?.data ?? []}
-              /> 
-         )
-      )}
+
     
-      {/* Pagination */}
+    ) : (
+      <PurchasedProductsTable
+        products={products}
+        reviewedProductIDs={reviewedProductIDs?.data ?? []}
+        reportedProductIDs={reportedProductIDs?.data ?? []}
+      />
+    )}
+
+    {/* Show pagination only if products exist */}
+    {products.length > 0 && (
       <div className="mt-6">
         <Pagination
           pagination={data?.pagination}
@@ -101,7 +118,8 @@ const PurchasedProducts: React.FC = () => {
           label="Purchased Products"
         />
       </div>
-    </div>
+    )}
+  </div>
   );
 };
  
