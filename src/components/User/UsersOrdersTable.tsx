@@ -1,13 +1,8 @@
-import { useState } from "react";
+ 
+import { EyeIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
-import {
-  EyeIcon,
-  ChatBubbleLeftRightIcon,
-  ExclamationTriangleIcon,
-} from "@heroicons/react/24/outline";
+ 
 import { FadeLoader } from "react-spinners";
-import ReportModal from "../Report/ReportModal";
-import SubmitReviewModal from "../Reviews/SubmitReviewModal";
  
 type Order = {
   _id: string;
@@ -38,40 +33,11 @@ const getStatusClass = (status: string): string => {
 
 const UsersOrdersTable = ({ orders, isLoading }: UsersOrdersTableProps) => {
   const navigate = useNavigate();
-  const [showReportModal, setShowReportModal] = useState(false);
-  const [showReviewModal, setShowReviewModal] = useState(false);
-  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
-  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
-
+ 
   const handleView = (id: string) => {
     navigate(`/dashboard/user/orders/${id}`);
   };
  
-
-  const handleReview = (orderId: string) => {
-  setSelectedOrderId(orderId);
-  setShowReviewModal(true);
-};
-
-
-  const handleReport = (productId: string) => {
-    setSelectedProductId(productId);
-    setShowReportModal(true);
-  };
-
-  const handleReportSubmit = (payload: {
-    productId: string;
-    reason: string;
-    comments: string;
-  }) => {
-    console.log("Submitted report:", payload);
-    // TODO: integrate with API here
-  };
-
-  const handleReviewSubmit = (payload: { orderId: string; rating: number; comment: string }) => {
-  console.log("Review submitted:", payload);
-  // TODO: Call API to submit the review
-};
 
   if (isLoading)
     return (
@@ -125,23 +91,7 @@ const UsersOrdersTable = ({ orders, isLoading }: UsersOrdersTableProps) => {
                     View
                   </button>
 
-                  {/* {order.status === "delivered" && ( */}
-                    <button
-                      onClick={() => handleReview(order._id)}
-                      className="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded text-sm"
-                    >
-                      <ChatBubbleLeftRightIcon className="w-4 h-4" />
-                      Review
-                    </button>
-                  {/* )} */}
-
-                  <button
-                    onClick={() => handleReport(order._id)}
-                    className="flex items-center gap-1 bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded text-sm"
-                  >
-                    <ExclamationTriangleIcon className="w-4 h-4" />
-                    Report
-                  </button>
+ 
                 </div>
               </td>
             </tr>
@@ -149,24 +99,7 @@ const UsersOrdersTable = ({ orders, isLoading }: UsersOrdersTableProps) => {
         </tbody>
       </table>
 
-      {/* Report Modal */}
-      {showReportModal && selectedProductId && (
-        <ReportModal
-          isOpen={showReportModal}
-          onClose={() => setShowReportModal(false)}
-          productId={selectedProductId}
-          onSubmit={handleReportSubmit}
-        />
-      )}
-      {/* Review Modal */}
-    {showReviewModal && selectedOrderId && (
-      <SubmitReviewModal
-        isOpen={showReviewModal}
-        onClose={() => setShowReviewModal(false)}
-        orderId={selectedOrderId}
-        onSubmit={handleReviewSubmit}
-      />
-    )}
+ 
 
     </div>
   );

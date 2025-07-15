@@ -5,11 +5,10 @@ import { useGetUserProfileQuery } from "../../features/user/userApi";
 const UserNav: React.FC = () => {
   const location = useLocation();
 
-  // Assuming your user state has firebaseUID if logged in via Firebase
+  // Fetch user profile
   const user = useGetUserProfileQuery();
   const { data: userProfile } = user;
   console.log("userProfile", userProfile);
-  
 
   // Define the navigation items array for User
   const navItems = [
@@ -17,6 +16,7 @@ const UserNav: React.FC = () => {
     { to: "/dashboard/user/profile", label: "Profile", icon: "fa-solid fa-user" },
     { to: "/dashboard/user/reports", label: "My Reports", icon: "fa-solid fa-flag" },
     { to: "/dashboard/user/orders", label: "My Orders", icon: "fa-solid fa-cart-plus" },
+    { to: "/dashboard/user/purchased-products", label: "My Purchases", icon: "fa-solid fa-box-open" }, // ✅ New Nav Item
     { to: "/dashboard/user/reviews", label: "Ratings & Reviews", icon: "fa-solid fa-list-check" },
     // Only show "Change Password" if not a Firebase-auth user
     ...(!userProfile?.data?.firebaseUID ? [

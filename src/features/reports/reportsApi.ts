@@ -5,6 +5,7 @@ import {
     SubmitReportResponse,
     UpdateVendorReportStatusRequest,
     UpdateVendorReportStatusResponse,
+    UserReportsResponse,
     UserSingleReportResponse,
     UserUpdateReportRequest,
     UserUpdateReportResponse,
@@ -60,9 +61,9 @@ const reportsApi = apiSlice.injectEndpoints({
                 body: data,
             }),
         }),
-        getUserReportsData: builder.query<UserSingleReportResponse,string>({
-            query: (id) => ({
-                url: `/reports/user/${id}`,
+        getUserReportsData: builder.query<UserReportsResponse,void>({
+            query: () => ({
+                url: `/reports/user`,
             }),
         }),
         updateVendorReportStatus: builder.mutation<UpdateVendorReportStatusResponse,UpdateVendorReportStatusRequest>({
@@ -72,6 +73,12 @@ const reportsApi = apiSlice.injectEndpoints({
                 body: { status },
             }),
             invalidatesTags: ["VendorReports"],
+        }),
+        getUserReportIDs: builder.query<{ data: string[] }, void>({
+            query: () => ({
+                url: `/reports/user_reported_Id`,
+            }),
+            providesTags: ["UserReportIDs"],
         }),
 
     }),
@@ -86,4 +93,5 @@ export const {
     useGetUserReportsDataQuery,
     useUpdateVendorReportStatusMutation,
     useSubmitReportMutation,
+    useGetUserReportIDsQuery
 } = reportsApi;

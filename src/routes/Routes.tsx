@@ -56,6 +56,7 @@ import OrderDetails from '../pages/Dashboard/User/Orders/OrderDetails';
 import UserReports from '../pages/Dashboard/User/Reports/UserReports';
 import ReportDetailsPage from '../pages/Dashboard/User/Reports/ReportDetails';
 import UserReviews from '../pages/Dashboard/User/Reviews/UserReviews';
+import PurchasedProducts from '../pages/Dashboard/User/Products/PurchasedProducts';
 
 const AppRouter = () => {
   return (
@@ -285,6 +286,14 @@ const AppRouter = () => {
             element={
               <PrivateRoute>
                     <UserReviews/>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="user/purchased-products"
+            element={
+              <PrivateRoute>
+                     <PurchasedProducts/>
               </PrivateRoute>
             }
           />

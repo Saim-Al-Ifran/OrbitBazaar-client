@@ -1,7 +1,14 @@
  
 import UserReportsTable from '../../../../components/Report/UserReportsTable'
+import { useGetPurchasedProductsQuery } from '../../../../features/products/productsApi'
 
 const UserReports = () => {
+  const{data} = useGetPurchasedProductsQuery({
+    page: 1,
+    limit: 5,
+    sort: 'createdAt:desc'
+  });
+  console.log(data);
   return (
     <>
         <div className="w-full px-4 py-6">

@@ -3,7 +3,7 @@ import {
   EyeIcon,
   PencilSquareIcon,
   TrashIcon,
-} from "@heroicons/react/24/outline";
+} from "@heroicons/react/24/solid";
 import { useState } from "react";
  
 import EditReportModal from "./EditReportModal";

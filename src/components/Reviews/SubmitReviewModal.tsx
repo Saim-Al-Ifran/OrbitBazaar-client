@@ -4,11 +4,11 @@ import { StarIcon } from "@heroicons/react/24/solid";
 interface SubmitReviewModalProps {
   isOpen: boolean;
   onClose: () => void;
-  orderId: string;
-  onSubmit: (review: { orderId: string; rating: number; comment: string }) => void;
+  productId: string;
+  onSubmit: (review: { productId: string; rating: number; comment: string }) => void;
 }
 
-const SubmitReviewModal = ({ isOpen, onClose, orderId, onSubmit }: SubmitReviewModalProps) => {
+const SubmitReviewModal = ({ isOpen, onClose,  productId, onSubmit }: SubmitReviewModalProps) => {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [comment, setComment] = useState("");
@@ -24,8 +24,8 @@ const SubmitReviewModal = ({ isOpen, onClose, orderId, onSubmit }: SubmitReviewM
       return;
     }
 
-   onSubmit({ orderId, rating, comment });
-   console.log("Review submitted:", { orderId, rating, comment });
+   onSubmit({ productId, rating, comment });
+   console.log("Review submitted:", { productId, rating, comment });
     setRating(0);
     setComment("");
     setError("");

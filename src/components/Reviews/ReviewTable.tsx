@@ -1,7 +1,7 @@
 import { StarIcon, PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import EditReviewModal from "./EditReviewModal";
-import { EyeIcon } from "@heroicons/react/24/outline";
+import { EyeIcon } from "@heroicons/react/24/solid";
 import ReviewDetailsModal from "./ReviewDetailsModal";
 
 const dummyReviews = [

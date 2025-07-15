@@ -48,6 +48,16 @@ const productsApi = apiSlice.injectEndpoints({
             },
             providesTags: ["Products"],
         }),
+        getPurchasedProducts: builder.query<ProductsResponse, ProductsParams>({
+            query: ({ page, limit, sort } = {}) => {
+                const params = new URLSearchParams();
+                if (page) params.append('page', page.toString());
+                if (limit) params.append('limit', limit.toString());
+                if (sort) params.append('sort', sort.toString());
+                return `/user/purchased-products?${params.toString()}`;
+            },
+            providesTags: ["PurchasedProducts"],
+        }),
         getSearchProducts: builder.query<ProductsResponse, ProductsSearchParams>({
         query: ({ keyword, page, limit,sort }) => {
             const params = new URLSearchParams();
@@ -82,7 +92,7 @@ const productsApi = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: productData,
             }),
-            invalidatesTags: ["Products"],
+            invalidatesTags: ["Products", "PurchasedProducts"],
         }),
 
         updateProduct: builder.mutation<UpdateProductResponse, ProductUpdateRequest>({
@@ -134,4 +144,5 @@ export const {
     useMarkProductAsArchivedMutation,
     useGetFeauturedProductsQuery,
     useGetAllProductsQuery,
+    useGetPurchasedProductsQuery
 } = productsApi;

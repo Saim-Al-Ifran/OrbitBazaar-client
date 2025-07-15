@@ -46,6 +46,13 @@ export interface UserSingleReportResponse {
   data: Report;
 }
 
+export interface UserReportsResponse {
+  success: boolean;
+  message: string;
+  data: Report[];
+  pagination: PaginationMeta;
+}
+
 export interface VendorReportRequestParams {
   page?: number;
   limit?: number;
