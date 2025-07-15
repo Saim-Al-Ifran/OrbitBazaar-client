@@ -21,7 +21,7 @@ export const dummyReports = [
       _id: "prd001",
       name: "Casual Denim Jacket",
       images: [
-        "https://res.cloudinary.com/demo/image/upload/v1690000000/demo-denim.jpg"
+        "https://res.cloudinary.com/dobzvjjld/image/upload/v1737276197/obritBazaar/uploads/demin_jacket.jpg"
       ],
     },
   },
@@ -36,7 +36,7 @@ export const dummyReports = [
       _id: "prd002",
       name: "Wireless Headphones",
       images: [
-        "https://res.cloudinary.com/demo/image/upload/v1690000000/demo-headphones.jpg"
+        "https://m.media-amazon.com/images/I/61N+WhybTZL._UF894,1000_QL80_.jpg"
       ],
     },
   },
@@ -51,7 +51,7 @@ export const dummyReports = [
       _id: "prd003",
       name: "Graphic T-Shirt",
       images: [
-        "https://res.cloudinary.com/demo/image/upload/v1690000000/demo-tshirt.jpg"
+        "https://i4.cloudfable.net/styles/550x550/8.51/Black/palm-tree-pastel-sunset-scene-t-shirt-20240605061044-ullmkoh0-s4.jpg"
       ],
     },
   },
