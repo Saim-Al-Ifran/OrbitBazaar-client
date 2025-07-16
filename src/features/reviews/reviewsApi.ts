@@ -1,9 +1,27 @@
 import { BaseQueryFn, EndpointBuilder } from "@reduxjs/toolkit/query";
 import { apiSlice } from "../api/apiSlice";
-import { ReviewResponse, ReviewsParams } from "../../types/api-types/reviews/reviews.types";
+import {
+  ReviewResponse,
+  ReviewsParams,
+  UserAddReviewRequest,
+  UserAddReviewResponse
+} from "../../types/api-types/reviews/reviews.types";
 
 const reviewsApi = apiSlice.injectEndpoints({
   endpoints: (builder: EndpointBuilder<BaseQueryFn, string, string>) => ({
+
+    submitReview: builder.mutation<UserAddReviewResponse,UserAddReviewRequest>({
+      query: (data) => ({
+        url: `/reviews`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: (_result, _error, { productId }) => [
+        { type: "ReviewsList", id: productId },
+        "ReviewsList",
+        "UserReviewsIDs"
+      ],
+    }),
     getProductsReviews: builder.query<ReviewResponse, ReviewsParams >({
       query: ({ productId, page , limit }) => ({
         url: `/reviews/${productId}`,
@@ -29,6 +47,17 @@ const reviewsApi = apiSlice.injectEndpoints({
       }),
       providesTags: ["UserReviewsIDs"],
     }),
+    deleteReview: builder.mutation<{ success: boolean; message: string }, string>({
+      query: (reviewId) => ({
+        url: `/reviews/${reviewId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (_result, _error, reviewId) => [
+        { type: "ReviewsList", id: reviewId },
+        "ReviewsList",
+        "UserReviewsIDs"
+      ],
+    }),
   }),
   
 });
@@ -36,4 +65,6 @@ export const {
   useGetProductsReviewsQuery,
   useGetUserReviewsQuery,
   useGetUserReviewsIDsQuery,
+  useSubmitReviewMutation,
+  useDeleteReviewMutation
 } = reviewsApi;

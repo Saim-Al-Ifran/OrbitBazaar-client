@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { StarIcon } from "@heroicons/react/24/solid";
+import { useNavigate } from "react-router-dom";
+import { useSubmitReviewMutation } from "../../features/reviews/reviewsApi";
+import toast from "react-hot-toast";
 
 interface SubmitReviewModalProps {
   isOpen: boolean;
@@ -8,13 +11,16 @@ interface SubmitReviewModalProps {
   onSubmit: (review: { productId: string; rating: number; comment: string }) => void;
 }
 
-const SubmitReviewModal = ({ isOpen, onClose,  productId, onSubmit }: SubmitReviewModalProps) => {
+const SubmitReviewModal = ({ isOpen, onClose, productId }: SubmitReviewModalProps) => {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [comment, setComment] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = () => {
+  const navigate = useNavigate();
+  const [submitReview, { isLoading,error:reviewError}] = useSubmitReviewMutation();
+  console.log(reviewError)
+  const handleSubmit = async () => {
     if (rating === 0) {
       setError("Rating is required.");
       return;
@@ -24,12 +30,24 @@ const SubmitReviewModal = ({ isOpen, onClose,  productId, onSubmit }: SubmitRevi
       return;
     }
 
-   onSubmit({ productId, rating, comment });
-   console.log("Review submitted:", { productId, rating, comment });
-    setRating(0);
-    setComment("");
-    setError("");
-    onClose();
+    try {
+      const result = await submitReview({ productId, rating, comment }).unwrap();
+      console.log("Review submitted:", result);
+
+      // Reset form
+      setRating(0);
+      setComment("");
+      setError("");
+
+      // Close modal
+      onClose?.();
+      toast.success("Review submitted successfully!");
+      // Navigate to reviews page
+      navigate("/dashboard/user/reviews");
+    } catch (err) {
+      console.error("Failed to submit review:", err);
+      setError("Failed to submit review. Please try again.");
+    }
   };
 
   if (!isOpen) return null;
@@ -77,21 +95,38 @@ const SubmitReviewModal = ({ isOpen, onClose,  productId, onSubmit }: SubmitRevi
         {/* Action buttons */}
         <div className="flex justify-end gap-3">
           <button
-            className="btn bg-[#AF2525]  hover:bg-[#8c1e1e] text-white"
             onClick={onClose}
+            disabled={isLoading}
+            className={`px-4 py-2 rounded text-white 
+                        bg-[#AF2525] 
+                        hover:bg-[#8c1e1e] 
+                        disabled:!bg-[#d49a9a] 
+                        disabled:cursor-not-allowed 
+                        disabled:opacity-80 
+                        transition-all duration-300`}
           >
             Cancel
           </button>
+
           <button
-            className="btn bg-[#123458]  hover:bg-[#144364] text-white"
+            disabled={isLoading}
             onClick={handleSubmit}
+            className={`px-4 py-2 rounded text-white bg-[#123458] 
+                        hover:bg-[#144364] 
+                        disabled:bg-[#8da1b8] 
+                        disabled:cursor-not-allowed 
+                        disabled:opacity-80 
+                        transition-all duration-300`}
           >
-            Submit Review
+            {isLoading? "Submitting..." : "Submit Review"}
           </button>
+
+
         </div>
       </div>
     </dialog>
   );
 };
+
 
 export default SubmitReviewModal;

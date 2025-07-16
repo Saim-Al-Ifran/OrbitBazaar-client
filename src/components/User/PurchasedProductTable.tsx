@@ -60,7 +60,7 @@ const PurchasedProductsTable: React.FC<PurchasedProductsTableProps> = ({ product
             <th className="py-2 px-4 border-b">Name</th>
             <th className="py-2 px-4 border-b">Price</th>
              
-            <th className="py-2 px-4 border-b">Ratings</th>
+            <th className="py-2 px-4 border-b">Products Rating</th>
             <th className="py-2 px-4 border-b">Actions</th>
           </tr>
         </thead>

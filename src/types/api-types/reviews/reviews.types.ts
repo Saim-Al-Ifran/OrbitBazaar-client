@@ -23,3 +23,14 @@ export interface ReviewsParams{
     page?: number;
     limit?: number;
 }
+
+export interface UserAddReviewResponse {
+    success: boolean;
+    message: string;
+}
+
+export interface UserAddReviewRequest {
+    productId: string;
+    rating: number;
+    comment: string;
+}

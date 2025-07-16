@@ -1,18 +1,40 @@
-import ReviewTable from "../../../../components/Reviews/ReviewTable";
+import ReviewTable, { ReviewedProduct } from "../../../../components/Reviews/ReviewTable";
 import { NavLink } from "react-router-dom";
+import { useGetUserReviewsQuery } from "../../../../features/reviews/reviewsApi";
+import { FadeLoader } from "react-spinners";
+import Pagination from "../../../../components/Pagination/Pagination";
+import { useEffect, useState } from "react";
+ 
 
 const UserReviews = () => {
-  const reviews = []; // Replace this with real data from Redux or API
-
+  const [page, setPage] = useState(1);
+  const limit = 5;  
+  const [paginationLoading, setPaginationLoading] = useState(false);
+  const {data:reviewsData,isLoading:isReviewLoading} = useGetUserReviewsQuery({
+     page,
+     limit 
+ });
+  useEffect(() => {
+      setPaginationLoading(false);
+  },[reviewsData])
+ 
+  if (isReviewLoading){
+      return (
+          <div className="w-full h-[60vh] flex items-center justify-center">
+            <FadeLoader />
+          </div>
+      );
+   }
   return (
     <div className="container mx-auto px-4 py-8">
-      {reviews.length > 0 ? (
+      {reviewsData?.data && reviewsData.data.length > 0 ? (
         <>
           <h1 className="text-2xl font-bold mb-6">User Reviews</h1>
           <p className="text-gray-700 mb-4">
             Here you can view and manage your reviews.
           </p>
-          <ReviewTable   />
+          <ReviewTable reviews={reviewsData?.data as unknown as ReviewedProduct[]} />
+
         </>
       ) : (
         <div className="flex items-center justify-center min-h-[60vh]">
@@ -27,6 +49,19 @@ const UserReviews = () => {
               Go to Shop
             </NavLink>
           </div>
+        </div>
+      )}
+          {/* Show pagination only if data is available */}
+      {reviewsData?.data && reviewsData?.data.length > 0 && (
+        <div className="mt-6">
+          <Pagination
+            pagination={reviewsData?.pagination}
+            isLoading={isReviewLoading}
+            paginationLoading={paginationLoading}
+            setPage={setPage}
+            setPaginationLoading={setPaginationLoading}
+            label="Reviews"
+          />
         </div>
       )}
     </div>

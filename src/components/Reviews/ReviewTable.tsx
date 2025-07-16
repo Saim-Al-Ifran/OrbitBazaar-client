@@ -3,28 +3,27 @@ import { useState } from "react";
 import EditReviewModal from "./EditReviewModal";
 import { EyeIcon } from "@heroicons/react/24/solid";
 import ReviewDetailsModal from "./ReviewDetailsModal";
+export interface ReviewedProduct {
+  _id: string;
+  productID: {
+    _id: string;
+    name: string;
+    images: string[];
+  };
+  rating: number;
+  comment: string;
+  createdAt: string;
+}
+export interface ReviewTableProps {
+  reviews: ReviewedProduct[];
+}
+ 
 
-const dummyReviews = [
-  {
-    _id: "67a7968ee54a859a40f0d130",
-    rating: 4.5,
-    comment: "Great product, highly recommend it!",
-    createdAt: "2025-02-08T17:38:22.326Z",
-    productID: {
-      _id: "678cbb25d55672ba96516637",
-      name: "Casual Denim Jackets",
-      images: [
-        "https://res.cloudinary.com/dobzvjjld/image/upload/v1737276197/obritBazaar/uploads/demin_jacket.jpg",
-      ],
-    },
-  },
-];
-
-const ReviewTable = () => {
-  const [reviews, setReviews] = useState(dummyReviews);
+const ReviewTable: React.FC<ReviewTableProps> = ({ reviews }) => {
+  console.log(reviews);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const [selectedDetailsReview, setSelectedDetailsReview] = useState<typeof dummyReviews[0] | null>(null);
+  const [selectedDetailsReview, setSelectedDetailsReview] = useState<ReviewedProduct | null>(null);
 
   const [selectedReview, setSelectedReview] = useState<{
     id: string;
