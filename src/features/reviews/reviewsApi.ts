@@ -3,6 +3,8 @@ import { apiSlice } from "../api/apiSlice";
 import {
   ReviewResponse,
   ReviewsParams,
+  UpdateReviewRequest,
+  UpdateReviewResponse,
   UserAddReviewRequest,
   UserAddReviewResponse
 } from "../../types/api-types/reviews/reviews.types";
@@ -10,18 +12,6 @@ import {
 const reviewsApi = apiSlice.injectEndpoints({
   endpoints: (builder: EndpointBuilder<BaseQueryFn, string, string>) => ({
 
-    submitReview: builder.mutation<UserAddReviewResponse,UserAddReviewRequest>({
-      query: (data) => ({
-        url: `/reviews`,
-        method: "POST",
-        body: data,
-      }),
-      invalidatesTags: (_result, _error, { productId }) => [
-        { type: "ReviewsList", id: productId },
-        "ReviewsList",
-        "UserReviewsIDs"
-      ],
-    }),
 
     getProductsReviews: builder.query<ReviewResponse, ReviewsParams >({
       query: ({ productId, page , limit }) => ({
@@ -49,10 +39,10 @@ const reviewsApi = apiSlice.injectEndpoints({
       }),
       providesTags: ["UserReviewsIDs"],
     }),
-    updateReview: builder.mutation({
-      query: ({reviewId,data}) => ({
-        url: `/reviews/user/${reviewId}`,
-        method: "PUT",
+     submitReview: builder.mutation<UserAddReviewResponse,UserAddReviewRequest>({
+      query: (data) => ({
+        url: `/reviews`,
+        method: "POST",
         body: data,
       }),
       invalidatesTags: (_result, _error, { productId }) => [
@@ -62,15 +52,29 @@ const reviewsApi = apiSlice.injectEndpoints({
         "UserReviews"
       ],
     }),
+    updateReview: builder.mutation<UpdateReviewResponse,UpdateReviewRequest>({
+      query: ({reviewId,data}) => ({
+        url: `/reviews/user/${reviewId}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: (_result, _error, { reviewId }) => [
+        { type: "ReviewsList", id: reviewId },
+        "ReviewsList",
+        "UserReviewsIDs",
+        "UserReviews"
+      ],
+    }),
     deleteReview: builder.mutation<{ success: boolean; message: string }, string>({
       query: (reviewId) => ({
-        url: `/reviews/${reviewId}`,
+        url: `/reviews/user/${reviewId}`,
         method: "DELETE",
       }),
       invalidatesTags: (_result, _error, reviewId) => [
         { type: "ReviewsList", id: reviewId },
         "ReviewsList",
-        "UserReviewsIDs"
+        "UserReviewsIDs",
+        "UserReviews"
       ],
     }),
   }),

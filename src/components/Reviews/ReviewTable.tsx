@@ -4,7 +4,9 @@ import EditReviewModal from "./EditReviewModal";
 import { EyeIcon } from "@heroicons/react/24/solid";
 import ReviewDetailsModal from "./ReviewDetailsModal";
 import toast from "react-hot-toast";
-import { useUpdateReviewMutation } from "../../features/reviews/reviewsApi";
+import { useDeleteReviewMutation, useUpdateReviewMutation } from "../../features/reviews/reviewsApi";
+import Swal from "sweetalert2";
+
 export interface ReviewedProduct {
   _id: string;
   productID: {
@@ -27,6 +29,7 @@ const ReviewTable: React.FC<ReviewTableProps> = ({ reviews }) => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [selectedDetailsReview, setSelectedDetailsReview] = useState<ReviewedProduct | null>(null);
   const [updateReview,{isLoading:isUpdating,isSuccess}] = useUpdateReviewMutation();
+  const [deleteReview] = useDeleteReviewMutation();
   const [selectedReview, setSelectedReview] = useState<{
     id: string;
     rating: number;
@@ -55,18 +58,32 @@ const handleUpdate = async (updated: { reviewId: string; rating: number; comment
       reviewId,
       data: { rating, comment },
     }).unwrap();
-    // toast.success("Review updated successfully!");
-    // setShowEditModal(false);
-    // setSelectedReview(null);
   } catch (error) {
     console.error("Failed to update review:", error);
   }
 };
 
-  const handleDelete = (reviewId: string) => {
-    console.log("Delete review:", reviewId);
-    // TODO: Confirm + call delete API
-  };
+const handleDelete = async (reviewId: string) => {
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "Once deleted, you won’t be able to recover this review!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, delete it!",
+  });
+
+  if (result.isConfirmed) {
+    try {
+      const response = await deleteReview(reviewId).unwrap();
+      toast.success(response.message || "Review deleted successfully!");
+    } catch (error) {
+      console.error("Failed to delete review:", error);
+      toast.error("Failed to delete review.");
+    }
+  }
+};
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 shadow-sm bg-white mt-8">

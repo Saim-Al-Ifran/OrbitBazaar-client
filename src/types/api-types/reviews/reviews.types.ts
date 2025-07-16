@@ -34,3 +34,24 @@ export interface UserAddReviewRequest {
     rating: number;
     comment: string;
 }
+
+export interface UpdateReviewRequest {
+  reviewId: string;
+  data: {
+    rating: number;
+    comment: string;
+  };
+}
+
+export interface UpdateReviewResponse {
+  message: string;
+  updatedReview: {
+    _id: string;
+    rating: number;
+    comment: string;
+    productID: string;
+    userEmail: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
