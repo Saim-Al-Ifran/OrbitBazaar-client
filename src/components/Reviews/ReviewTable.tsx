@@ -1,8 +1,10 @@
 import { StarIcon, PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditReviewModal from "./EditReviewModal";
 import { EyeIcon } from "@heroicons/react/24/solid";
 import ReviewDetailsModal from "./ReviewDetailsModal";
+import toast from "react-hot-toast";
+import { useUpdateReviewMutation } from "../../features/reviews/reviewsApi";
 export interface ReviewedProduct {
   _id: string;
   productID: {
@@ -20,24 +22,45 @@ export interface ReviewTableProps {
  
 
 const ReviewTable: React.FC<ReviewTableProps> = ({ reviews }) => {
-  console.log(reviews);
+ 
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [selectedDetailsReview, setSelectedDetailsReview] = useState<ReviewedProduct | null>(null);
-
+  const [updateReview,{isLoading:isUpdating,isSuccess}] = useUpdateReviewMutation();
   const [selectedReview, setSelectedReview] = useState<{
     id: string;
     rating: number;
     comment: string;
   } | null>(null);
 
+  useEffect(()=>{
+    if (isSuccess) {
+      toast.success("Review updated successfully!");
+      setShowEditModal(false);
+      setSelectedReview(null);
+    }
+  },[isSuccess]);
+
 const handleEdit = (id: string, rating: number, comment: string) => {
   setSelectedReview({ id, rating, comment });
   setShowEditModal(true);
 };
-const handleUpdate = (updated: { reviewId: string; rating: number; comment: string }) => {
-  console.log("Updated review:", updated);
-  // TODO: Send PATCH/PUT request to backend
+
+
+const handleUpdate = async (updated: { reviewId: string; rating: number; comment: string }) => {
+  const { reviewId, rating, comment } = updated;
+
+  try {
+     await updateReview({
+      reviewId,
+      data: { rating, comment },
+    }).unwrap();
+    // toast.success("Review updated successfully!");
+    // setShowEditModal(false);
+    // setSelectedReview(null);
+  } catch (error) {
+    console.error("Failed to update review:", error);
+  }
 };
 
   const handleDelete = (reviewId: string) => {
@@ -139,6 +162,7 @@ const handleUpdate = (updated: { reviewId: string; rating: number; comment: stri
             reviewId={selectedReview.id}
             initialRating={selectedReview.rating}
             initialComment={selectedReview.comment}
+            isUpdating={isUpdating}
             onSubmit={handleUpdate}
           />
         )}

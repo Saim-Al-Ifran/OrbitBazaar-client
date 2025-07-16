@@ -7,6 +7,7 @@ interface EditReviewModalProps {
   reviewId: string;
   initialRating: number;
   initialComment: string;
+  isUpdating: boolean;
   onSubmit: (payload: { reviewId: string; rating: number; comment: string }) => void;
 }
 
@@ -16,14 +17,14 @@ const EditReviewModal = ({
   reviewId,
   initialRating,
   initialComment,
+  isUpdating,
   onSubmit,
 }: EditReviewModalProps) => {
   const [rating, setRating] = useState(initialRating);
   const [hover, setHover] = useState(0);
   const [comment, setComment] = useState(initialComment);
   const [error, setError] = useState("");
-
-  // Reset state when modal opens
+ 
   useEffect(() => {
     setRating(initialRating);
     setComment(initialComment);
@@ -37,7 +38,7 @@ const EditReviewModal = ({
     }
 
     onSubmit({ reviewId, rating, comment });
-    onClose();
+   
   };
 
   if (!isOpen) return null;
@@ -79,11 +80,31 @@ const EditReviewModal = ({
 
         {/* Buttons */}
         <div className="flex justify-end gap-2">
-          <button className="btn bg-[#AF2525] hover:bg-[#8c1e1e] text-white" onClick={onClose}>
+          <button
+            onClick={onClose}
+            disabled={isUpdating}
+            className={`px-4 py-2 rounded text-white 
+                        bg-[#AF2525] 
+                        hover:bg-[#8c1e1e] 
+                        disabled:!bg-[#d49a9a] 
+                        disabled:cursor-not-allowed 
+                        disabled:opacity-80 
+                        transition-all duration-300`}
+          >
             Cancel
           </button>
-          <button className="btn bg-[#123458] hover:bg-[#144364] text-white" onClick={handleSubmit}>
-            Update Review
+
+          <button
+            disabled={isUpdating}
+            onClick={handleSubmit}
+            className={`px-4 py-2 rounded text-white bg-[#123458] 
+                        hover:bg-[#144364] 
+                        disabled:bg-[#8da1b8] 
+                        disabled:cursor-not-allowed 
+                        disabled:opacity-80 
+                        transition-all duration-300`}
+          >
+            {isUpdating? "Updatting..." : "Update Review"}
           </button>
         </div>
       </div>

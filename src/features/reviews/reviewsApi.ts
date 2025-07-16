@@ -22,6 +22,7 @@ const reviewsApi = apiSlice.injectEndpoints({
         "UserReviewsIDs"
       ],
     }),
+
     getProductsReviews: builder.query<ReviewResponse, ReviewsParams >({
       query: ({ productId, page , limit }) => ({
         url: `/reviews/${productId}`,
@@ -39,6 +40,7 @@ const reviewsApi = apiSlice.injectEndpoints({
         method: "GET",
         params: { page, limit },
       }),
+      providesTags:["UserReviews"]
     }),
     getUserReviewsIDs: builder.query<{ data: string[] }, void>({
       query: () => ({
@@ -46,6 +48,19 @@ const reviewsApi = apiSlice.injectEndpoints({
         method: "GET",
       }),
       providesTags: ["UserReviewsIDs"],
+    }),
+    updateReview: builder.mutation({
+      query: ({reviewId,data}) => ({
+        url: `/reviews/user/${reviewId}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: (_result, _error, { productId }) => [
+        { type: "ReviewsList", id: productId },
+        "ReviewsList",
+        "UserReviewsIDs",
+        "UserReviews"
+      ],
     }),
     deleteReview: builder.mutation<{ success: boolean; message: string }, string>({
       query: (reviewId) => ({
@@ -66,5 +81,6 @@ export const {
   useGetUserReviewsQuery,
   useGetUserReviewsIDsQuery,
   useSubmitReviewMutation,
-  useDeleteReviewMutation
+  useDeleteReviewMutation,
+  useUpdateReviewMutation
 } = reviewsApi;
