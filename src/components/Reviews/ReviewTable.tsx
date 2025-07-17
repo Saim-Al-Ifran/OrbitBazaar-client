@@ -1,11 +1,19 @@
-import { StarIcon, PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
+import {
+  StarIcon,
+  PencilSquareIcon,
+  TrashIcon,
+  EyeIcon,
+} from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import EditReviewModal from "./EditReviewModal";
-import { EyeIcon } from "@heroicons/react/24/solid";
 import ReviewDetailsModal from "./ReviewDetailsModal";
 import toast from "react-hot-toast";
-import { useDeleteReviewMutation, useUpdateReviewMutation } from "../../features/reviews/reviewsApi";
+import {
+  useDeleteReviewMutation,
+  useUpdateReviewMutation,
+} from "../../features/reviews/reviewsApi";
 import Swal from "sweetalert2";
+import { ClipLoader } from "react-spinners";
 
 export interface ReviewedProduct {
   _id: string;
@@ -18,72 +26,79 @@ export interface ReviewedProduct {
   comment: string;
   createdAt: string;
 }
+
 export interface ReviewTableProps {
   reviews: ReviewedProduct[];
 }
- 
 
 const ReviewTable: React.FC<ReviewTableProps> = ({ reviews }) => {
- 
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const [selectedDetailsReview, setSelectedDetailsReview] = useState<ReviewedProduct | null>(null);
-  const [updateReview,{isLoading:isUpdating,isSuccess}] = useUpdateReviewMutation();
+  const [selectedDetailsReview, setSelectedDetailsReview] =
+    useState<ReviewedProduct | null>(null);
+  const [updateReview, { isLoading: isUpdating, isSuccess }] =
+    useUpdateReviewMutation();
   const [deleteReview] = useDeleteReviewMutation();
   const [selectedReview, setSelectedReview] = useState<{
     id: string;
     rating: number;
     comment: string;
   } | null>(null);
+  const [deletingReviewId, setDeletingReviewId] = useState<string | null>(null);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (isSuccess) {
       toast.success("Review updated successfully!");
       setShowEditModal(false);
       setSelectedReview(null);
     }
-  },[isSuccess]);
+  }, [isSuccess]);
 
-const handleEdit = (id: string, rating: number, comment: string) => {
-  setSelectedReview({ id, rating, comment });
-  setShowEditModal(true);
-};
+  const handleEdit = (id: string, rating: number, comment: string) => {
+    setSelectedReview({ id, rating, comment });
+    setShowEditModal(true);
+  };
 
-
-const handleUpdate = async (updated: { reviewId: string; rating: number; comment: string }) => {
-  const { reviewId, rating, comment } = updated;
-
-  try {
-     await updateReview({
-      reviewId,
-      data: { rating, comment },
-    }).unwrap();
-  } catch (error) {
-    console.error("Failed to update review:", error);
-  }
-};
-
-const handleDelete = async (reviewId: string) => {
-  const result = await Swal.fire({
-    title: "Are you sure?",
-    text: "Once deleted, you won’t be able to recover this review!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#3085d6",
-    confirmButtonText: "Yes, delete it!",
-  });
-
-  if (result.isConfirmed) {
+  const handleUpdate = async (updated: {
+    reviewId: string;
+    rating: number;
+    comment: string;
+  }) => {
+    const { reviewId, rating, comment } = updated;
     try {
-      const response = await deleteReview(reviewId).unwrap();
-      toast.success(response.message || "Review deleted successfully!");
+      await updateReview({
+        reviewId,
+        data: { rating, comment },
+      }).unwrap();
     } catch (error) {
-      console.error("Failed to delete review:", error);
-      toast.error("Failed to delete review.");
+      console.error("Failed to update review:", error);
     }
-  }
-};
+  };
+
+  const handleDelete = async (reviewId: string) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "Once deleted, you won’t be able to recover this review!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#123458",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        setDeletingReviewId(reviewId);
+        const response = await deleteReview(reviewId).unwrap();
+        toast.success((response as any)?.message || "Review deleted successfully!");
+      } catch (error) {
+        console.error("Failed to delete review:", error);
+        toast.error("Failed to delete review.");
+      } finally {
+        setDeletingReviewId(null);
+      }
+    }
+  };
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 shadow-sm bg-white mt-8">
@@ -138,59 +153,95 @@ const handleDelete = async (reviewId: string) => {
                 {/* Actions */}
                 <td className="px-6 py-4">
                   <div className="flex flex-col gap-2 w-fit">
-                    <button 
+                    <button
+                      type="button"
                       onClick={() => {
-                          setSelectedDetailsReview(review);
-                          setShowDetailsModal(true);
+                        setSelectedDetailsReview(review);
+                        setShowDetailsModal(true);
                       }}
-                      className="flex bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 text-sm rounded text-center"
+                      disabled={deletingReviewId === review._id}
+                      className={`flex bg-indigo-600 text-white px-3 py-1 text-sm rounded text-center ${
+                        deletingReviewId === review._id
+                          ? "bg-indigo-400 cursor-not-allowed"
+                          : "hover:bg-indigo-700"
+                      }`}
+                      aria-label="View Details"
                     >
                       <EyeIcon className="w-4 h-4 mt-[2px] mr-1" />
                       View
                     </button>
+
                     <button
-                      onClick={() => handleEdit(review._id, review.rating, review.comment)}
-                      className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 text-sm rounded"
+                      type="button"
+                      onClick={() =>
+                        handleEdit(review._id, review.rating, review.comment)
+                      }
+                      disabled={deletingReviewId === review._id}
+                      className={`flex items-center gap-1 text-white px-3 py-1 text-sm rounded ${
+                        deletingReviewId === review._id
+                          ? "bg-blue-400 cursor-not-allowed"
+                          : "bg-blue-600 hover:bg-blue-700"
+                      }`}
+                      aria-label="Edit Review"
                     >
                       <PencilSquareIcon className="w-4 h-4" />
                       Edit
                     </button>
 
-                    <button
-                      onClick={() => handleDelete(review._id)}
-                      className="flex items-center gap-1 bg-red-600 hover:bg-red-700 text-white px-3 py-1 text-sm rounded"
-                    >
+                <button
+                  type="button"
+                  onClick={() => handleDelete(review._id)}
+                  disabled={deletingReviewId === review._id}
+                  className={`flex items-center justify-center gap-2 px-3 py-1 text-sm rounded text-white ${
+                    deletingReviewId === review._id
+                      ? "bg-red-400 cursor-not-allowed"
+                      : "bg-red-600 hover:bg-red-700"
+                  }`}
+                  aria-label="Delete Review"
+                >
+                  {deletingReviewId === review._id ? (
+                    <>
+                      <ClipLoader color="#ffffff" size={16} />
+                      Deleting...
+                    </>
+                  ) : (
+                    <>
                       <TrashIcon className="w-4 h-4" />
                       Delete
-                    </button>
+                    </>
+                  )}
+                </button>
+
                   </div>
                 </td>
+
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* Edit  Review Modal*/}
-        {showEditModal && selectedReview && (
-          <EditReviewModal
-            isOpen={showEditModal}
-            onClose={() => setShowEditModal(false)}
-            reviewId={selectedReview.id}
-            initialRating={selectedReview.rating}
-            initialComment={selectedReview.comment}
-            isUpdating={isUpdating}
-            onSubmit={handleUpdate}
-          />
-        )}
+      {/* Edit Review Modal */}
+      {showEditModal && selectedReview && (
+        <EditReviewModal
+          isOpen={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          reviewId={selectedReview.id}
+          initialRating={selectedReview.rating}
+          initialComment={selectedReview.comment}
+          isUpdating={isUpdating}
+          onSubmit={handleUpdate}
+        />
+      )}
+
       {/* Review Details Modal */}
-        {showDetailsModal && selectedDetailsReview && (
-          <ReviewDetailsModal
-            isOpen={showDetailsModal}
-            onClose={() => setShowDetailsModal(false)}
-            review={selectedDetailsReview}
-          />
-        )}
+      {showDetailsModal && selectedDetailsReview && (
+        <ReviewDetailsModal
+          isOpen={showDetailsModal}
+          onClose={() => setShowDetailsModal(false)}
+          review={selectedDetailsReview}
+        />
+      )}
     </div>
   );
 };

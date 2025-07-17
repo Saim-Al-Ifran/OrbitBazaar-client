@@ -49,7 +49,8 @@ const reviewsApi = apiSlice.injectEndpoints({
         { type: "ReviewsList", id: productId },
         "ReviewsList",
         "UserReviewsIDs",
-        "UserReviews"
+        "UserReviews",
+        "PurchasedProducts",
       ],
     }),
     updateReview: builder.mutation<UpdateReviewResponse,UpdateReviewRequest>({
@@ -74,7 +75,8 @@ const reviewsApi = apiSlice.injectEndpoints({
         { type: "ReviewsList", id: reviewId },
         "ReviewsList",
         "UserReviewsIDs",
-        "UserReviews"
+        "UserReviews",
+        "PurchasedProducts"
       ],
     }),
   }),
