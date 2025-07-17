@@ -58,6 +58,7 @@ const reportsApi = apiSlice.injectEndpoints({
             query: () => ({
                 url: `/reports/user`,
             }),
+            providesTags: ["UserReports"],
         }),
         getUserReportIDs: builder.query<{ data: string[] }, void>({
             query: () => ({
@@ -72,6 +73,7 @@ const reportsApi = apiSlice.injectEndpoints({
                 method: "POST",
                 body: reportData,
             }),
+            invalidatesTags: ["VendorReports", "UserReportIDs", "UserReports"],
         }),
         updateVendorReportStatus: builder.mutation<UpdateVendorReportStatusResponse,UpdateVendorReportStatusRequest>({
             query: ({ reportId, status }) => ({
@@ -79,7 +81,7 @@ const reportsApi = apiSlice.injectEndpoints({
                 method: "PATCH",
                 body: { status },
             }),
-            invalidatesTags: ["VendorReports"],
+            invalidatesTags: ["VendorReports", "UserReports"],
         }),
 
     }),

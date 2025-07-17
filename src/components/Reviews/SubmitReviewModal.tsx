@@ -18,8 +18,8 @@ const SubmitReviewModal = ({ isOpen, onClose, productId }: SubmitReviewModalProp
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
-  const [submitReview, { isLoading,error:reviewError}] = useSubmitReviewMutation();
-  console.log(reviewError)
+  const [submitReview, { isLoading}] = useSubmitReviewMutation();
+   
   const handleSubmit = async () => {
     if (rating === 0) {
       setError("Rating is required.");
@@ -42,7 +42,6 @@ const SubmitReviewModal = ({ isOpen, onClose, productId }: SubmitReviewModalProp
       // Close modal
       onClose?.();
       toast.success("Review submitted successfully!");
-      // Navigate to reviews page
       navigate("/dashboard/user/reviews");
     } catch (err) {
       console.error("Failed to submit review:", err);

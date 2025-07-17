@@ -1,4 +1,7 @@
 import  { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSubmitReportMutation } from "../../features/reports/reportsApi";
+import toast from "react-hot-toast";
 
 interface ReportModalProps {
   isOpen: boolean;
@@ -11,32 +14,31 @@ interface ReportModalProps {
   }) => void;
 }
 
-const ReportModal = ({ isOpen, onClose, productId, onSubmit }: ReportModalProps) => {
+const ReportModal = ({ isOpen, onClose, productId  }: ReportModalProps) => {
   const [reason, setReason] = useState("");
-  const [comments, setComments] = useState("");
+  const [comment, setComments] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const [submitReport, { isLoading }] = useSubmitReportMutation();
 
   const handleSubmit = async () => {
     if (!reason.trim()) {
       setError("Reason is required.");
       return;
     }
-
-    setLoading(true);
+ 
     try {
-      await new Promise((res) => setTimeout(res, 1000)); // Simulated API call
-      onSubmit({ productId, reason, comments });
+      await submitReport({ productId, reason, comment }).unwrap();
+    
       setReason("");
       setComments("");
       setError("");
       onClose();
-      // toast.success("Report submitted successfully");
+      toast.success("Review submitted successfully!");
+      navigate("/dashboard/user/reports");
     } catch (err) {
       setError("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   if (!isOpen) return null;
@@ -77,7 +79,7 @@ const ReportModal = ({ isOpen, onClose, productId, onSubmit }: ReportModalProps)
             rows={4}
             placeholder="Provide additional context..."
             className="textarea textarea-bordered w-full"
-            value={comments}
+            value={comment}
             onChange={(e) => setComments(e.target.value)}
           />
         </div>
@@ -88,7 +90,14 @@ const ReportModal = ({ isOpen, onClose, productId, onSubmit }: ReportModalProps)
         {/* Buttons */}
         <div className="flex justify-end gap-3 mt-6">
           <button
-            className="btn bg-[#af2525] hover:bg-[#8c1e1e] text-white"
+            disabled={isLoading}
+            className="px-4 py-2 rounded text-white 
+                        bg-[#AF2525] 
+                        hover:bg-[#8c1e1e] 
+                        disabled:!bg-[#d49a9a] 
+                        disabled:cursor-not-allowed 
+                        disabled:opacity-80 
+                        transition-all duration-300"
             onClick={() => {
               setReason("");
               setComments("");
@@ -99,11 +108,16 @@ const ReportModal = ({ isOpen, onClose, productId, onSubmit }: ReportModalProps)
             Cancel
           </button>
           <button
-            className={`btn bg-[#123458] hover:bg-[#144364] text-white ${loading ? "loading" : ""}`}
+            className={`px-4 py-2 rounded text-white bg-[#123458] 
+                        hover:bg-[#144364] 
+                        disabled:bg-[#8da1b8] 
+                        disabled:cursor-not-allowed 
+                        disabled:opacity-80 
+                        transition-all duration-300`}
             onClick={handleSubmit}
-            disabled={loading}
+            disabled={isLoading }
           >
-            {loading ? "Submitting..." : "Submit Report"}
+            {isLoading  ? "Submitting..." : "Submit Report"}
           </button>
         </div>
       </div>
