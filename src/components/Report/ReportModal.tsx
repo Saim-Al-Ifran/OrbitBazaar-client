@@ -34,7 +34,7 @@ const ReportModal = ({ isOpen, onClose, productId  }: ReportModalProps) => {
       setComments("");
       setError("");
       onClose();
-      toast.success("Review submitted successfully!");
+      toast.success("Report submitted successfully!");
       navigate("/dashboard/user/reports");
     } catch (err) {
       setError("Something went wrong. Please try again.");

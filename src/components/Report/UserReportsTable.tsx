@@ -7,7 +7,11 @@ import {
 import { useState } from "react";
  
 import EditReportModal from "./EditReportModal";
- 
+import { useDeleteReportMutation } from "../../features/reports/reportsApi";
+import Swal from "sweetalert2";
+import { ClipLoader } from "react-spinners";
+import toast from "react-hot-toast";
+
 export interface Report {
   _id: string;
   productID: {
@@ -27,9 +31,10 @@ interface ReportsTableProps {
 }
 const ReportsTable: React.FC<ReportsTableProps> = ({ reports }) => {
  
-const [showEditModal, setShowEditModal] = useState(false);
-const [selectedReport, setSelectedReport] = useState(null);
- 
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedReport, setSelectedReport] = useState(null);
+  const [deletingReportId, setDeletingReportId] = useState<string | null>(null);
+  const [deleteReport] = useDeleteReportMutation();
 
   const handleEditReport = (report: any) => {
     setSelectedReport(report);
@@ -40,6 +45,29 @@ const [selectedReport, setSelectedReport] = useState(null);
     // TODO: call update mutation here
   };
 
+  const handleDeleteReport = async (reportId: string) => {
+        const result = await Swal.fire({
+          title: "Are you sure?",
+          text: "Once deleted, you won’t be able to recover this review!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#123458",
+          confirmButtonText: "Yes, delete it!",
+        });
+    if (result.isConfirmed) {
+      setDeletingReportId(reportId);
+      try {
+        await deleteReport(reportId).unwrap();
+        toast.success("Report deleted successfully!");
+      } catch (error) {
+        console.error("Failed to delete report:", error);
+        Swal.fire("Error!", "Failed to delete the report. Please try again.", "error");
+      } finally {
+        setDeletingReportId(null);
+      }
+    }
+  }
 
   return (
     <div className="overflow-x-auto shadow border rounded bg-white">
@@ -105,31 +133,65 @@ const [selectedReport, setSelectedReport] = useState(null);
             <td className="px-6 py-4">
                 <div className="flex flex-col  gap-2">
                     {/* View Button (Always visible) */}
-                    <NavLink
+                      <NavLink
                         to={`/dashboard/user/reports/${report._id}`}
-                    >
-                    <button  className="flex bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 text-sm rounded text-center">
-                      <EyeIcon className="w-4 h-4 mt-[2px] mr-1" />
-                      View
-                    </button>
+                        onClick={(e) => {
+                          if (deletingReportId === report._id) {
+                            e.preventDefault(); // prevent navigation while deleting
+                          }
+                        }}
+                      >
+                        <button
+                          disabled={deletingReportId === report._id}
+                          className={`flex items-center gap-1 text-white px-3 py-1 text-sm rounded text-center ${
+                            deletingReportId === report._id
+                              ? "bg-indigo-400 cursor-not-allowed"
+                              : "bg-indigo-600 hover:bg-indigo-700"
+                          }`}
+                        >
+                          <EyeIcon className="w-4 h-4 mt-[2px] mr-1" />
+                          View
+                        </button>
+                      </NavLink>
 
-                    </NavLink>
 
                     {/* Edit & Delete only for pending status */}
                     {report.status === "pending" && (
                     <>
                         <button 
-                          className="flex bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 text-sm rounded text-center"
+                          disabled={deletingReportId === report._id}
+                          className={`flex items-center gap-1 text-white px-3 py-1 text-sm rounded ${
+                            deletingReportId === report._id
+                              ? "bg-blue-400 cursor-not-allowed"
+                              : "bg-blue-600 hover:bg-blue-700"
+                          }`}
                           onClick={() => handleEditReport(report._id)}
                         > 
                           <PencilSquareIcon className="w-4 h-4 mt-[2px] mr-1" />
                           Edit
                         </button>
                         <button
-                          className="flex bg-red-600 hover:bg-red-700 text-white px-3 py-1 text-sm rounded"
+                          type="button"
+                          onClick={() => handleDeleteReport(report._id)}
+                          disabled={deletingReportId === report._id}
+                          className={`flex items-center justify-center gap-2 px-3 py-1 text-sm rounded text-white ${
+                            deletingReportId === report._id
+                              ? "bg-red-400 cursor-not-allowed"
+                              : "bg-red-600 hover:bg-red-700"
+                          }`}
+                          aria-label="Delete Review"
                         >
-                            <TrashIcon className="w-4 h-4 mt-[2px] mr-1" />
-                            Delete
+                          {deletingReportId === report._id ? (
+                            <>
+                              <ClipLoader color="#ffffff" size={16} />
+                              Deleting...
+                            </>
+                          ) : (
+                            <>
+                              <TrashIcon className="w-4 h-4" />
+                              Delete
+                            </>
+                          )}
                         </button>
                     </>
                     )}

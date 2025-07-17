@@ -188,29 +188,29 @@ const ReviewTable: React.FC<ReviewTableProps> = ({ reviews }) => {
                       Edit
                     </button>
 
-                <button
-                  type="button"
-                  onClick={() => handleDelete(review._id)}
-                  disabled={deletingReviewId === review._id}
-                  className={`flex items-center justify-center gap-2 px-3 py-1 text-sm rounded text-white ${
-                    deletingReviewId === review._id
-                      ? "bg-red-400 cursor-not-allowed"
-                      : "bg-red-600 hover:bg-red-700"
-                  }`}
-                  aria-label="Delete Review"
-                >
-                  {deletingReviewId === review._id ? (
-                    <>
-                      <ClipLoader color="#ffffff" size={16} />
-                      Deleting...
-                    </>
-                  ) : (
-                    <>
-                      <TrashIcon className="w-4 h-4" />
-                      Delete
-                    </>
-                  )}
-                </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(review._id)}
+                      disabled={deletingReviewId === review._id}
+                      className={`flex items-center justify-center gap-2 px-3 py-1 text-sm rounded text-white ${
+                        deletingReviewId === review._id
+                          ? "bg-red-400 cursor-not-allowed"
+                          : "bg-red-600 hover:bg-red-700"
+                      }`}
+                      aria-label="Delete Review"
+                    >
+                      {deletingReviewId === review._id ? (
+                        <>
+                          <ClipLoader color="#ffffff" size={16} />
+                          Deleting...
+                        </>
+                      ) : (
+                        <>
+                          <TrashIcon className="w-4 h-4" />
+                          Delete
+                        </>
+                      )}
+                    </button>
 
                   </div>
                 </td>

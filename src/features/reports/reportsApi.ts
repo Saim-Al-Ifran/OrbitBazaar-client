@@ -40,13 +40,6 @@ const reportsApi = apiSlice.injectEndpoints({
                 url: `/reports/user/${id}`,
             }),
         }),
-        deleteReport: builder.mutation<DeleteReportResponse,{id:string}>({
-            query: (id) => ({
-                url: `/reports/user/${id}`,
-                method: "DELETE",
-            }),
-            invalidatesTags: ["VendorReports"],
-        }),
         userUpdateReport: builder.mutation<UserUpdateReportResponse,UserUpdateReportRequest>({
             query: ({ id, data }) => ({
                 url: `/reports/user/${id}`,
@@ -83,7 +76,13 @@ const reportsApi = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["VendorReports", "UserReports"],
         }),
-
+        deleteReport: builder.mutation<DeleteReportResponse,string>({
+            query: (id) => ({
+                url: `/reports/user/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["VendorReports", "UserReports", "UserReportIDs"],
+        }),
     }),
 });
 
