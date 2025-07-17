@@ -17,13 +17,6 @@ import { apiSlice } from "../api/apiSlice";
 
 const reportsApi = apiSlice.injectEndpoints({
     endpoints: (builder: EndpointBuilder<BaseQueryFn, string, string>) => ({
-        submitReport: builder.mutation<SubmitReportResponse,SubmitReportRequest>({
-            query: (reportData) => ({
-                url: `/reports`,
-                method: "POST",
-                body: reportData,
-            }),
-        }),
         getVendorReportsData: builder.query<VendorReportsResponse, VendorReportRequestParams>({
             query: ({page,limit,sort} = {}) => {
                 let base = `/reports/vendor`;
@@ -66,6 +59,20 @@ const reportsApi = apiSlice.injectEndpoints({
                 url: `/reports/user`,
             }),
         }),
+        getUserReportIDs: builder.query<{ data: string[] }, void>({
+            query: () => ({
+                url: `/reports/user_reported_Id`,
+            }),
+            providesTags: ["UserReportIDs"],
+        }),
+
+       submitReport: builder.mutation<SubmitReportResponse,SubmitReportRequest>({
+            query: (reportData) => ({
+                url: `/reports`,
+                method: "POST",
+                body: reportData,
+            }),
+        }),
         updateVendorReportStatus: builder.mutation<UpdateVendorReportStatusResponse,UpdateVendorReportStatusRequest>({
             query: ({ reportId, status }) => ({
                 url: `/reports/vendor/${reportId}/status`,
@@ -73,12 +80,6 @@ const reportsApi = apiSlice.injectEndpoints({
                 body: { status },
             }),
             invalidatesTags: ["VendorReports"],
-        }),
-        getUserReportIDs: builder.query<{ data: string[] }, void>({
-            query: () => ({
-                url: `/reports/user_reported_Id`,
-            }),
-            providesTags: ["UserReportIDs"],
         }),
 
     }),

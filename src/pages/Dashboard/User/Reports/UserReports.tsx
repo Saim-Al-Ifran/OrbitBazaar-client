@@ -1,15 +1,26 @@
 import { NavLink } from "react-router-dom";
-import UserReportsTable from "../../../../components/Report/UserReportsTable";
+import UserReportsTable, { Report } from "../../../../components/Report/UserReportsTable";
+import { useGetUserReportsDataQuery } from "../../../../features/reports/reportsApi";
+import { FadeLoader } from "react-spinners";
 
 const UserReports = () => {
-  const reports = []; // Replace with actual data later
-
+   
+  const{data: userReports,isLoading:isReportLoading} = useGetUserReportsDataQuery();
+  const reports = userReports?.data || [];
+  console.log("User Reports:", userReports);
+  if (isReportLoading) {
+    return (
+          <div className="w-full h-[60vh] flex items-center justify-center">
+            <FadeLoader />
+          </div>
+    );
+  }
   return (
     <div className="w-full px-4 py-6">
       {reports.length > 0 ? (
         <>
           <h1 className="text-3xl font-semibold text-gray-800 mb-6">My Reports</h1>
-          <UserReportsTable  />
+          <UserReportsTable  reports={reports as unknown as Report[]}/>
         </>
       ) : (
         <div className="flex items-center justify-center min-h-[60vh]">
