@@ -43,7 +43,7 @@ export interface VendorSingleReportResponse {
 export interface UserSingleReportResponse {
   success: boolean;
   message: string;
-  data: Report;
+  report: Report;
 }
 
 export interface UserReportsResponse {
