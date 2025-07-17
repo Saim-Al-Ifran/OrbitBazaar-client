@@ -3,7 +3,7 @@ import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 
 import { useGetPurchasedProductsQuery } from "../../../../features/products/productsApi";
 import PurchasedProductsTable from "../../../../components/User/PurchasedProductTable";
-import { ClipLoader, FadeLoader } from "react-spinners";
+import {  FadeLoader, PulseLoader } from "react-spinners";
 import Pagination from "../../../../components/Pagination/Pagination";
 import { useGetUserReviewsIDsQuery  } from "../../../../features/reviews/reviewsApi";
 import { useGetUserReportIDsQuery  } from "../../../../features/reports/reportsApi";
@@ -13,7 +13,7 @@ import { NavLink } from "react-router-dom";
 const PurchasedProducts: React.FC = () => {
   const [sort, setSort] = useState<string>(""); 
   const [page, setPage] = useState(1);
-  const limit = 5; // You can adjust this as needed
+  const limit = 5;
   const [paginationLoading, setPaginationLoading] = useState(false);
   const { data, isLoading:isPurchasedProductLoading} = useGetPurchasedProductsQuery({
     page,
@@ -79,7 +79,7 @@ const PurchasedProducts: React.FC = () => {
 
     {isPurchasedProductLoading || paginationLoading || sortingLoading ? (
       <div className="w-full flex justify-center py-10">
-        <ClipLoader size={50} />
+        <PulseLoader color="#123458" />
       </div>
     ) : products.length === 0 ? (
         <div className="flex items-center justify-center min-h-[60vh]">

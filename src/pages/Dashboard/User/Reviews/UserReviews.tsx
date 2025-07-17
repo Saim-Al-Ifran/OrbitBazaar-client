@@ -1,7 +1,7 @@
 import ReviewTable, { ReviewedProduct } from "../../../../components/Reviews/ReviewTable";
 import { NavLink } from "react-router-dom";
 import { useGetUserReviewsQuery } from "../../../../features/reviews/reviewsApi";
-import { FadeLoader } from "react-spinners";
+import { FadeLoader, PulseLoader } from "react-spinners";
 import Pagination from "../../../../components/Pagination/Pagination";
 import { useEffect, useState } from "react";
  
@@ -33,7 +33,14 @@ const UserReviews = () => {
           <p className="text-gray-700 mb-4">
             Here you can view and manage your reviews.
           </p>
-          <ReviewTable reviews={reviewsData?.data as unknown as ReviewedProduct[]} />
+            {paginationLoading ? (
+              <div className="flex justify-center items-center h-32">
+                <PulseLoader color="#123458" />
+              </div>
+            ) : (
+                 <ReviewTable reviews={reviewsData?.data as unknown as ReviewedProduct[]} />
+            )}
+ 
 
         </>
       ) : (

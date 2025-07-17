@@ -47,9 +47,10 @@ const reportsApi = apiSlice.injectEndpoints({
                 body: data,
             }),
         }),
-        getUserReportsData: builder.query<UserReportsResponse,void>({
-            query: () => ({
+        getUserReportsData: builder.query<UserReportsResponse,{page:number,limit:number}>({
+            query: ({page,limit}) => ({
                 url: `/reports/user`,
+                params: { page, limit }
             }),
             providesTags: ["UserReports"],
         }),

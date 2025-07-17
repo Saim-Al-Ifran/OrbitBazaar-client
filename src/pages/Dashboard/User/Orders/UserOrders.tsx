@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import UsersOrdersTable from "../../../../components/User/UsersOrdersTable";
 import { useGetAllUserOrdersQuery } from "../../../../features/orders/ordersApi";
 import Pagination from "../../../../components/Pagination/Pagination";
-import { ClipLoader, FadeLoader } from "react-spinners";
+import { FadeLoader, PulseLoader } from "react-spinners";
 import { NavLink } from "react-router-dom";
  
 
@@ -67,7 +67,7 @@ const UserOrders = () => {
 
     {isOrderDataLoading || paginationLoading || sortingLoading ? (
       <div className="w-full flex justify-center py-10">
-        <ClipLoader size={50} />
+       <PulseLoader color="#123458" />
       </div>
     ) : ordersData?.data?.length === 0 ? (
       <div className="flex items-center justify-center min-h-[60vh]">

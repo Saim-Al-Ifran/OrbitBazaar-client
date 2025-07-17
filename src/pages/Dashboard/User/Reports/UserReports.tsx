@@ -1,27 +1,46 @@
 import { NavLink } from "react-router-dom";
 import UserReportsTable, { Report } from "../../../../components/Report/UserReportsTable";
 import { useGetUserReportsDataQuery } from "../../../../features/reports/reportsApi";
-import { FadeLoader } from "react-spinners";
+import { FadeLoader, PulseLoader } from "react-spinners";
+import Pagination from "../../../../components/Pagination/Pagination";
+import { useEffect, useState } from "react";
 
 const UserReports = () => {
-   
-  const{data: userReports,isLoading:isReportLoading} = useGetUserReportsDataQuery();
+  const [page, setPage] = useState(1);
+  const limit = 5;
+  const [paginationLoading, setPaginationLoading] = useState(false);
+  const{data: userReports,isLoading:isReportLoading} = useGetUserReportsDataQuery(
+    {
+      page,
+      limit
+    }
+  );
   const reports = userReports?.data || [];
   console.log("User Reports:", userReports);
+  useEffect(() => {
+    setPaginationLoading(false);
+  }, [userReports]);
   if (isReportLoading) {
     return (
-          <div className="w-full h-[60vh] flex items-center justify-center">
-            <FadeLoader />
-          </div>
+        <div className="w-full h-[60vh] flex items-center justify-center">
+          <FadeLoader />
+        </div>
     );
   }
   return (
     <div className="w-full px-4 py-6">
       {reports.length > 0 ? (
-        <>
-          <h1 className="text-3xl font-semibold text-gray-800 mb-6">My Reports</h1>
-          <UserReportsTable  reports={reports as unknown as Report[]}/>
-        </>
+<>
+  <h1 className="text-3xl font-semibold text-gray-800 mb-6">My Reports</h1>
+  {paginationLoading ? (
+    <div className="flex justify-center items-center h-32">
+      <PulseLoader color="#123458" />
+    </div>
+  ) : (
+    <UserReportsTable reports={reports as unknown as Report[]} />
+  )}
+</>
+
       ) : (
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center text-gray-600 flex flex-col items-center">
@@ -38,6 +57,20 @@ const UserReports = () => {
           </div>
         </div>
       )}
+
+         {/* Show pagination only if data is available */}
+            {userReports?.data && userReports?.data.length > 0 && (
+              <div className="mt-6">
+                <Pagination
+                  pagination={userReports?.pagination}
+                  isLoading={isReportLoading}
+                  paginationLoading={paginationLoading}
+                  setPage={setPage}
+                  setPaginationLoading={setPaginationLoading}
+                  label="Reviews"
+                />
+              </div>
+            )}
     </div>
   );
 };
