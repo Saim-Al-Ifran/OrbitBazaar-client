@@ -7,18 +7,20 @@ interface EditReportModalProps {
     reason: string;
     comment: string;
   };
+  isUpdating: boolean;
   onUpdate: (reportId: string, payload: {
     reason: string;
-    comments: string;
+    comment: string;
   }) => void;
 }
 
-const EditReportModal = ({ isOpen, onClose, report, onUpdate }: EditReportModalProps) => {
+const EditReportModal = ({ isOpen, onClose, report,isUpdating, onUpdate }: EditReportModalProps) => {
   const [reason, setReason] = useState("");
-  const [comments, setComments] = useState("");
+  const [comment, setComments] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
+  console.log(report);
+  
   // Prefill when modal opens
   useEffect(() => {
     if (report) {
@@ -32,18 +34,11 @@ const EditReportModal = ({ isOpen, onClose, report, onUpdate }: EditReportModalP
       setError("Reason is required.");
       return;
     }
-
-    setLoading(true);
-    try {
-      await new Promise((res) => setTimeout(res, 1000)); // Simulate API call
-      onUpdate(report._id, { reason, comments });
+ 
+      onUpdate(report._id, { reason, comment});
       setError("");
-      onClose();
-    } catch (err) {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    //  onClose();
+
   };
 
   if (!isOpen) return null;
@@ -77,7 +72,7 @@ const EditReportModal = ({ isOpen, onClose, report, onUpdate }: EditReportModalP
             id="comments"
             className="textarea textarea-bordered w-full"
             rows={4}
-            value={comments}
+            value={comment}
             onChange={(e) => setComments(e.target.value)}
           />
         </div>
@@ -86,17 +81,30 @@ const EditReportModal = ({ isOpen, onClose, report, onUpdate }: EditReportModalP
 
         <div className="flex justify-end gap-3 mt-6">
           <button
-            className="btn bg-[#af2525] hover:bg-[#8c1e1e] text-white"
             onClick={onClose}
+            disabled={isUpdating}
+            className={`px-4 py-2 rounded text-white 
+                        bg-[#AF2525] 
+                        hover:bg-[#8c1e1e] 
+                        disabled:!bg-[#d49a9a] 
+                        disabled:cursor-not-allowed 
+                        disabled:opacity-80 
+                        transition-all duration-300`}
           >
             Cancel
           </button>
+
           <button
-            className={`btn bg-[#123458] hover:bg-[#144364] text-white ${loading ? "loading" : ""}`}
+            disabled={isUpdating}
             onClick={handleUpdate}
-            disabled={loading}
+            className={`px-4 py-2 rounded text-white bg-[#123458] 
+                        hover:bg-[#144364] 
+                        disabled:bg-[#8da1b8] 
+                        disabled:cursor-not-allowed 
+                        disabled:opacity-80 
+                        transition-all duration-300`}
           >
-            {loading ? "Updating..." : "Update Report"}
+            {isUpdating? "Updatting..." : "Update Review"}
           </button>
         </div>
       </div>

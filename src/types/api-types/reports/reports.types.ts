@@ -75,7 +75,8 @@ export interface UserUpdateReportResponse {
 export interface UserUpdateReportRequest {
   id: string;
   data: {
-     status: 'pending' | 'resolve' | 'reject';
+    reason: string;
+    comment: string;
   };
 }
 

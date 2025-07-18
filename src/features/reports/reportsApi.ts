@@ -39,13 +39,7 @@ const reportsApi = apiSlice.injectEndpoints({
             query: (id) => ({
                 url: `/reports/user/${id}`,
             }),
-        }),
-        userUpdateReport: builder.mutation<UserUpdateReportResponse,UserUpdateReportRequest>({
-            query: ({ id, data }) => ({
-                url: `/reports/user/${id}`,
-                method: "PUT",
-                body: data,
-            }),
+            providesTags: (_result, _error, id) => [{ type: 'UserReports', id }],
         }),
         getUserReportsData: builder.query<UserReportsResponse,{page:number,limit:number}>({
             query: ({page,limit}) => ({
@@ -69,13 +63,26 @@ const reportsApi = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["VendorReports", "UserReportIDs", "UserReports"],
         }),
+       userUpdateReport: builder.mutation<UserUpdateReportResponse,UserUpdateReportRequest>({
+            query: ({ id, data }) => ({
+                url: `/reports/user/${id}`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: ["UserReports", "UserReportIDs", "VendorReports"],
+        }),
         updateVendorReportStatus: builder.mutation<UpdateVendorReportStatusResponse,UpdateVendorReportStatusRequest>({
             query: ({ reportId, status }) => ({
                 url: `/reports/vendor/${reportId}/status`,
                 method: "PATCH",
                 body: { status },
             }),
-            invalidatesTags: ["VendorReports", "UserReports"],
+            invalidatesTags: (_result, _error, { reportId }) => [
+                { type: 'VendorReports', id: reportId },
+                { type: 'UserReports', id: reportId },
+                "UserReports",
+                "VendorReports",
+            ],
         }),
         deleteReport: builder.mutation<DeleteReportResponse,string>({
             query: (id) => ({

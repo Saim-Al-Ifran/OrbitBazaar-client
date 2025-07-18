@@ -4,10 +4,10 @@ import {
   PencilSquareIcon,
   TrashIcon,
 } from "@heroicons/react/24/solid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
  
 import EditReportModal from "./EditReportModal";
-import { useDeleteReportMutation } from "../../features/reports/reportsApi";
+import { useDeleteReportMutation, useUserUpdateReportMutation } from "../../features/reports/reportsApi";
 import Swal from "sweetalert2";
 import { ClipLoader } from "react-spinners";
 import toast from "react-hot-toast";
@@ -35,14 +35,28 @@ const ReportsTable: React.FC<ReportsTableProps> = ({ reports }) => {
   const [selectedReport, setSelectedReport] = useState(null);
   const [deletingReportId, setDeletingReportId] = useState<string | null>(null);
   const [deleteReport] = useDeleteReportMutation();
+  const [userUpdateReport,{isLoading:isUpdating,isSuccess}] = useUserUpdateReportMutation();
+  
+  useEffect(()=>{
+    if (isSuccess) {
+      toast.success("Report updated successfully!");
+      setShowEditModal(false);
+      setSelectedReport(null);
+    }
+  },[isSuccess]);
 
   const handleEditReport = (report: any) => {
     setSelectedReport(report);
     setShowEditModal(true);
   };
-  const handleReportUpdate = (reportId: string, payload: { reason: string; comments: string }) => {
+  const handleReportUpdate = async (reportId: string, payload: { reason: string; comment: string }) => {
     console.log("Update report:", reportId, payload);
-    // TODO: call update mutation here
+    try {
+      await userUpdateReport({ id: reportId, data: payload }).unwrap();
+    } catch (error) {
+      toast.error("Failed to update report. Please try again.");
+    }
+    setShowEditModal(false);
   };
 
   const handleDeleteReport = async (reportId: string) => {
@@ -165,7 +179,7 @@ const ReportsTable: React.FC<ReportsTableProps> = ({ reports }) => {
                               ? "bg-blue-400 cursor-not-allowed"
                               : "bg-blue-600 hover:bg-blue-700"
                           }`}
-                          onClick={() => handleEditReport(report._id)}
+                          onClick={() => handleEditReport(report)}
                         > 
                           <PencilSquareIcon className="w-4 h-4 mt-[2px] mr-1" />
                           Edit
@@ -208,6 +222,7 @@ const ReportsTable: React.FC<ReportsTableProps> = ({ reports }) => {
     isOpen={showEditModal}
     onClose={() => setShowEditModal(false)}
     report={selectedReport}
+    isUpdating={isUpdating}
     onUpdate={handleReportUpdate}
   />
 )}
