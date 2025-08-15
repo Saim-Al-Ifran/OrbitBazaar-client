@@ -9,14 +9,38 @@ import {
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import { NavLink } from "react-router-dom";
+import { useAddToCartMutation } from "../../features/cart/cartApi";
+import { Tooltip } from "@material-tailwind/react";
+ 
 
 const WishlistPage = () => {
+  const [loadingProductId, setLoadingProductId] = useState<string | null>(null);
   const { data: wishlistData, isLoading } = useGetWishlistQuery();
   const [removeFromWishlist] = useRemoveFromWishlistMutation();
   const [removeAllFromWishlist] = useRemoveAllFromWishlistMutation();
-  console.log("Wishlist Data:", wishlistData);
+  const [addToCart] = useAddToCartMutation();
   const [removingId, setRemovingId] = useState<string | null>(null);
   const [clearingAll, setClearingAll] = useState(false);
+
+       const handleAddToCart = async (productId: string, price: number) => {
+       try {
+         setLoadingProductId(productId);
+   
+         const res = await addToCart({ productId, price, quantity: 1 }).unwrap();
+   
+         if (res.message === "Added to cart") {
+           toast.success("Product added to cart!");
+         } else if (res.message === "Quantity updated") {
+           toast.success("Quantity updated");
+         } else {
+           toast.success("Cart updated");
+         }
+       } catch (error: any) {
+         toast.error(error?.data?.message || "Failed to add product to cart");
+       } finally {
+         setLoadingProductId(null);
+       }
+     };
 
   const handleRemove = async (productId: string) => {
     const result = await Swal.fire({
@@ -139,12 +163,55 @@ const WishlistPage = () => {
                     </div>
 
                     <div className="mt-2 flex gap-2">
-                      <button
-                        className="btn btn-sm btn-neutral"
-                        disabled={isDeleting || clearingAll}
-                      >
-                        <i className="fas fa-cart-plus mr-2"></i> Add to Cart
-                      </button>
+                      {item.productID.stock === 0 ? (
+                        <Tooltip content="Out of Stock" placement="top">
+                          <span>
+                                <button
+                            className="btn btn-sm btn-neutral"
+                            disabled={
+                              loadingProductId === item.productID._id ||
+                              isDeleting ||
+                              item.productID.stock === 0
+                            }
+                            onClick={() =>
+                              handleAddToCart(item.productID._id, item.productID.price)
+                            }
+                          >
+                            {loadingProductId === item.productID._id ? (
+                              <>
+                                <i className="fas fa-spinner fa-spin mr-2"></i> Adding...
+                              </>
+                            ) : (
+                              <>
+                                <i className="fas fa-cart-plus mr-2"></i> Add to Cart
+                              </>
+                            )}
+                          </button>
+                          </span>
+
+                        </Tooltip>
+                      ) : (
+                        <button
+                          className="btn btn-sm btn-neutral"
+                          disabled={
+                            loadingProductId === item.productID._id || isDeleting
+                          }
+                          onClick={() =>
+                            handleAddToCart(item.productID._id, item.productID.price)
+                          }
+                        >
+                          {loadingProductId === item.productID._id ? (
+                            <>
+                              <i className="fas fa-spinner fa-spin mr-2"></i> Adding...
+                            </>
+                          ) : (
+                            <>
+                              <i className="fas fa-cart-plus mr-2"></i> Add to Cart
+                            </>
+                          )}
+                        </button>
+                      )}
+ 
                       <button
                         onClick={() => handleRemove(item.productID._id)}
                         className="btn btn-sm btn-outline btn-error"

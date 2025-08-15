@@ -1,4 +1,5 @@
 export interface WishlistProduct {
+  stock: number;
   _id: string;
   name: string;
   price: number;
