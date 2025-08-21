@@ -86,6 +86,26 @@ const productsApi = apiSlice.injectEndpoints({
             },
             providesTags: ["FeaturedProducts"],
         }),
+        // Record a product view
+        recordProductView: builder.mutation<{ message: string }, string>({
+        query: (productId) => ({
+            url: `products/${productId}/view`,
+            method: "PATCH",
+        }),
+        invalidatesTags: (_result, _error, productId) => [
+            { type: "Product", id: productId },
+        ],
+        }),
+        // Record a product click
+        recordProductClick: builder.mutation<{ message: string }, string>({
+        query: (productId) => ({
+            url: `products/${productId}/click`,
+            method: "PATCH",
+        }),
+        invalidatesTags: (_result, _error, productId) => [
+            { type: "Product", id: productId },
+        ],
+        }),
         addProduct: builder.mutation<AddProductResponse, FormData>({
             query: (productData) => ({
                 url: '/products',
@@ -144,5 +164,7 @@ export const {
     useMarkProductAsArchivedMutation,
     useGetFeauturedProductsQuery,
     useGetAllProductsQuery,
-    useGetPurchasedProductsQuery
+    useGetPurchasedProductsQuery,
+    useRecordProductViewMutation,
+    useRecordProductClickMutation,
 } = productsApi;

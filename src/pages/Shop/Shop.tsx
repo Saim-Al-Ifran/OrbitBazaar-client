@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useGetAllProductsQuery } from "../../features/products/productsApi";
+import { useGetAllProductsQuery, useRecordProductClickMutation } from "../../features/products/productsApi";
 import { useGetCategoriesQuery } from "../../features/categories/categoriesApi";
 import Pagination from "../../components/Pagination/Pagination";
 import SkeletonCard from "../../components/SkeletonLoader/SkeletonCard";
@@ -43,6 +43,7 @@ const Shop = () => {
   });
   const { data: categories } = useGetCategoriesQuery();
   const [addToCart] = useAddToCartMutation();
+  const [recordProductClick] = useRecordProductClickMutation();
   const [loadingProductId, setLoadingProductId] = useState<string | null>(null);
   const {isAdmin,isVendor,isSuperAdmin} = useCheckRoles();
   const isPrivilegedUser = isAdmin || isVendor || isSuperAdmin;
@@ -106,7 +107,7 @@ const Shop = () => {
      const handleAddToCart = async (productId: string, price: number) => {
        try {
          setLoadingProductId(productId);
-   
+         
          const res = await addToCart({ productId, price, quantity: 1 }).unwrap();
    
          if (res.message === "Added to cart") {
@@ -135,6 +136,14 @@ const Shop = () => {
     setPage(1);
  
   };
+
+  const handleProductClick = async (productId: string) => {
+  try {
+    await recordProductClick(productId).unwrap();
+  } catch (error) {
+    console.error("Failed to track product click", error);
+  }
+};
 
   return (
     <>
@@ -347,7 +356,12 @@ const Shop = () => {
                       </div>
                       <div className="w-20">
                         <Link to={`/shop/${product._id}`}>
-                          <button className="btn bg-[#47698F] text-white border-[#35567b] flex-1">
+                          <button 
+                            className="btn bg-[#47698F] text-white border-[#35567b] flex-1"
+                            onClick={() => {
+                              handleProductClick(product._id);
+                            }}
+                            >
                             <i className="fas fa-eye mr-1" /> View Product
                           </button>
                         </Link>

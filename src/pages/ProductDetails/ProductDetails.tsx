@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import { useGetSingleProductQuery } from "../../features/products/productsApi";
+import { useGetSingleProductQuery, useRecordProductViewMutation } from "../../features/products/productsApi";
 import ProductDetailsSkeleton from "../../components/SkeletonLoader/ProductDetailsSkeleton";
 import BreadcrumbSkeleton from "../../components/SkeletonLoader/BreadcrumbSkeleton";
 import ReviewSection from "./Sections/Review";
@@ -28,8 +28,23 @@ const ProductDetails = () => {
     },
   ] = useAddToWishlistMutation();
   const [addToCart] = useAddToCartMutation();
+  const [recordProductView] = useRecordProductViewMutation()
 
   const isPrivilegedUser = isAdmin || isVendor || isSuperAdmin;
+
+useEffect(() => {
+  const handleProductView = async () => {
+   const viewedProducts = JSON.parse(sessionStorage.getItem("viewedProducts") || "[]");
+
+    if (!viewedProducts.includes(id)) {
+      await recordProductView(id);
+      console.log("Recording product view for ID:", id);
+      viewedProducts.push(id);
+      sessionStorage.setItem("viewedProducts", JSON.stringify(viewedProducts));
+    }
+  };
+  handleProductView();
+}, [id]);
  
   useEffect(() => {
     if (productData?.product?.images?.length) {
@@ -37,25 +52,25 @@ const ProductDetails = () => {
     }
   }, [productData]);
 
-useEffect(() => {
-  if (isAddingWishListSuccess) {
-    toast.success("Product added to wishlist successfully!");
-  }
+  useEffect(() => {
+    if (isAddingWishListSuccess) {
+      toast.success("Product added to wishlist successfully!");
+    }
 
-  if (
-    (wishListError as any)?.data?.message === "Product already in wishlist"
-  ) {
-    toast('Product already exists in the wishlist!', {
-      icon: '⚠️',
-      style: {
-        borderRadius: '10px',
-        background: '#fef3c7',
-        color: '#92400e',
-        border: '1px solid #facc15',
-      },
-    });
-  }
-}, [isAddingWishListSuccess, wishListError]);
+    if (
+      (wishListError as any)?.data?.message === "Product already in wishlist"
+    ) {
+      toast('Product already exists in the wishlist!', {
+        icon: '⚠️',
+        style: {
+          borderRadius: '10px',
+          background: '#fef3c7',
+          color: '#92400e',
+          border: '1px solid #facc15',
+        },
+      });
+    }
+  }, [isAddingWishListSuccess, wishListError]);
 
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,7 +107,7 @@ useEffect(() => {
         setLoadingProductId(null);
       }
     };
-
+  console.log("clicked product id", id);
   return (
     <>
       <Helmet>
