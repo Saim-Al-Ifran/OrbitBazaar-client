@@ -1,5 +1,5 @@
 import { BaseQueryFn, EndpointBuilder } from "@reduxjs/toolkit/query";
-import { DashboardResponse, VendorDashboardResponse } from "../../types/api-types/dashboard/dashboard.types";
+import { DashboardResponse,  UserDashboardReponse, VendorDashboardResponse } from "../../types/api-types/dashboard/dashboard.types";
 import { apiSlice } from "../api/apiSlice";
  
 
@@ -9,18 +9,25 @@ const dashboardApi = apiSlice.injectEndpoints({
       query: () => ({
         url: `/admin/dashboard/stats`,
       }),
-      providesTags: ["Dashboard"],
+      providesTags: ["AdminDashboard"],
     }),
     getVendorDashboardData: builder.query<VendorDashboardResponse,void>({
       query: () => ({
         url: `/vendor/dashboard/stats`,
       }),
-      providesTags: ["Dashboard"],
+      providesTags: ["VendorDashboard"],
      }),
+    getUserDashboardData:builder.query<UserDashboardReponse, void>({
+      query: () => ({
+        url: `/user/dashboard/stats`,
+      }),
+      providesTags: ["UserDashboard"],
+    }),
   }),
 });
 
 export const {
   useGetAdminDashboardDataQuery,
   useGetVendorDashboardDataQuery,
+  useGetUserDashboardDataQuery,
 } = dashboardApi;

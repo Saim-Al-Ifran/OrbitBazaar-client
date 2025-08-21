@@ -57,6 +57,7 @@ import UserReports from '../pages/Dashboard/User/Reports/UserReports';
 import ReportDetailsPage from '../pages/Dashboard/User/Reports/ReportDetails';
 import UserReviews from '../pages/Dashboard/User/Reviews/UserReviews';
 import PurchasedProducts from '../pages/Dashboard/User/Products/PurchasedProducts';
+import UserDashboard from '../pages/Dashboard/User/UserDashboard/UserDashboard';
 
 const AppRouter = () => {
   return (
@@ -229,7 +230,7 @@ const AppRouter = () => {
             path="user/home"
             element={
               <PrivateRoute>
-                <h1>Hello user</h1>
+                 <UserDashboard />
               </PrivateRoute>
             }
           />

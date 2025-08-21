@@ -40,3 +40,39 @@ export interface VendorDashboardResponse {
     revenue: number;
   }[];
 }
+export interface UserDashboardReponse {
+  totalOrders: number;
+  pendingOrders: number;
+  totalSpent: number;
+  reviewsSubmitted: number;
+  recentOrders: RecentOrder[];
+  chartData: ChartDataPoint[];
+}
+
+export interface RecentOrder {
+  _id: string;
+  items: OrderItem[];
+  totalPrice: number;
+  status: string;
+  createdAt: string; // ISO date string
+}
+
+export interface OrderItem {
+  _id: string;
+  productID: Product;
+  quantity: number;
+  price: number;
+  total: number;
+}
+
+export interface Product {
+  _id: string;
+  name: string;
+  images: string[];
+  createdAt: string; // ISO date string
+}
+
+export interface ChartDataPoint {
+  month: string; // e.g. "7-2025"
+  total: number;
+}
