@@ -35,9 +35,28 @@ export interface UpdateCartRequest{
 export interface UpdateCartResponse extends AddToCartResponse{};
 
 export interface RemoveCartRequest {
-    id:string;
+    productId:string;
+}
+export interface CartItem {
+
 }
 
-export interface RemoveCartResponse {
-    message:string;
+export interface RemoveCartResponse  {
+  _id: string;
+  userEmail: string;
+  items: {
+    productID: string;
+    quantity: number;
+    price: number;
+    total: number;
+  };
+  totalQuantity: number;
+  totalPrice: number;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
+
+// export interface RemoveCartResponse {
+//     message:string;
+// }

@@ -95,7 +95,9 @@ const handleRemove = async (productId: string, productName: string) => {
     try {
       setDeletingProductId(productId);
       await removeFromCart(productId).unwrap();
+       
       toast.success("Product has been removed from your cart.");
+      
     } catch (error) {
       Swal.fire("Failed!", "Something went wrong.", "error");
     } finally {
@@ -103,7 +105,7 @@ const handleRemove = async (productId: string, productName: string) => {
     }
   }
 };
-
+ 
 
 const handleAddToWishlist = async (productId: string) => {
   try {
