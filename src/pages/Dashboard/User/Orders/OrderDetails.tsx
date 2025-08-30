@@ -74,7 +74,7 @@ const OrderDetails = () => {
               {orderDetails?.order.shippingAddress?.postalCode}
             </p>
             <p><strong>Country:</strong> {orderDetails?.order.shippingAddress?.countryCode}</p>
-            <p><strong>Email:</strong> {orderDetails?.order.totalPrice .userEmail}</p>
+            <p><strong>Email:</strong> {orderDetails?.order.userEmail}</p>
           </div>
         </div>
 
