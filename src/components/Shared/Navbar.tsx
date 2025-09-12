@@ -8,6 +8,7 @@ import { BarLoader } from "react-spinners";
 import useCheckRoles from "../../hooks/auth/useCheckRoles";
 import { useGetWishlistQuery } from "../../features/wishlist/wishlistApi";
 import { useGetCartQuery } from "../../features/cart/cartApi";
+import logo from '../../../public/logo1.png'
 
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -49,9 +50,10 @@ const Navbar = () => {
   return (
     <nav className="bg-white shadow-md relative">
       <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-        <div className="text-2xl font-extrabold text-black tracking-wide">
-          MyStore
-        </div>
+      <NavLink to="/" className="flex items-center gap-3 text-2xl font-extrabold text-gray-900 tracking-wide">
+        <img src={logo} alt="OrbitBazaar Logo" className="w-12 h-auto" />
+        <span className="hidden sm:inline whitespace-nowrap">OrbitBazaar</span>
+      </NavLink>
 
         {/* Search Bar */}
         <div className="hidden md:flex flex-1 justify-center mx-6">
