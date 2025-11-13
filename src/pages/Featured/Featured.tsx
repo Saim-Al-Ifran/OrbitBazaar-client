@@ -139,7 +139,7 @@ const FeaturedProducts = () => {
                 </div>
                 <div className="flex justify-center items-center mt-2">
                   <span className="text-[#FE9428] text-lg">
-                    <i className="fa-solid fa-star"></i> {product.ratings.average}
+                    <i className="fa-solid fa-star"></i> {product.ratings.average.toFixed(2)}
                   </span>
                   <span className="text-gray-500 text-sm ml-2">({product.ratings.count} reviews)</span>
                 </div>

@@ -76,7 +76,7 @@ const PurchasedProductsTable: React.FC<PurchasedProductsTableProps> = ({ product
           <td className="px-6 py-4">
             {product.ratings.count > 0 ? (
               <>
-                {product.ratings.average}
+                {product.ratings.average.toFixed(2)}
                 <i className="fa-solid fa-star text-[#ff8036] mx-1"></i>
                 ({product.ratings.count})
               </>

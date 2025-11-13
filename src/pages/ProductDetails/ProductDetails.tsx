@@ -179,7 +179,7 @@ useEffect(() => {
               <div className="flex items-center gap-2 text-[#ff943d] text-[15px]">
                 <i className="fas fa-star"></i>
                 <span>
-                  {productData?.product?.ratings?.average ?? "0"} (
+                  {productData?.product?.ratings?.average?.toFixed(2) ?? "0"} (
                   {productData?.product?.ratings?.count ?? "0"} ratings)
                 </span>
               </div>
